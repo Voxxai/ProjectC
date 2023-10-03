@@ -33,7 +33,7 @@ bld/
 # Roslyn cache directories
 *.ide/
 
-[Oo]bj/
+# [Oo]bj/
 
 .[Vv]scode/
 
