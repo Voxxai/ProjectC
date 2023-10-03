@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\henno\\OneDrive\\Documenten\\Project_C\\ProjectC\\ProjectC.csproj": {}
+    "C:\\Users\\gilkr\\Documents\\School\\Project\\Project_C\\ProjectC\\ProjectC.csproj": {}
   },
   "projects": {
-    "C:\\Users\\henno\\OneDrive\\Documenten\\Project_C\\ProjectC\\ProjectC.csproj": {
+    "C:\\Users\\gilkr\\Documents\\School\\Project\\Project_C\\ProjectC\\ProjectC.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\henno\\OneDrive\\Documenten\\Project_C\\ProjectC\\ProjectC.csproj",
+        "projectUniqueName": "C:\\Users\\gilkr\\Documents\\School\\Project\\Project_C\\ProjectC\\ProjectC.csproj",
         "projectName": "ProjectC",
-        "projectPath": "C:\\Users\\henno\\OneDrive\\Documenten\\Project_C\\ProjectC\\ProjectC.csproj",
-        "packagesPath": "C:\\Users\\henno\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\henno\\OneDrive\\Documenten\\Project_C\\ProjectC\\obj\\",
+        "projectPath": "C:\\Users\\gilkr\\Documents\\School\\Project\\Project_C\\ProjectC\\ProjectC.csproj",
+        "packagesPath": "C:\\Users\\gilkr\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gilkr\\Documents\\School\\Project\\Project_C\\ProjectC\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\henno\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\gilkr\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -53,7 +53,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }
