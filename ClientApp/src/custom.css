@@ -1,4 +1,9 @@
 /* Provide sufficient contrast against white background */
+@import url('https://fonts.cdnfonts.com/css/helvetica-neue-55');
+
+* {
+  font-family: Helvetica neue;
+}
 a {
   color: #0366d6;
 }
