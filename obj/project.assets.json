@@ -48,11 +48,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Gebruiker\\OneDrive\\Documenten\\Project_C\\ProjectC\\ProjectC.csproj",
+      "projectUniqueName": "C:\\Users\\Gebruiker\\Desktop\\Alle mapjes\\Project_C\\ProjectC\\ProjectC.csproj",
       "projectName": "ProjectC",
-      "projectPath": "C:\\Users\\Gebruiker\\OneDrive\\Documenten\\Project_C\\ProjectC\\ProjectC.csproj",
+      "projectPath": "C:\\Users\\Gebruiker\\Desktop\\Alle mapjes\\Project_C\\ProjectC\\ProjectC.csproj",
       "packagesPath": "C:\\Users\\Gebruiker\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Gebruiker\\OneDrive\\Documenten\\Project_C\\ProjectC\\obj\\",
+      "outputPath": "C:\\Users\\Gebruiker\\Desktop\\Alle mapjes\\Project_C\\ProjectC\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"
