@@ -1,11 +1,12 @@
 h1 {
     color: #7F3689;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
 }
 
 p {
     color: #696969;
-    
+    font-size: 12px;
+    font-weight: 400;
 }
 
 a {
