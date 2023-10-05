@@ -42,31 +42,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Gebruiker\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\henno\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Gebruiker\\Desktop\\Alle mapjes\\Project_C\\ProjectC\\ProjectC.csproj",
+      "projectUniqueName": "C:\\Users\\henno\\OneDrive\\Documenten\\Project_C\\ProjectC\\ProjectC.csproj",
       "projectName": "ProjectC",
-      "projectPath": "C:\\Users\\Gebruiker\\Desktop\\Alle mapjes\\Project_C\\ProjectC\\ProjectC.csproj",
-      "packagesPath": "C:\\Users\\Gebruiker\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Gebruiker\\Desktop\\Alle mapjes\\Project_C\\ProjectC\\obj\\",
+      "projectPath": "C:\\Users\\henno\\OneDrive\\Documenten\\Project_C\\ProjectC\\ProjectC.csproj",
+      "packagesPath": "C:\\Users\\henno\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\henno\\OneDrive\\Documenten\\Project_C\\ProjectC\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Gebruiker\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\henno\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -109,7 +102,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

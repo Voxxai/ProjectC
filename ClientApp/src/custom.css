@@ -1,8 +1,8 @@
 /* Provide sufficient contrast against white background */
-@import url('https://fonts.cdnfonts.com/css/helvetica-neue-55');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 * {
-  font-family: Helvetica neue;
+  font-family: 'Poppins', sans-serif;
 }
 a {
   color: #0366d6;
