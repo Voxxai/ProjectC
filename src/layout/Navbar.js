@@ -26,14 +26,14 @@ function Navbar() {
           className={`bg-cavero-hover-purple absolute cursor-pointer -right-3 top-6 w-4 border-dark-purple p-2 rounded-full duration-300  ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
-        <div className="flex gap-x-2 items-center mb-4">
+        <div className="flex min-w-max gap-x-2 items-center mb-4">
           <img
             src={LogoIcon}
             className={`cursor-pointer duration-500 w-16 ml-1`}
           />
           <h1
-            className={`text-white mt-2 text-sm ${
-              !open && "hidden"
+            className={`text-white mt-2 text-sm  ${
+              !open && "invisible"
             }`}
           >
             Cavero<br/>
@@ -43,7 +43,7 @@ function Navbar() {
           {Menus.map((Menu, index) => (
             <li
               key={index}
-              className={`flex rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4`}>
+              className={`flex min-w-max rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4`}>
               <FontAwesomeIcon icon={Menu.src} size='1x'/>
               <span className={`${!open && "hidden"} origin-left duration-200`}>
                 {Menu.title}
