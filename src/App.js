@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Topbar from "./layout/Topbar";
 import Navbar from "./layout/Navbar";
 import WeekOverzicht from "./pages/WeekOverzicht";
+import Evenementen from "./pages/Evenementen";
 
 
 function App() {
@@ -13,11 +14,12 @@ function App() {
     <div>
       
         <main className='flex flex-row'>
-          <Navbar />
+          {/* <Navbar /> */}
           <div className='main-container'>
             {/* <Login /> */}
             <Topbar />
-            <WeekOverzicht />
+            < Evenementen />
+            {/* <WeekOverzicht /> */}
           </div>
         </main>
         </div>
