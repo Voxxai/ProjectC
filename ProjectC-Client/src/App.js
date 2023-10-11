@@ -13,11 +13,11 @@ function App() {
     <div>
       
         <main className='flex flex-row'>
-          <Navbar />
+          {/* <Navbar /> */}
           <div className='main-container'>
-            {/* <Login /> */}
-            <Topbar />
-            <WeekOverzicht />
+            <Login />
+            {/* <Topbar /> */}
+            {/* <WeekOverzicht /> */}
           </div>
         </main>
         </div>
