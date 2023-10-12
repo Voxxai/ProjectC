@@ -7,23 +7,33 @@ app.use(cors());
 
 
 var db  = mysql.createConnection({
-  host            : '145.24.222.229', // localhost or 145.24.222.229
+  host            : 'localhost', // localhost or 145.24.222.229
   user            : 'root',
-  password        : 'Z47pQnc',
-  database        : 'caverogroep2'
+  password        : '',
+  database        : 'temp'
 });
 
 db.connect();
 
 app.get('/', (request, response) => {
+    console.log("Server on");
+})
+
+app.get('/users', (request, response) => {
     db.query("SELECT * FROM accounts", (error, result) => {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log(result);
-        }
-        db.end();
+        response.send(result);
     });
+})
+
+app.get('/user_find/:email&:ww', (request, response) => {
+    const email = request.params.email;
+    const ww = request.params.ww;
+    console.log(email, ww);
+    // db.query("SELECT id FROM accounts WHERE Email = ? AND Wachtwoord =  ?", email, ww, (error, result) => {
+    //     if (error) console.log(error);
+
+    //     response.send(result);
+    // });
 })
 
 app.listen(8080, () => {

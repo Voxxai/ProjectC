@@ -5,8 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightLong, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 
 function Login() {
+
+    var email = "admin";
+    var ww = "test123";
     const apiCall = () => {
-        axios.get('http://localhost:8080/').then((data) => {
+        axios.get(`http://localhost:8080/users_id/`, { params: {
+            email: email,
+            ww: ww
+        }}).then((data) => {
             console.log(data);
         })
     }
