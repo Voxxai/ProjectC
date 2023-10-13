@@ -28,12 +28,11 @@ app.get('/users', (request, response) => {
 app.get('/user_find/:email&:ww', (request, response) => {
     const email = request.params.email;
     const ww = request.params.ww;
-    console.log(email, ww);
-    // db.query("SELECT id FROM accounts WHERE Email = ? AND Wachtwoord =  ?", email, ww, (error, result) => {
-    //     if (error) console.log(error);
+    db.query(`SELECT id FROM accounts WHERE Email = "${email}" AND Wachtwoord = "${ww}"`, (error, result) => {
+        if (error) console.log(error);
 
-    //     response.send(result);
-    // });
+        response.send(result);
+    });
 })
 
 app.listen(8080, () => {
