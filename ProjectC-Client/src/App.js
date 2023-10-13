@@ -14,7 +14,7 @@ function App() {
       
         <main className='flex flex-row'>
           <Navbar />
-          <div className='main-container'>
+          <div className='main-container flex-1'>
             {/* <Login /> */}
             <Topbar />
             <WeekOverzicht />
