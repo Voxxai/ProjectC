@@ -8,8 +8,8 @@ import { faArrowRightLong, faEnvelope, faLock } from '@fortawesome/free-solid-sv
 //Token meesturen als je bent ingelogd.
 
 function Login() {
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -27,7 +27,7 @@ function Login() {
         try {
             const response = await axios.get(`http://localhost:8080/user_find/${email}&${password}`);
             if (response.data.length > 0) {
-                console.log("LOGGED IN!")
+                console.log("LOGGED IN!");
             } else {
                 setErrorMessage("Emailadres of wachtwoord klopt niet!");
                 setError(true);
