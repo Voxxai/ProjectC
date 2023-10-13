@@ -16,34 +16,36 @@ function Login() {
     }
 
     return (
-        <div className='login-container h-screen w-screen flex items-center justify-center'>
-            <div className='form-login mb-32'>
-            <div>
-                <h1>Login bij Cavero</h1>
-                <p>Je kunt bij Cavero inloggen met de volgende gegevens.</p>
-            </div>
-            <form>
-                <div className='input-container'>
-                <div className='input-group'>
-                    <FontAwesomeIcon icon={faEnvelope} color='black' className='field-icon'/>
-                    <input type="email" className='field-input' id="email" placeholder="E-mailadres" onChange={e => setEmail(e.target.value)}/>
+        <div className='bg-gradient-to-r from-white to-cavero-purple-light'>
+            <div className='login-container h-screen w-screen flex items-center justify-center'>
+                <div className='form-login mb-32 bg-white shadow-2xl shadow-cavero-purple-light'>
+                    <div className='mt-6'>
+                        <h1>Login bij Cavero</h1>
+                        <p>Je kunt bij Cavero inloggen met de volgende gegevens.</p>
+                    </div>
+                <form>
+                    <div className='input-container'>
+                    <div className='input-group'>
+                        <FontAwesomeIcon icon={faEnvelope} color='black' className='field-icon'/>
+                        <input type="email" className='field-input' id="email" placeholder="E-mailadres" onChange={e => setEmail(e.target.value)}/>
+                    </div>
+                    <div className='ColoredLine'></div>
+                    </div>
+                    
+                    <div className='input-container'>
+                    <div className='input-group'>
+                        <FontAwesomeIcon icon={faLock} color='black' className='field-icon'/>
+                        <input type="password" className='field-input' id="password" placeholder="Wachtwoord" onChange={e => setPassword(e.target.value)}/>
+                    </div>
+                    <div className='ColoredLine'></div>
+                    </div>
+                    <div className='form-extras'>
+                    <a>Wachtwoord vergeten?</a>
+                    <button type="submit" className='btn-submit' onClick={apiCall}>Login <FontAwesomeIcon icon={faArrowRightLong} color='white'/></button>
+                    </div>
+                    
+                </form>
                 </div>
-                <div className='ColoredLine'></div>
-                </div>
-                
-                <div className='input-container'>
-                <div className='input-group'>
-                    <FontAwesomeIcon icon={faLock} color='black' className='field-icon'/>
-                    <input type="password" className='field-input' id="password" placeholder="Wachtwoord" onChange={e => setPassword(e.target.value)}/>
-                </div>
-                <div className='ColoredLine'></div>
-                </div>
-                <div className='form-extras'>
-                <a>Wachtwoord vergeten?</a>
-                <button type="button" className='btn-submit' onClick={apiCall}>Login <FontAwesomeIcon icon={faArrowRightLong} color='white'/></button>
-                </div>
-                
-            </form>
             </div>
         </div>
     );

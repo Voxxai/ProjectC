@@ -23,13 +23,13 @@ function Navbar() {
         } bg-cavero-purple h-screen pt-2.5 relative duration-300`}
       >
         <FontAwesomeIcon icon={faChevronLeft} color='white'
-          className={`bg-cavero-hover-purple absolute cursor-pointer -right-3 top-6 w-4 border-dark-purple p-2 rounded-full duration-300  ${!open && "rotate-180"}`}
+          className={`bg-cavero-hover-purple absolute cursor-pointer -right-3 top-6 w-4 border-dark-purple p-2 rounded-full duration-300 bg-opacity-75 hover:bg-opacity-100 ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
         <div className="flex min-w-max gap-x-2 items-center mb-4">
           <img
             src={LogoIcon}
-            className={`cursor-pointer duration-500 w-16 ml-1`}
+            className={`cursor-pointer duration-500 w-20 px-2`}
           />
           <h1
             className={`text-white mt-2 text-sm  ${
@@ -43,9 +43,9 @@ function Navbar() {
           {Menus.map((Menu, index) => (
             <li
               key={index}
-              className={`flex min-w-max rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4`}>
-              <FontAwesomeIcon icon={Menu.src} size='1x'/>
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
+              className={`flex h-16 min-w-max rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4`}>
+              <FontAwesomeIcon icon={Menu.src} className='w-8 fa-lg'/>
+              <span className={`${!open && "hidden"} origin-left`}>
                 {Menu.title}
               </span>
             </li>
