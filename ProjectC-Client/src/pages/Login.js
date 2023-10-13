@@ -5,16 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightLong, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 
 function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-    var email = "admin";
-    var ww = "test123";
     const apiCall = () => {
-        axios.get(`http://localhost:8080/users_id/`, { params: {
-            email: email,
-            ww: ww
-        }}).then((data) => {
-            console.log(data);
-        })
+        console.log(email, password);
+        // axios.get(`http://localhost:8080/user_find/${email}&${password}`).then((data) => {
+        //     console.log(data);
+        // })
     }
 
     return (
@@ -28,7 +26,7 @@ function Login() {
                 <div className='input-container'>
                 <div className='input-group'>
                     <FontAwesomeIcon icon={faEnvelope} color='black' className='field-icon'/>
-                    <input type="email" className='field-input' id="email" placeholder="E-mailadres"/>
+                    <input type="email" className='field-input' id="email" placeholder="E-mailadres" onChange={e => setEmail(e.target.value)}/>
                 </div>
                 <div className='ColoredLine'></div>
                 </div>
@@ -36,7 +34,7 @@ function Login() {
                 <div className='input-container'>
                 <div className='input-group'>
                     <FontAwesomeIcon icon={faLock} color='black' className='field-icon'/>
-                    <input type="password" className='field-input' id="password" placeholder="Wachtwoord"/>
+                    <input type="password" className='field-input' id="password" placeholder="Wachtwoord" onChange={e => setPassword(e.target.value)}/>
                 </div>
                 <div className='ColoredLine'></div>
                 </div>
