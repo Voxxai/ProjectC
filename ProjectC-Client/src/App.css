@@ -14,14 +14,3 @@ p {
   font-size: 12px;
   font-weight: 400;
 }
-
-a {
-  font-size: 12px;
-  color: #696969;
-  transition-duration: 0.4s;
-  text-decoration: none;
-}
-
-a:hover {
-  color: #414141;
-}

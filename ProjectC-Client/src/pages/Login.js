@@ -31,10 +31,17 @@ function Login() {
         setError(false);
 
         try {
-            const response = await axios.get(`http://localhost:8080/user_find/${email}&${password}`);
+            const response = await axios.get(`http://localhost:8080/login/${email}&${password}`);
             if (response.data.length > 0) {
                 // Login succes
-                setAuth({email, password})
+                const ID = response.data[0].ID;
+                const FirstName = response.data[0].Voornaam;
+                const LastName = response.data[0].Achternaam;
+                const Email = response.data[0].Email;
+                const Password = response.data[0].Wachtwoord;
+                const Level = response.data[0].Level;
+
+                setAuth({ ID, FirstName, LastName, Email, Password, Level});
                 navigate(from, { replace: true });
             } else {
                 setErrorMessage("Emailadres of wachtwoord klopt niet!");
