@@ -3,17 +3,23 @@ import axios from 'axios';
 import "./Login.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightLong, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
+import useAuth from '../hooks/useAuth';
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 //TODO encrypt wachtwoord voordat het gestuurd wordt naar de server op de params.
 //Token meesturen als je bent ingelogd.
 
 function Login() {
+    const { setAuth } = useAuth();
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
-    const [result, setResult] = useState(null);
 
     const getUser = async () => {
         if (!email.length > 0 || !password.length > 0) {
@@ -27,14 +33,14 @@ function Login() {
         try {
             const response = await axios.get(`http://localhost:8080/user_find/${email}&${password}`);
             if (response.data.length > 0) {
-                console.log("LOGGED IN!");
+                // Login succes
+                setAuth({email, password})
+                navigate(from, { replace: true });
             } else {
                 setErrorMessage("Emailadres of wachtwoord klopt niet!");
                 setError(true);
                 return;
             }
-
-            setResult(response.data);
 
         } catch (err) {
             console.log(err);

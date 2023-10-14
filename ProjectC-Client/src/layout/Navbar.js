@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Navbar.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faCalendarDays, faChevronLeft, faDashboard, faHome, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
@@ -9,10 +9,10 @@ function Navbar() {
 
     const [open, setOpen] = useState(true);
     const Menus = [
-        { title: "Week Overzicht", src: faHome },
-        { title: "Evenementen", src: faCalendarDays },
-        { title: "Nieuws", src: faBell },
-        { title: "Morgen ", src: faUsers },
+        { title: "Week Overzicht", src: faHome, link: "/"},
+        { title: "Evenementen", src: faCalendarDays, link: "/Evenementen" },
+        { title: "Nieuws", src: faBell, link: "/Nieuws" },
+        { title: "Morgen ", src: faUsers, link: "/Morgen" },
     ];
   return (
     <div>
@@ -44,10 +44,12 @@ function Navbar() {
             <li
               key={index}
               className={`flex h-16 min-w-max rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4`}>
-              <FontAwesomeIcon icon={Menu.src} className='w-8 fa-lg'/>
-              <span className={`${!open && "hidden"} origin-left`}>
-                {Menu.title}
-              </span>
+              <Link to={Menu.link}>
+                <FontAwesomeIcon icon={Menu.src} className='w-8 fa-lg'/>
+                <span className={`${!open && "hidden"} origin-left`}>
+                  {Menu.title}
+                </span>
+                </Link>
             </li>
           ))}
       </div>
