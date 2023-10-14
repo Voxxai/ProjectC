@@ -28,7 +28,7 @@ app.get('/users', (request, response) => {
 app.get('/login/:email&:ww', (request, response) => {
     const email = request.params.email;
     const ww = request.params.ww;
-    db.query(`SELECT id FROM accounts WHERE Email = "${email}" AND Wachtwoord = SHA1("${ww}")`, (error, result) => {
+    db.query(`SELECT * FROM accounts WHERE Email = "${email}" AND Wachtwoord = SHA1("${ww}")`, (error, result) => {
         if (error) console.log(error);
 
         response.send(result);
