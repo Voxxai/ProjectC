@@ -41,16 +41,16 @@ function Navbar() {
           </h1>
         </div>
           {Menus.map((Menu, index) => (
-            <li
-              key={index}
-              className={`flex h-16 min-w-max rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4`}>
-              <Link to={Menu.link}>
-                <FontAwesomeIcon icon={Menu.src} className='w-8 fa-lg'/>
-                <span className={`${!open && "hidden"} origin-left`}>
-                  {Menu.title}
-                </span>
-                </Link>
-            </li>
+            <Link to={Menu.link} className='no-underline'>
+              <li
+                key={index}
+                className={`flex h-16 min-w-max rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4`}>
+                  <FontAwesomeIcon icon={Menu.src} className='w-8 fa-lg'/>
+                  <span className={`${!open && "hidden"} origin-left text-white no-underline text-lg`}>
+                    {Menu.title}
+                  </span>
+              </li>
+            </Link>
           ))}
       </div>
       </div>
