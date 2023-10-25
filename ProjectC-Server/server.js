@@ -7,10 +7,11 @@ app.use(cors());
 
 
 var db  = mysql.createConnection({
-  host            : 'localhost', // localhost or 145.24.222.229
-  user            : 'root',
-  password        : '',
-  database        : 'temp'
+    host            : '145.24.222.229', // localhost or 145.24.222.229
+    user            : 'caverogroep2',
+    password        : 'test1234',
+    database        : 'caverogroep2',
+    port            : '8321'
 });
 
 db.connect();
