@@ -7,10 +7,11 @@ app.use(cors());
 
 
 var db  = mysql.createConnection({
-  host            : 'localhost', // localhost or 145.24.222.229
-  user            : 'root',
-  password        : '',
-  database        : 'temp'
+    host            : '145.24.222.229', // localhost or 145.24.222.229
+    user            : 'caverogroep2',
+    password        : 'test1234',
+    database        : 'caverogroep2',
+    port            : '8321'
 });
 
 db.connect();
@@ -28,7 +29,7 @@ app.get('/users', (request, response) => {
 app.get('/login/:email&:ww', (request, response) => {
     const email = request.params.email;
     const ww = request.params.ww;
-    db.query(`SELECT id FROM accounts WHERE Email = "${email}" AND Wachtwoord = SHA1("${ww}")`, (error, result) => {
+    db.query(`SELECT * FROM accounts WHERE Email = "${email}" AND Wachtwoord = SHA1("${ww}")`, (error, result) => {
         if (error) console.log(error);
 
         response.send(result);
