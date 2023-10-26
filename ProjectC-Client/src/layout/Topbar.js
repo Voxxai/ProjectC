@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import "./Navbar.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,7 @@ import useAuth from '../hooks/useAuth';
 
 function Topbar() {
   const { auth } = useAuth();
+  const profileMenu = useRef(null)
   const [open, setOpen] = useState(false);
 
   const Menus = [
@@ -15,6 +16,14 @@ function Topbar() {
         { title: "Theme", src: faCircleHalfStroke, link: "/" },
         { title: "Instellingen", src: faGear, link: "/" },
     ];
+
+  const closeOpenMenus = (e)=>{
+      if(profileMenu.current && open && !profileMenu.current.contains(e.target)){
+        setOpen(false)
+      }
+  }
+
+  document.addEventListener('mousedown',closeOpenMenus);
   
   // console.log(auth);
   return (
@@ -26,7 +35,7 @@ function Topbar() {
 
         {/* Account item */}
         <div className='my-auto flex gap-10 items-center'>
-          <button className='flex gap-2 items-center' onClick={() => setOpen(!open)}>
+          <button ref={profileMenu} className='flex gap-2 items-center' onClick={() => setOpen(!open)}>
             <FontAwesomeIcon icon={faCircleUser} className='fa-xl text-cavero-purple'/>
             <span className=''>Hallo, {auth.FirstName}</span>
           </button>
