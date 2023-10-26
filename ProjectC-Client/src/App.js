@@ -11,12 +11,13 @@ function App() {
     <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Layout />}>
+        <Route index element={<WeekOverzicht />} />
         
           
         {/* Private Routes */}
         <Route element={<RequireAuth />} >
           <Route path='/Login' element={<Login />} />
-          <Route index element={<WeekOverzicht />} />
+
           <Route path='/Evenementen' element={<WeekOverzicht />} />
           <Route path='/Nieuws' element={<WeekOverzicht />} />
           <Route path='/Morgen' element={<WeekOverzicht />} />
