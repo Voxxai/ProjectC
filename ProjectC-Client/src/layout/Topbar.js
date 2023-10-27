@@ -21,7 +21,7 @@ function Topbar() {
   }
 
   return (
-    <div className='Topbar bg-white shadow-md w-full h-20 flex justify-between items-center px-4'>
+    <div className='bg-white shadow-md w-full h-20 flex justify-between items-center px-4'>
         <div className='items-center mt-2'>
             <h2 className=''>Week Overzicht</h2>
         </div>
