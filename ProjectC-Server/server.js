@@ -36,10 +36,10 @@ app.get('/user_find/:email&:ww', (request, response) => {
     });
 })
 
-app.post('/insert_nieuws', (req, res) => {
+app.post('/insert_news', (req, res) => {
     const { title, description } = req.body;
     
-    const sql = 'INSERT INTO nieuws (title, description) VALUES (?, ?)';
+    const sql = 'INSERT INTO news (title, description) VALUES (?, ?)';
     db.query(sql, [title, description], (err, result) => {
         if (err) {
             console.log(error)
@@ -51,13 +51,13 @@ app.post('/insert_nieuws', (req, res) => {
 });
 
 app.get('/nieuws', (req, res) => {
-    const sql = 'SELECT * FROM nieuws';
+    const sql = 'SELECT * FROM news';
     db.query(sql, (err, results) => {
         if (err) {
         console.log(error)
         res.status(500).json({ message: 'Error retrieving data' });
         } else {
-        res.status(200).json(results);
+        res.send(results)
         }
     });
 });
