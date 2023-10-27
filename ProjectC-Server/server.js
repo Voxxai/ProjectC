@@ -7,10 +7,11 @@ app.use(cors());
 
 
 var db  = mysql.createConnection({
-  host            : 'localhost', // localhost or 145.24.222.229
-  user            : 'root',
-  password        : '',
-  database        : 'temp'
+    host            : '145.24.222.229', // localhost or 145.24.222.229
+    user            : 'caverogroep2',
+    password        : 'test1234',
+    database        : 'caverogroep2',
+    port            : '8321'
 });
 
 db.connect();
@@ -34,6 +35,32 @@ app.get('/user_find/:email&:ww', (request, response) => {
         response.send(result);
     });
 })
+
+app.post('/insert_nieuws', (req, res) => {
+    const { title, description } = req.body;
+    
+    const sql = 'INSERT INTO nieuws (title, description) VALUES (?, ?)';
+    db.query(sql, [title, description], (err, result) => {
+        if (err) {
+            console.log(error)
+            res.status(500).json({ message: 'Error inserting data' });
+        } else {
+            res.status(200).json({ message: 'Data inserted successfully' });
+        }
+    });
+});
+
+app.get('/nieuws', (req, res) => {
+    const sql = 'SELECT * FROM nieuws';
+    db.query(sql, (err, results) => {
+        if (err) {
+        console.log(error)
+        res.status(500).json({ message: 'Error retrieving data' });
+        } else {
+        res.status(200).json(results);
+        }
+    });
+});
 
 app.listen(8080, () => {
     console.log("Server listing");

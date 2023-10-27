@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Topbar from "./layout/Topbar";
 import Navbar from "./layout/Navbar";
 import WeekOverzicht from "./pages/WeekOverzicht";
+import Nieuws from './pages/Nieuws';
 
 
 function App() {
@@ -16,8 +17,7 @@ function App() {
           <Navbar />
           <div className='main-container'>
             {/* <Login /> */}
-            <Topbar />
-            <WeekOverzicht />
+            <Nieuws />
           </div>
         </main>
         </div>
