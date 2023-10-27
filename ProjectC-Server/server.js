@@ -69,7 +69,16 @@ app.post('/login', (req, res) => {
 
         if (result.length > 0) {
             // Create session with user results
-            req.session.user = result[0];
+            req.session.user = {
+                                ID: result[0].ID,
+                                Email: result[0].Email,
+                                Password: result[0].Wachtwoord, 
+                                FirstName: result[0].Voornaam, 
+                                LastName: result[0].Achternaam, 
+                                Level: result[0].Level
+            };
+            
+            // Send JSON array back with data
             res.json({ Login: true,
                             ID: result[0].ID,
                             Email: result[0].Email,
