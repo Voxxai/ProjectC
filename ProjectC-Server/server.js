@@ -50,7 +50,7 @@ app.post('/insert_news', (req, res) => {
     });
 });
 
-app.get('/nieuws', (req, res) => {
+app.get('/news', (req, res) => {
     const sql = 'SELECT * FROM news';
     db.query(sql, (err, results) => {
         if (err) {
