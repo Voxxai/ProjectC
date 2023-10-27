@@ -9,7 +9,7 @@ function Nieuws() {
   useEffect(() => {
     const fetchNieuwsData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/nieuws');
+        const response = await axios.get('http://localhost:8080/news');
         setNews(response.data);
       } catch (error) {
         console.error('Error fetching data: ', error);
