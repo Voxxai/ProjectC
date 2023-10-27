@@ -15,6 +15,7 @@ function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
+    const [loading, setLoading] = useState(false);
 
     const [values, setValues] = useState({
         email: '',
@@ -69,6 +70,9 @@ function Login() {
     }
 
     useEffect(() => {
+        // show loading spinner
+        // setLoading(true);
+
         axios.get(`http://localhost:8080/login`).then((response) => {
             if (response.data.loggedIn == true) {
                 const ID = response.data.user.ID;
@@ -80,10 +84,19 @@ function Login() {
                 
                 // Storing the user details to the authenticate
                 setAuth({ ID, FirstName, LastName, Email, Password, Level });
+                
+                // hide loading spinner
+                // setTimeout(() => {
+                //     setLoading(false);
+                // },1000);
+
                 // Redirect back to url
                 navigate(from, { replace: true });
+                
             }
-        })
+        }, [])
+
+
     }, [])
 
     return (
