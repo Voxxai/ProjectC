@@ -36,9 +36,7 @@ function Nieuws() {
 
   return (
     <div>
-      <Topbar title="Nieuws" />
-
-      <div className="p-3 space-y-5 md:space-y-0 md:flex md:flex-wrap md:justify-between">
+      <div className="p-3 md:flex md:flex-wrap md:justify-between">
         {currentArticles.map((article) => (
           <div key={article.id} className="md:w-1/3 md:px-0">
             <NewsArticle
