@@ -36,9 +36,9 @@ function Nieuws() {
 
   return (
     <div>
-      <div className="p-3 space-y-5 md:space-y-0 md:flex md:flex-wrap md:justify-between">
+      <div className="p-3 grid grid-cols-3 gap-4 justify-items-center">
         {currentArticles.map((article) => (
-          <div key={article.id} className="md:w-1/3 md:px-0">
+          <div key={article.id} className="">
             <NewsArticle
               title={article.title}
               description={article.description}
