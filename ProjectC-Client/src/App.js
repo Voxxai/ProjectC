@@ -10,12 +10,11 @@ function App() {
   return (
     <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<Layout />}>
-        
+        <Route path='/Login' element={<Login />} />
           
         {/* Private Routes */}
         <Route element={<RequireAuth />} >
-          <Route path='/Login' element={<Login />} />
+          <Route path="/" element={<Layout />}>
           <Route index element={<WeekOverzicht />} />
           <Route path='/Evenementen' element={<WeekOverzicht />} />
           <Route path='/Nieuws' element={<WeekOverzicht />} />
