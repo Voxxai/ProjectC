@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faCalendarDays, faChevronLeft, faCircleHalfStroke, faCircleUser, faDashboard, faGear, faHome, faMoon, faSignOut, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faCalendarDays, faChevronDown, faChevronUp, faCircleHalfStroke, faCircleUser, faDashboard, faGear, faHome, faMoon, faSignOut, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import LogoIcon from '../images/Cavero_Icon_BW.png';
 import useAuth from '../hooks/useAuth';
 
@@ -49,6 +49,7 @@ function Topbar() {
           <button ref={profileMenu} className='flex gap-2 items-center' onClick={() => setOpen(!open)}>
             <FontAwesomeIcon icon={faCircleUser} className='fa-xl text-cavero-purple'/>
             <span className=''>Hallo, {auth.FirstName}</span>
+            <FontAwesomeIcon icon={!open ? faChevronDown : faChevronUp} />
           </button>
 
           {/* Dropdown menu */}
