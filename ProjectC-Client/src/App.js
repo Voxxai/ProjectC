@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Login from "./pages/Login";
-import Topbar from "./layout/Topbar";
-import Navbar from "./layout/Navbar";
+import Layout from './layout/Layout';
 import WeekOverzicht from "./pages/WeekOverzicht";
-import Nieuws from './pages/Nieuws';
-
+import RequireAuth from './components/RequireAuth';
 
 function App() {
   return (
-    <div>
-      
-        <main className='flex flex-row'>
-          <Navbar />
-          <div className='main-container'>
-            {/* <Login /> */}
-            <Nieuws />
-          </div>
-        </main>
-        </div>
+    <Routes>
+        {/* Public Routes */}
+        <Route path='/Login' element={<Login />} />
+          
+        {/* Private Routes */}
+        <Route element={<RequireAuth />} >
+          <Route path="/" element={<Layout />}>
+          <Route index element={<WeekOverzicht />} />
+          <Route path='/Evenementen' element={<WeekOverzicht />} />
+          <Route path='/Nieuws' element={<WeekOverzicht />} />
+          <Route path='/Morgen' element={<WeekOverzicht />} />
+         </Route> 
+      </Route>
+    </Routes>
   );
 }
 
