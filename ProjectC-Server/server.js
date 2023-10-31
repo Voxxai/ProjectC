@@ -30,12 +30,12 @@ app.use(session({
     }
 }))
 
-var db  = mysql.createConnection({
-    host            : '145.24.222.229', // localhost or 145.24.222.229
-    user            : 'caverogroep2',
-    password        : 'test1234',
-    database        : 'caverogroep2',
-    port            : '8321'
+var db = mysql.createConnection({
+    host: '145.24.222.229', // localhost or 145.24.222.229
+    user: 'caverogroep2',
+    password: 'test1234',
+    database: 'caverogroep2',
+    port: '8321'
 });
 
 db.connect();
@@ -70,23 +70,24 @@ app.post('/login', (req, res) => {
         if (result.length > 0) {
             // Create session with user results
             req.session.user = {
-                                ID: result[0].ID,
-                                Email: result[0].Email,
-                                Password: result[0].Wachtwoord, 
-                                FirstName: result[0].Voornaam, 
-                                LastName: result[0].Achternaam, 
-                                Level: result[0].Level
+                ID: result[0].ID,
+                Email: result[0].Email,
+                Password: result[0].Wachtwoord,
+                FirstName: result[0].Voornaam,
+                LastName: result[0].Achternaam,
+                Level: result[0].Level
             };
-            
+
             // Send JSON array back with data
-            res.json({ Login: true,
-                            ID: result[0].ID,
-                            Email: result[0].Email,
-                            Password: result[0].Wachtwoord, 
-                            FirstName: result[0].Voornaam, 
-                            LastName: result[0].Achternaam, 
-                            Level: result[0].Level
-                        });
+            res.json({
+                Login: true,
+                ID: result[0].ID,
+                Email: result[0].Email,
+                Password: result[0].Wachtwoord,
+                FirstName: result[0].Voornaam,
+                LastName: result[0].Achternaam,
+                Level: result[0].Level
+            });
         }
     });
 })
@@ -95,12 +96,12 @@ app.post('/login', (req, res) => {
 app.get("/signout", (req, res) => {
     res.clearCookie("userID");
     res.send({ signedOut: true });
-    res.end();    
+    res.end();
 })
 
 app.post('/insert_news', (req, res) => {
     const { title, description } = req.body;
-    
+
     const sql = 'INSERT INTO news (title, description) VALUES (?, ?)';
     db.query(sql, [title, description], (err, result) => {
         if (err) {
@@ -116,13 +117,19 @@ app.get('/news', (req, res) => {
     const sql = 'SELECT * FROM news';
     db.query(sql, (err, results) => {
         if (err) {
-        console.log(error)
-        res.status(500).json({ message: 'Error retrieving data' });
+            console.log(error)
+            res.status(500).json({ message: 'Error retrieving data' });
         } else {
-        res.send(results)
+            res.send(results)
         }
     });
 });
+
+app.get('/events', (request, response) => {
+    db.query("SELECT * FROM events", (error, result) => {
+        response.send(result);
+    });
+})
 
 app.listen(8080, () => {
     console.log("Server listing");
