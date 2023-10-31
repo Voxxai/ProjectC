@@ -1,33 +1,120 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import axios, { Axios } from 'axios';
 import "./Login.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightLong, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
+import useAuth from '../hooks/useAuth';
+import { Link, useNavigate, useLocation } from "react-router-dom";
+
+//TODO encrypt wachtwoord voordat het gestuurd wordt naar de server op de params.
+//Token meesturen als je bent ingelogd.
 
 function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const { setAuth } = useAuth();
 
-    const apiCall = () => {
-        console.log(email, password);
-        // axios.get(`http://localhost:8080/user_find/${email}&${password}`).then((data) => {
-        //     console.log(data);
-        // })
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+    const [loading, setLoading] = useState(false);
+
+    const [values, setValues] = useState({
+        email: '',
+        password: ''
+    });
+
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    axios.defaults.withCredentials = true;
+
+    const getUser = async () => {
+        if (!values.email.length > 0 || !values.password.length > 0) {
+            setErrorMessage("Vul elk veld in!");
+            setError(true);
+            return;
+        }
+        
+        setError(false);
+
+        try {
+            await axios.post(`http://localhost:8080/login`, values)
+            .then(response => {
+                if (response.data.Login) {
+                    // Login succes
+                    const ID = response.data.ID;
+                    const FirstName = response.data.FirstName;
+                    const LastName = response.data.LastName;
+                    const Email = response.data.Email;
+                    const Password = response.data.Wachtwoord;
+                    const Level = response.data.Level;
+    
+                    setAuth({ ID, FirstName, LastName, Email, Password, Level });
+                    navigate(from, { replace: true });
+                } else {
+                    setErrorMessage("Emailadres of wachtwoord klopt niet!");
+                    setError(true);
+                    return;
+                }
+
+            }).catch(err => {
+                    console.log(err);
+            });
+
+        } catch (err) {
+            console.log(err);
+        }
     }
 
+    const handleInput = (e) => {
+        setValues(prev => ({ ...prev, [e.target.name]: [e.target.value] }));
+    }
+
+    useEffect(() => {
+        // show loading spinner
+        // setLoading(true);
+
+        axios.get(`http://localhost:8080/login`).then((response) => {
+            if (response.data.loggedIn == true) {
+                const ID = response.data.user.ID;
+                const FirstName = response.data.user.FirstName;
+                const LastName = response.data.user.LastName;
+                const Email = response.data.user.Email;
+                const Password = response.data.user.Wachtwoord;
+                const Level = response.data.user.Level;
+                
+                // Storing the user details to the authenticate
+                setAuth({ ID, FirstName, LastName, Email, Password, Level });
+                
+                // hide loading spinner
+                // setTimeout(() => {
+                //     setLoading(false);
+                // },1000);
+
+                // Redirect back to url
+                navigate(from, { replace: true });
+                
+            }
+        }, [])
+
+
+    }, [])
+
     return (
-        <div className='bg-gradient-to-r from-white to-cavero-purple-light'>
+        <div className='bg-gradient-to-br from-white to-cavero-purple-light'>
             <div className='login-container h-screen w-screen flex items-center justify-center'>
-                <div className='form-login mb-32 bg-white shadow-2xl shadow-cavero-purple-light'>
+                <div className='form-login mb-32 bg-white shadow-2xl shadow-cavero-purple-light rounded'>
                     <div className='mt-6'>
                         <h1>Login bij Cavero</h1>
                         <p>Je kunt bij Cavero inloggen met de volgende gegevens.</p>
+                    </div>
+                    <div className={`bg-red-200 h-10 rounded flex mb-1 ${!error && 'hidden'}`}>
+                        <p className='text-black my-auto p-2 text-sm'>{errorMessage}</p>
                     </div>
                 <form>
                     <div className='input-container'>
                     <div className='input-group'>
                         <FontAwesomeIcon icon={faEnvelope} color='black' className='field-icon'/>
-                        <input type="email" className='field-input' id="email" placeholder="E-mailadres" onChange={e => setEmail(e.target.value)}/>
+                        <input type="email" className='field-input' name='email' id="email" placeholder="E-mailadres" onChange={handleInput} required/>
                     </div>
                     <div className='ColoredLine'></div>
                     </div>
@@ -35,13 +122,13 @@ function Login() {
                     <div className='input-container'>
                     <div className='input-group'>
                         <FontAwesomeIcon icon={faLock} color='black' className='field-icon'/>
-                        <input type="password" className='field-input' id="password" placeholder="Wachtwoord" onChange={e => setPassword(e.target.value)}/>
+                        <input type="password" className='field-input' name='password' id="password" placeholder="Wachtwoord" onChange={handleInput} required/>
                     </div>
                     <div className='ColoredLine'></div>
                     </div>
                     <div className='form-extras'>
                     <a>Wachtwoord vergeten?</a>
-                    <button type="submit" className='btn-submit' onClick={apiCall}>Login <FontAwesomeIcon icon={faArrowRightLong} color='white'/></button>
+                    <button type="button" className='btn-submit' onClick={getUser}>Login <FontAwesomeIcon icon={faArrowRightLong} color='white'/></button>
                     </div>
                     
                 </form>
