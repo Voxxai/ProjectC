@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { Outlet, Link } from "react-router-dom";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faCalendarDays, faChevronLeft, faCircleHalfStroke, faCircleUser, faDashboard, faGear, faHome, faMoon, faSignOut, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +9,7 @@ import useAuth from '../hooks/useAuth';
 
 function Topbar() {
   const { auth } = useAuth();
+  const navigate = useNavigate();
   const profileMenu = useRef(null)
   const [open, setOpen] = useState(false);
 
@@ -24,10 +26,19 @@ function Topbar() {
   }
 
   document.addEventListener('mousedown',closeOpenMenus);
+
+  const handleSignOut = () => {
+    axios.get(`http://localhost:8080/signout`).then((response) => {
+            if (response.data.signedOut == true) {
+              // Redirect back to login
+              navigate("/Login");
+            }
+        })
+  }
   
   // console.log(auth);
   return (
-    <div className='Topbar bg-white shadow-md w-full h-20 flex justify-between items-center px-4'>
+    <div className='bg-white shadow-md w-full h-20 flex justify-between items-center px-4'>
         {/* Header */}
         <div className='items-center mt-2'>
             <h2 className=''>Week Overzicht</h2>
@@ -55,9 +66,7 @@ function Topbar() {
           {/* Next items */}
           <div className='flex gap-3 fa-lg items-center'>
             <FontAwesomeIcon icon={faBell} className='text-cavero-purple duration-300 hover:scale-110'/>
-            <Link to={"/Login"}>
-              <FontAwesomeIcon icon={faSignOut} className='text-cavero-purple duration-300 hover:scale-110'/>
-            </Link>
+            <FontAwesomeIcon icon={faSignOut} className='text-cavero-purple duration-300 hover:scale-110' onClick={handleSignOut}/>
           </div>
         </div>
     

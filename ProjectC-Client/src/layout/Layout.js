@@ -3,6 +3,8 @@ import Navbar from "./Navbar";
 import { useAuth } from "../components/auth";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 
 function Layout() {
