@@ -36,6 +36,12 @@ app.get('/login/:email&:ww', (request, response) => {
     });
 })
 
+app.get('/events', (request, response) => {
+    db.query("SELECT * FROM events", (error, result) => {
+        response.send(result);
+    });
+})
+
 app.listen(8080, () => {
     console.log("Server listing");
 })
