@@ -69,8 +69,8 @@ function Topbar() {
             <FontAwesomeIcon icon={faSignOut} className='text-cavero-purple duration-300 hover:scale-110' onClick={handleSignOut}/>
           </div>
         </div>
-    
     </div>
   );
-};
+}
+
 export default Topbar;
