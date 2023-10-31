@@ -98,6 +98,32 @@ app.get("/signout", (req, res) => {
     res.end();    
 })
 
+app.post('/insert_news', (req, res) => {
+    const { title, description } = req.body;
+    
+    const sql = 'INSERT INTO news (title, description) VALUES (?, ?)';
+    db.query(sql, [title, description], (err, result) => {
+        if (err) {
+            console.log(error)
+            res.status(500).json({ message: 'Error inserting data' });
+        } else {
+            res.status(200).json({ message: 'Data inserted successfully' });
+        }
+    });
+});
+
+app.get('/news', (req, res) => {
+    const sql = 'SELECT * FROM news';
+    db.query(sql, (err, results) => {
+        if (err) {
+        console.log(error)
+        res.status(500).json({ message: 'Error retrieving data' });
+        } else {
+        res.send(results)
+        }
+    });
+});
+
 app.listen(8080, () => {
     console.log("Server listing");
 })
