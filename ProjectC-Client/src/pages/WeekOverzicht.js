@@ -33,7 +33,6 @@ function WeekOverzicht() {
         // Set dates into a state
         setDates(week);
         getEvents();
-        console.log(events[0]);
     }, [])
 
     // console.log(dates);
@@ -97,7 +96,13 @@ function WeekOverzicht() {
                             <span className="text-slate-700 text-3xl font-medium">{dates[index].Day}</span>
                             <span className='text-slate-700 text-lg font-semibold'>{dates[index].Month}</span>
                         </div>
-                        <div className='flex flex-row bg-black'>
+                        <div className='flex flex-row'>
+                            {events.map((event, index) => (
+                                <div className='flex flex-col'>
+                                    <span className='text-slate-700 text-sm font-semibold'>{event.Title}</span>
+                                    <span className='text-slate-700 text-sm font-semibold'>{event.Location}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 ))}
