@@ -26,8 +26,9 @@ function WeekOverzicht() {
                         Month:  getMonthName(day.getMonth()),
                         Year:  day.getFullYear(),
                         Week: getDayName(day.getDay()),
-                        Events: [getEvents()]
+                        Events: [getEvents(day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate())]
                     })
+
         }
 
         // Set dates into a state
@@ -49,31 +50,14 @@ function WeekOverzicht() {
         return dayNames[day];
     }
 
-    async function getEvents(date) {
-        setError(false);
-        let tempEvents = [];
+    const getEvents = async (date) => {
         try {
-            const response = await axios.get(`http://localhost:8080/events/${date}`);
-            if (response.data.length > 0) {
-                for (let i = 0; i < response.data.length; i++) {;
-                    const ID = response.data[i].ID;
-                    const Title = response.data[i].Titel;
-                    const Description = response.data[i].Samenvatting;
-                    const Location = response.data[i].Locatie;
-                    const Date = response.data[i].Datum;
-                    const Level = response.data[i].Level;
-                    tempEvents.push({ ID : ID, 
-                                    Title : Title,
-                                    Description : Description, 
-                                    Location : Location, 
-                                    Date : Date, 
-                                    Level : Level });
-                }
-                return tempEvents;
-
+            const response = await axios.post(`http://localhost:8080/events/${date}`);
+            if (response.data.length > 0) {           
+                return response.data;
+                
             } else {
-                setError(true);
-                return;
+                return null;
             }
 
         }
@@ -81,6 +65,7 @@ function WeekOverzicht() {
             console.log(err);
         }
     }
+
     console.log(dates);
     return (
         <div className="flex flex-row h-full bg-slate-100">
@@ -89,23 +74,24 @@ function WeekOverzicht() {
                 {/* Items */}
                 {dates.map((Date, index) => (
                     <div className="bg-white rounded-md text-gray-400 w-3/12 p-2 shadow-md">
-                        <span className='font-medium text-lg'>{dates[index].Week}</span>
+                        <span className='font-medium text-lg'>{Date.Week}</span>
                         <div className="flex flex-row text-black items-end gap-1.5">
-                            <span className="text-slate-700 text-3xl font-medium">{dates[index].Day}</span>
-                            <span className='text-slate-700 text-lg font-semibold'>{dates[index].Month}</span>
+                            <span className="text-slate-700 text-3xl font-medium">{Date.Day}</span>
+                            <span className='text-slate-700 text-lg font-semibold'>{Date.Month}</span>
                         </div>
                         {/* events card */}
-                        {/* {dates[index].Events.map((event, index) => (
-                        <div className='flex flex-row bg-cavero-purple-light rounded-md p-2 m-2'>
+                        {dates[index].Events.map((event, index2) => (
+                        <div className='flex flex-row bg-cavero-purple-light rounded-md p-2'>
+                            {console.log(event.Titel)}
                                 <div className='flex flex-row place-items-center gap-x-2'>
-                                    <FontAwesomeIcon icon={faCircle} className='text-cavero-hover-purple text-xs'/>
+                                    <div className='w-2.5 h-2.5 bg-cavero-purple rounded-full'></div>
                                     <div className='flex flex-col'>
-                                        <span className='text-black text-sm font-semibold'>{event.Title}</span>
+                                        <span className='text-black text-sm font-semibold'>{event.Titel}</span>
                                         <span className='text-black text-xs font-semibold'>{event.Location}</span>
                                     </div>
                                 </div>
                         </div>
-                        ))} */}
+                        ))}
                     </div>
                 ))}
 
