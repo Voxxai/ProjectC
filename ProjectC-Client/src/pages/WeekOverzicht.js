@@ -1,6 +1,7 @@
 // import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {  } from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios';
 
 
 import React, { useEffect, useState } from 'react';
@@ -8,6 +9,8 @@ import React, { useEffect, useState } from 'react';
 
 function WeekOverzicht() {
     const [ dates, setDates ] = useState([]);
+    const [ error, setError ] = useState(false);
+    const [events, setEvents] = useState([]);
 
     // Onload set dates of this week
     useEffect(() => {
@@ -29,9 +32,13 @@ function WeekOverzicht() {
 
         // Set dates into a state
         setDates(week);
+        getEvents();
+        console.log(events[0]);
     }, [])
 
     // console.log(dates);
+
+
 
     function getMonthName(month) {
         var monthNames = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun",
@@ -45,6 +52,38 @@ function WeekOverzicht() {
         return dayNames[day];
     }
 
+    async function getEvents() {
+        setError(false);
+        let tempEvents = [];
+        try {
+            const response = await axios.get(`http://localhost:8080/events`);
+            if (response.data.length > 0) {
+                for (let i = 0; i < response.data.length; i++) {;
+                    const ID = response.data[i].ID;
+                    const Title = response.data[i].Titel;
+                    const Description = response.data[i].Samenvatting;
+                    const Location = response.data[i].Locatie;
+                    const Date = response.data[i].Datum;
+                    const Level = response.data[i].Level;
+                    tempEvents.push({ ID : ID, 
+                                    Title : Title,
+                                    Description : Description, 
+                                    Location : Location, 
+                                    Date : Date, 
+                                    Level : Level });
+                }
+                setEvents(tempEvents);
+
+            } else {
+                setError(true);
+                return;
+            }
+
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <div className="flex flex-row h-full bg-slate-100">
@@ -57,6 +96,8 @@ function WeekOverzicht() {
                         <div className="flex flex-row text-black items-end gap-1.5">
                             <span className="text-slate-700 text-3xl font-medium">{dates[index].Day}</span>
                             <span className='text-slate-700 text-lg font-semibold'>{dates[index].Month}</span>
+                        </div>
+                        <div className='flex flex-row bg-black'>
                         </div>
                     </div>
                 ))}
