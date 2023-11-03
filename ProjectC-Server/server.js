@@ -42,7 +42,7 @@ app.get('/events', (request, response) => {
     });
 })
 
-app.post('/events/:date', (request, response) => {
+app.get('/events/:date', (request, response) => {
     db.query(`SELECT * FROM events WHERE Datum = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
         
@@ -51,8 +51,10 @@ app.post('/events/:date', (request, response) => {
 })
 
 
-app.get('/users_day', (request, response) => {
-    db.query("SELECT * FROM Werknemer_rooster", (error, result) => {
+app.get('/users_day/:date', (request, response) => {
+    db.query(`SELECT * FROM Werknemer_rooster WHERE Date = "${request.params.date}"`, (error, result) => {
+        if (error) console.log(error);
+        
         response.send(result);
     });
 })
