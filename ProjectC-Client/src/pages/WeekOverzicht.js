@@ -1,7 +1,7 @@
 // import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
-import axios from 'axios';
+import axios, { all } from 'axios';
 
 
 import React, { useEffect, useState } from 'react';
@@ -10,30 +10,74 @@ import React, { useEffect, useState } from 'react';
 function WeekOverzicht() {
     const [ dates, setDates ] = useState([]);
     const [ error, setError ] = useState(false);
+    const [ events, setEvents ] = useState([]);
+const [ users, setUsers ] = useState([]);
 
-    // Onload set dates of this week
-    useEffect(() => {
-        let curr = new Date
-        let week = []
+// Onload set dates of this week
+useEffect(() => {
+    const curr = new Date();
+    const week = [];
+
+    const getEvents = async (date) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/events/${date}`);
+            return response.data;
+        }
+        catch (err) {
+            console.log(err);
+            return [];
+        }
+    }
+
+    const getUsers = async (date) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/users_day/${date}`);
+            return response.data;
+        }
+        catch (err) {
+            console.log(err);
+            return [];
+        }
+    }
+
+    const fetchData = async () => {
+        const eventPromises = [];
+        const userPromises = [];
 
         for (let i = 1; i <= 5; i++) {
-            let first = curr.getDate() - curr.getDay() + i 
-            let day = new Date(curr.setDate(first));
+            const first = curr.getDate() - curr.getDay() + i;
+            const day = new Date(curr.setDate(first));
+            const dateString = day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
 
-            // Formatting every date item if needed
-            week.push({ Date: day,
-                        Day:  day.getDate(),
-                        Month:  getMonthName(day.getMonth()),
-                        Year:  day.getFullYear(),
-                        Week: getDayName(day.getDay()),
-                        Events: [getEvents(day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate())]
-                    })
-
+            eventPromises.push(getEvents(dateString));
+            userPromises.push(getUsers(dateString));
         }
 
-        // Set dates into a state
+        const eventData = await Promise.all(eventPromises);
+        const userData = await Promise.all(userPromises);
+
+        for (let i = 1; i <= 5; i++) {
+            const first = curr.getDate() - curr.getDay() + i;
+            const day = new Date(curr.setDate(first));
+
+            week.push({
+                Date: day,
+                Day: day.getDate(),
+                Month: getMonthName(day.getMonth()),
+                Year: day.getFullYear(),
+                Week: getDayName(day.getDay()),
+                Events: eventData[i - 1],
+                Users: userData[i - 1]
+            });
+        }
+
+        setEvents(eventData.flat()); // Flattening the array if needed
+        setUsers(userData.flat()); // Flattening the array if needed
         setDates(week);
-    }, [])
+    }
+
+    fetchData();
+}, []);
 
 
 
@@ -50,54 +94,7 @@ function WeekOverzicht() {
         return dayNames[day];
     }
 
-    const getEvents = async (date) => {
-        try {
-            const response = await axios.post(`http://localhost:8080/events/${date}`);
-            if (response.data.length > 0) {           
-                return response.data;
-                
-            } else {
-                return null;
-            }
-
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-
-    async function getUsers() {
-        setError(false);
-        let tempUsers = [];
-        try {
-            const response = await axios.get(`http://localhost:8080/users_day`);
-            if (response.data.length > 0) {
-                for (let i = 0; i < response.data.length; i++) {;
-                    const ID = response.data[i].ID;
-                    const AccountID = response.data[i].Account_ID;
-                    const Date = response.data[i].Date;
-                    const Room = response.data[i].Room;
-                    
-                    tempUsers.push({ ID : ID, 
-                                    AccountID : AccountID,
-                                    Date : Date,
-                                    Room : Room
-                                    });
-                }
-                // setUsers(tempUsers);
-
-            } else {
-                setError(true);
-                return;
-            }
-
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-
-    console.log(dates);
+    // console.log(dates);
 
     return (
         <div className="flex flex-row h-full bg-slate-100">
@@ -111,29 +108,31 @@ function WeekOverzicht() {
                             <span className="text-slate-700 text-3xl font-medium">{Date.Day}</span>
                             <span className='text-slate-700 text-lg font-semibold'>{Date.Month}</span>
                         </div>
+
+                        {/* Items Users */}
+                        <div className='flex flex-row'>
+                            {dates[index].Users.map((user, index) => (
+                                 <div className='flex flex-col'>
+                                    <span className='text-slate-700 text-sm font-semibold'>{user.Account_ID}</span>
+                                     <span className='text-slate-700 text-sm font-semibold'>{user.Date}</span>
+                                 </div>
+                            ))}
+
+                        </div>
+
                         {/* events card */}
                         {dates[index].Events.map((event, index2) => (
-                            <div className='flex flex-row bg-cavero-purple-light rounded-md p-2'>
-                                {console.log(event.Titel)}
+                            <div className='flex flex-row bg-cavero-purple-light rounded-md p-2 my-1'>
+                                {/* {console.log(event.Titel)} */}
                                     <div className='flex flex-row place-items-center gap-x-2'>
                                         <div className='w-2.5 h-2.5 bg-cavero-purple rounded-full'></div>
                                         <div className='flex flex-col'>
                                             <span className='text-black text-sm font-semibold'>{event.Titel}</span>
-                                            <span className='text-black text-xs font-semibold'>{event.Location}</span>
+                                            <span className='text-black text-xs font-semibold'>{event.Datum}</span>
                                         </div>
                                     </div>
                             </div>
                         ))}
-
-                         {/* Items Users
-                         <div className='flex flex-row'>
-                             {users.map((user, index) => (
-                                 <div className='flex flex-col'>
-                                    <span className='text-slate-700 text-sm font-semibold'>{user.AccountID}</span>
-                                     <span className='text-slate-700 text-sm font-semibold'>{user.Date}</span>
-                                 </div> */}
-                            
-
                     </div>
                 ))}
 
