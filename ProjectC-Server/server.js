@@ -178,7 +178,9 @@ app.get('/events', (request, response) => {
 
 app.post('/events/:date', (request, response) => {
     db.query(`SELECT * FROM events WHERE Datum = "${request.params.date}"`, (error, result) => {
-        response.send(result);
+        if (error) console.log(error);
+        
+        response.json(result);
     });
 })
 
