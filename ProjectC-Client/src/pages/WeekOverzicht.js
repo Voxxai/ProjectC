@@ -1,6 +1,6 @@
 // import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {  } from '@fortawesome/free-solid-svg-icons'
+import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
 
 
@@ -10,7 +10,6 @@ import React, { useEffect, useState } from 'react';
 function WeekOverzicht() {
     const [ dates, setDates ] = useState([]);
     const [ error, setError ] = useState(false);
-    const [events, setEvents] = useState([]);
 
     // Onload set dates of this week
     useEffect(() => {
@@ -26,16 +25,15 @@ function WeekOverzicht() {
                         Day:  day.getDate(),
                         Month:  getMonthName(day.getMonth()),
                         Year:  day.getFullYear(),
-                        Week: getDayName(day.getDay())
+                        Week: getDayName(day.getDay()),
+                        Events: [getEvents()]
                     })
         }
 
         // Set dates into a state
         setDates(week);
-        getEvents();
     }, [])
 
-    // console.log(dates);
 
 
 
@@ -51,11 +49,11 @@ function WeekOverzicht() {
         return dayNames[day];
     }
 
-    async function getEvents() {
+    async function getEvents(date) {
         setError(false);
         let tempEvents = [];
         try {
-            const response = await axios.get(`http://localhost:8080/events`);
+            const response = await axios.get(`http://localhost:8080/events/${date}`);
             if (response.data.length > 0) {
                 for (let i = 0; i < response.data.length; i++) {;
                     const ID = response.data[i].ID;
@@ -71,7 +69,7 @@ function WeekOverzicht() {
                                     Date : Date, 
                                     Level : Level });
                 }
-                setEvents(tempEvents);
+                return tempEvents;
 
             } else {
                 setError(true);
@@ -83,7 +81,7 @@ function WeekOverzicht() {
             console.log(err);
         }
     }
-
+    console.log(dates);
     return (
         <div className="flex flex-row h-full bg-slate-100">
             <div className="flex w-full p-4 gap-x-4">
@@ -96,14 +94,18 @@ function WeekOverzicht() {
                             <span className="text-slate-700 text-3xl font-medium">{dates[index].Day}</span>
                             <span className='text-slate-700 text-lg font-semibold'>{dates[index].Month}</span>
                         </div>
-                        <div className='flex flex-row'>
-                            {events.map((event, index) => (
-                                <div className='flex flex-col'>
-                                    <span className='text-slate-700 text-sm font-semibold'>{event.Title}</span>
-                                    <span className='text-slate-700 text-sm font-semibold'>{event.Location}</span>
+                        {/* events card */}
+                        {/* {dates[index].Events.map((event, index) => (
+                        <div className='flex flex-row bg-cavero-purple-light rounded-md p-2 m-2'>
+                                <div className='flex flex-row place-items-center gap-x-2'>
+                                    <FontAwesomeIcon icon={faCircle} className='text-cavero-hover-purple text-xs'/>
+                                    <div className='flex flex-col'>
+                                        <span className='text-black text-sm font-semibold'>{event.Title}</span>
+                                        <span className='text-black text-xs font-semibold'>{event.Location}</span>
+                                    </div>
                                 </div>
-                            ))}
                         </div>
+                        ))} */}
                     </div>
                 ))}
 
