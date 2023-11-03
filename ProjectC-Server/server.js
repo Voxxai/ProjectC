@@ -42,6 +42,12 @@ app.get('/events', (request, response) => {
     });
 })
 
+app.post('/events/:date', (request, response) => {
+    db.query(`SELECT * FROM events WHERE Datum = "${request.params.date}"`, (error, result) => {
+        response.send(result);
+    });
+})
+
 app.listen(8080, () => {
     console.log("Server listing");
 })
