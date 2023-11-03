@@ -180,7 +180,14 @@ app.post('/events/:date', (request, response) => {
     db.query(`SELECT * FROM events WHERE Datum = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
         
-        response.json(result);
+        response.send(result);
+    });
+})
+
+
+app.get('/users_day', (request, response) => {
+    db.query("SELECT * FROM Werknemer_rooster", (error, result) => {
+        response.send(result);
     });
 })
 
