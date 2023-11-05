@@ -186,7 +186,7 @@ app.get('/events/:date', (request, response) => {
 
 
 app.get('/users_day/:date', (request, response) => {
-    db.query(`SELECT * FROM Werknemer_rooster WHERE Date = "${request.params.date}"`, (error, result) => {
+    db.query(`SELECT accounts.Voornaam, accounts.Achternaam, Werknemer_rooster.Date FROM Werknemer_rooster LEFT JOIN accounts ON Werknemer_rooster.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
         
         response.send(result);
