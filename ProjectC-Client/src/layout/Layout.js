@@ -12,7 +12,7 @@ function Layout() {
         <main className='flex flex-row'>
             <Navbar/>
             
-            <div className="maincontainer flex-1">
+            <div className="flex-1 flex flex-col">
             <Topbar/>
                 <Outlet />
             </div>
