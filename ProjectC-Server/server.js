@@ -50,6 +50,21 @@ app.get('/users', (req, res) => {
     });
 })
 
+app.post('/user_update', (req, res) => {
+    const ID = req.body.ID;
+    const Email = req.body.Email;
+    const FirstName = req.body.FirstName;
+    const LastName = req.body.LastName;
+
+    db.query("UPDATE accounts SET Email=?, Voornaam=?, Achternaam=? WHERE ID = ?", [Email, FirstName, LastName, ID], (error, result) => {
+        if (error) res.send(false);
+
+        res.send(true);
+    });
+
+
+})
+
 // Login GET
 app.get("/login", (req, res) => {
     if (req.session.user) {
@@ -64,7 +79,7 @@ app.post('/login', (req, res) => {
     const email = req.body.email;
     const password = sha1(req.body.password);
 
-    db.query(`SELECT * FROM accounts WHERE Email = '${email}' AND Wachtwoord = '${password}'`, (error, result) => {
+    db.query(`SELECT * FROM accounts WHERE Email = ? AND Wachtwoord = ?`, [email, password],(error, result) => {
         if (error) res.send(false);
 
         if (result.length > 0) {
