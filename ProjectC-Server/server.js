@@ -65,6 +65,30 @@ app.post('/user_update', (req, res) => {
 
 })
 
+//Update Session cookie
+app.post("/session_update", (req, res) => {
+    const Email = req.body.Email;
+    const FirstName = req.body.FirstName;
+    const LastName = req.body.LastName;
+
+    if (req.session.user) {
+        req.session.user = {
+            ID: req.session.ID,
+            Email: Email,
+            Password: req.session.Wachtwoord,
+            FirstName: FirstName,
+            LastName: LastName,
+            Level: req.session.Level
+        };
+
+        req.session.save();
+        res.send(true);
+    } else {
+        res.send(false);
+    }
+})
+
+
 // Login GET
 app.get("/login", (req, res) => {
     if (req.session.user) {
