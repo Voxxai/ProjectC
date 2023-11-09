@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faCheckCircle, faPen, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faCheckCircle, faPen, faSpinner, faUser } from '@fortawesome/free-solid-svg-icons'
 import useAuth from '../hooks/useAuth';
-import { Link, Outlet } from 'react-router-dom';
 import axios from 'axios';
 
 
 function Profile() {
   const { auth, setAuth } = useAuth();
+
+  const [ loading, setLoading ] = useState(false);
+  const [ hidden, setHidden ] = useState(true);
+
   const [ error, setError ] = useState(false);
-  const [ errorSuccesfull, seterrorSuccesfull ] = useState(false);
-  const [ errorMessage, setErrorMessage ] = useState("Gegevens zijn aangepast!");
+
+  const [ changed, setChanged ] = useState(false);
+
+  // Setting default values to fields
   const [ ProfileValues, setProfileValues ] = useState({
     ID: auth.ID,
     FirstName: auth.FirstName,
@@ -19,11 +24,22 @@ function Profile() {
   });
 
   const SaveProfile = async (e)=>{
+    // Check if values are changed before sending request
+    if (!changed) return;
+    
+    // Show loading icon
+    setLoading(true);
+    setHidden(false);
+
+    // Trying to update user to new values
     try {
       await axios.post(`http://localhost:8080/user_update`, ProfileValues)
       .then(response => {
           if (response) {
               // Update succesfull
+              setChanged(false);
+
+              // Change auth values
               setAuth(
                 {
                   FirstName: ProfileValues.FirstName,
@@ -32,9 +48,32 @@ function Profile() {
                 }
               );
 
+              // Trying to update session cookie to new values
+              try {
+                axios.post(`http://localhost:8080/session_update`, ProfileValues)
+                .then(response => {
+                    if (response) {
+                        // Sesison update succesfull
+                        return;
+                    } else {
+                        console.log("Opnieuw inloggen");
+                    }
+        
+                }).catch(err => {
+                        console.log(err);
+                });
+        
+              } catch (err) {
+                  console.log(err);
+              }
+
+              // Hide loading icon
+              setTimeout(() => {
+                setLoading(false);
+              }, 1500)
+              
+
             return
-          } else {
-              return;
           }
 
       }).catch(err => {
@@ -46,18 +85,16 @@ function Profile() {
     }
   }
 
+  // Update values on change and set changed to true for the request to be send
   const onChangeValues = (e) => {
     setProfileValues(prev => ({ ...prev, [e.target.name]: [e.target.value] }));
+    setChanged(true);
   };
 
   return (
     <div className='flex flex-col gap-y-2 p-4 w-full'>
       <div className='flex'>
       <span className='font-semibold text-2xl text-cavero-purple'>Uw profiel</span>
-      </div>
-
-      <div className={`bg-red-200 h-10 rounded flex mb-1 ${!error && 'hidden'}`}>
-        <span>{errorMessage}</span>
       </div>
 
       <div className='flex flex-col mb-10'>
@@ -89,7 +126,7 @@ function Profile() {
       <div className='flex flex-row-reverse'>
         <button type='submit' onClick={SaveProfile} className='flex gap-x-1.5 items-center justify-center px-4 py-1.5 bg-cavero-purple rounded-md text-white hover:bg-cavero-purple-dark hover:scale-105 duration-200'>
           Opslaan
-          <FontAwesomeIcon icon={faCheck}/>
+          <FontAwesomeIcon icon={loading ? faSpinner : faCheck} className={`${loading ? "animate-spin" : ""} ${hidden ? 'hidden' : ''}`}/>
           </button>
       </div>
         
