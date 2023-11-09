@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import useAuth from '../hooks/useAuth';
 import { Link, Outlet } from 'react-router-dom';
+import { Resend } from 'resend';
+import Email from '../hooks/email';
 
 
 function Profile() {
@@ -10,6 +12,10 @@ function Profile() {
   const [ ProfileValues, setProfileValues ] = useState({
     
   });
+
+  const sendEmail = async (e)=>{
+    
+  }
 
   return (
     <div className='flex flex-col gap-y-2 p-4 w-full'>
@@ -25,6 +31,8 @@ function Profile() {
             <span className='w-2/5 h-4/5 bg-gray-500 absolute rounded-full left-1 top-1 peer-checked:bg-cavero-purple peer-checked:left-11 transition-all duration-300 '></span>
         </label>
       </div>
+
+      {/* <button className='flex flex-row gap-x-2 items-center justify-center w-full h-10 bg-cavero-purple rounded-md text-white hover:bg-cavero-purple-dark duration-200 scale-95' onClick={sendEmail()}>Klik me</button> */}
         
     </div>
   );
