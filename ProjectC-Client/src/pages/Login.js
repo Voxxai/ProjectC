@@ -104,8 +104,8 @@ function Login() {
             <div className='login-container h-screen w-screen flex items-center justify-center'>
                 <div className='form-login mb-32 bg-white shadow-2xl shadow-cavero-purple-light rounded'>
                     <div className='mt-6'>
-                        <h1>Login bij Cavero</h1>
-                        <p>Je kunt bij Cavero inloggen met de volgende gegevens.</p>
+                        <h1 className='text-cavero-purple font-semibold'>Login bij Cavero</h1>
+                        <p className='text-gray-600 text-md'>Je kunt bij Cavero inloggen met de volgende gegevens.</p>
                     </div>
                     <div className={`bg-red-200 h-10 rounded flex mb-1 ${!error && 'hidden'}`}>
                         <p className='text-black my-auto p-2 text-sm'>{errorMessage}</p>
