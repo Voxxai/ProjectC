@@ -49,7 +49,7 @@ function Topbar() {
           <button ref={profileMenu} className='flex gap-2 items-center' onClick={() => setOpen(!open)}>
             <FontAwesomeIcon icon={faCircleUser} className='fa-xl text-cavero-purple'/>
             <span className=''>Hallo, {auth.FirstName}</span>
-            <FontAwesomeIcon icon={!open ? faChevronDown : faChevronUp} />
+            <FontAwesomeIcon icon={faChevronDown} className={`${open && "rotate-180"} duration-100`}/>
           </button>
 
           {/* Dropdown menu */}
