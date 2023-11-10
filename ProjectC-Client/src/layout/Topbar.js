@@ -14,8 +14,7 @@ function Topbar() {
 
   const Menus = [
         { title: "Profiel weergeven", src: faUser, link: "/instellingen/profiel" },
-        { title: "Theme", src: faCircleHalfStroke, link: "/" },
-        { title: "Instellingen", src: faGear, link: "/instellingen" },
+        { title: "Instellingen", src: faGear, link: "/instellingen/options" },
     ];
 
   const closeOpenMenus = (e)=>{
