@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import useAuth from '../hooks/useAuth';
 import { Link, Outlet } from 'react-router-dom';
-import { Resend } from 'resend';
-import Email from '../hooks/email';
 
 
 function Profile() {
