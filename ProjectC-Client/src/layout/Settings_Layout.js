@@ -11,15 +11,14 @@ function Settings() {
   const Menus = [
     { title: "Profiel", src: faUser, link: "/instellingen/profiel" },
     { title: "Beveiliging", src: faLock, link: "/instellingen/security" },
-    { title: "Instellingen", src: faGear, link: "/instellingen" },
+    { title: "Instellingen", src: faGear, link: "/instellingen/options" },
 ];
 
   return (
-    <div className="flex flex-row h-full bg-slate-100">
-      <div className="flex w-full">
-        <div className='flex flex-row bg-white h-5/6 m-auto w-4/6 p-4 rounded-md'>
+    <div className="flex h-full bg-slate-100 ">
+        <div className='flex bg-white h-5/6 m-auto w-4/6 p-4 rounded-md'>
           <div className='flex flex-col w-3/12'>
-            <span className='text-md italic font-semibold text-gray-400'>Account</span>
+            <span className='text-md italic font-semibol text-gray-400'>Account</span>
             <span className='text-xl'>{auth.FirstName} {auth.LastName}</span>
 
             {/* Nav Items */}
@@ -39,7 +38,6 @@ function Settings() {
             <Outlet />
           </div>
         </div>
-      </div>
     </div>
   );
 }
