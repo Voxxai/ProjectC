@@ -36,9 +36,25 @@ app.get('/login/:email&:ww', (request, response) => {
     });
 })
 
+function formatDate(date) {
+    const hoursToAdd = 1 * 60 * 60 * 1000;
+    date.setTime(date.getTime() + hoursToAdd);
+    return date;
+  }
+
 app.get('/events', (request, response) => {
+    
     db.query("SELECT * FROM events", (error, result) => {
-        response.send(result);
+        response.send(result.map((event) => {
+            return {
+                ID: event.ID,
+                Date: formatDate(event.Date),
+                Title: event.Title,
+                Description: event.Description,
+                Location: event.Location,
+                Level: event.Level
+            }
+        }));
     });
 })
 
@@ -46,7 +62,16 @@ app.get('/events/:date', (request, response) => {
     db.query(`SELECT * FROM events WHERE Date = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
         
-        response.send(result);
+        response.send(result.map((event) => {
+            return {
+                ID: event.ID,
+                Date: formatDate(event.Date),
+                Title: event.Title,
+                Description: event.Description,
+                Location: event.Location,
+                Level: event.Level
+            }
+        }));
     });
 })
 
