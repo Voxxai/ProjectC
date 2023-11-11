@@ -23,6 +23,7 @@ useEffect(() => {
     const getEvents = async (date) => {
         try {
             const response = await axios.get(`http://localhost:8080/events/${date}`);
+            console.log(response.data);
             return response.data;
         }
         catch (err) {
@@ -81,9 +82,6 @@ useEffect(() => {
     fetchData();
 }, []);
 
-
-
-
     function getMonthName(month) {
         var monthNames = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun",
             "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
@@ -139,8 +137,8 @@ useEffect(() => {
                                     <div className='flex flex-row place-items-center gap-x-2'>
                                         <div className='w-2.5 h-2.5 bg-cavero-purple rounded-full'></div>
                                         <div className='flex flex-col'>
-                                            <span className='text-black text-sm font-semibold'>{event.Titel}</span>
-                                            <span className='text-black text-xs font-semibold'>{event.Datum}</span>
+                                            <span className='text-black text-sm font-semibold'>{event.Title}</span>
+                                            <span className='text-black text-xs font-semibold'>{event.Date}</span>
                                         </div>
                                     </div>
                             </div>
