@@ -101,7 +101,7 @@ app.get("/login", (req, res) => {
 // Login POST
 app.post('/login', (req, res) => {
     const email = req.body.email;
-    const password = sha1(req.body.password);
+    const password = req.body.password;
 
     db.query(`SELECT * FROM accounts WHERE Email = ? AND Wachtwoord = ?`, [email, password],(error, result) => {
         if (error) res.send(false);
