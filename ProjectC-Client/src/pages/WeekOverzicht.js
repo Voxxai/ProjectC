@@ -135,7 +135,7 @@ useEffect(() => {
                         
                         {/* Dropdown Items Users */}
                         <div id={`dropdownitems-${index}`} className={`${ open ? "opacity-100" : "opacity-0" }  duration-150 flex flex-col bg-white w-full p-2.5 shadow-md rounded-sm absolute`}>
-                            <p className='w-full'>Deze werknemers zijn aanwezig.</p>
+                            <p className='w-full'>{dates[index].Users.length > 0 ? "Deze medewerkers zijn aanwezig" : "Er zijn vandaag geen medewerkers"}</p>
                             {dates[index].Users.map((user, index) => (
                                  <div className='flex flex-row bg-cavero-purple-light w-full p-2 rounded-md place-items-center gap-x-2 mb-1'>
                                     <FontAwesomeIcon className='text-cavero-purple fa-2x' icon={faCircleUser}/>
@@ -144,7 +144,7 @@ useEffect(() => {
                                  
                             ))}
                                  
-                        </div>
+                        </div> 
 
                         {/* Events Card */}
                         {dates[index].Events.map((event, index2) => (
