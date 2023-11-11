@@ -8,7 +8,7 @@ import React, { useEffect, useState, useRef } from 'react';
 
 
 function WeekOverzicht() {
-    const usersDropdown = useRef(null)
+    const usersDropdown = useRef(null);
     const [ dates, setDates ] = useState([]);
     const [ open, setOpen ] = useState(false);
     const [ error, setError ] = useState(false);
@@ -23,7 +23,6 @@ useEffect(() => {
     const getEvents = async (date) => {
         try {
             const response = await axios.get(`http://localhost:8080/events/${date}`);
-            console.log(response.data);
             return response.data;
         }
         catch (err) {
@@ -82,6 +81,11 @@ useEffect(() => {
     fetchData();
 }, []);
 
+
+
+
+
+
     function getMonthName(month) {
         var monthNames = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun",
             "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
@@ -94,6 +98,18 @@ useEffect(() => {
         return dayNames[day];
     }
 
+    function openDropdown(index) {
+        const dropdownButton = document.getElementById(`dropdownbutton-${index}`);
+        const dropdownItems = document.getElementById(`dropdownitems-${index}`);
+        const dropdownIcon = document.getElementById(`dropdownicon-${index}`);
+        dropdownItems.classList.toggle('opacity-100');
+        dropdownItems.classList.toggle('opacity-0');
+        dropdownIcon.classList.toggle('rotate-180'); 
+    }
+
+    // if a menu is open, close it when clicking outside of it
+
+
     // console.log(dates);
 
     return (
@@ -102,7 +118,7 @@ useEffect(() => {
 
                 {/* Items */}
                 {dates.map((Date, index) => (
-                    <div className="bg-white rounded-md text-gray-400 w-3/12 p-2 shadow-md">
+                    <div className="bg-white rounded-md text-gray-400 w-3/12 p-2 shadow-md" key={index}>
                         <div className='relative'>
                         <span className='font-medium text-lg'>{Date.Week}</span>
                         <div className="flex flex-row text-black items-end gap-1.5">
@@ -112,13 +128,13 @@ useEffect(() => {
 
                         {/* Users button */}
                         <div className='flex flex-row'>
-                            <button ref={usersDropdown} className='bg-cavero-purple text-white w-full p-1 text-left rounded-sm mt-2' onClick={() => setOpen(!open)}>Personen
-                            <FontAwesomeIcon icon={ open ? faChevronUp : faChevronDown } className=' float-right mt-1 ml-1 fa-sm'/>
+                            <button ref={usersDropdown} id={`dropdownbutton-${index}`} className='bg-cavero-purple text-white w-full p-1 text-left rounded-sm mt-2' onClick={() => openDropdown(index) && setOpen(!open)} >Personen    
+                            <FontAwesomeIcon id={`dropdownicon-${index}`} icon={ faChevronDown } className={`duration-100 float-right mt-1 ml-1 fa-sm`}/>
                             </button>
                         </div>
                         
                         {/* Dropdown Items Users */}
-                        <div className={`${ open ? "opacity-100" : "opacity-0" }  duration-150 flex flex-col bg-white w-full p-2.5 shadow-md rounded-sm absolute`}>
+                        <div id={`dropdownitems-${index}`} className={`${ open ? "opacity-100" : "opacity-0" }  duration-150 flex flex-col bg-white w-full p-2.5 shadow-md rounded-sm absolute`}>
                             <p className='w-full'>Deze werknemers zijn aanwezig.</p>
                             {dates[index].Users.map((user, index) => (
                                  <div className='flex flex-row bg-cavero-purple-light w-full p-2 rounded-md place-items-center gap-x-2 mb-1'>
