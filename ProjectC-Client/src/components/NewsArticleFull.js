@@ -11,7 +11,7 @@ function NewsArticleFull({ title, description, onBackClick, creation_time }) {
                 Back
             </button>
           <div className="bg-zinc-300 h-[250px]" />
-          <div className="text-cavero-purple w-96 text-3xl font-semibold font-['Poppins'] mt-4">
+          <div className="text-cavero-purple text-3xl font-semibold font-['Poppins'] mt-4">
             {title}
           </div>
           <div className="text-zinc-500 text-base mt-4">
