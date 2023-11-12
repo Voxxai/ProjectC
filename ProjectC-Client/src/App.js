@@ -5,21 +5,23 @@ import Login from "./pages/Login";
 import Layout from './layout/Layout';
 import WeekOverzicht from "./pages/WeekOverzicht";
 import RequireAuth from './components/RequireAuth';
+import Nieuws from './pages/Nieuws';
 
 function App() {
   return (
     <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<Layout />}>
+        <Route path='/Login' element={<Login />} />
+        <Route path="/" element={<Layout />}/>
         <Route index element={<WeekOverzicht />} />
         
           
         {/* Private Routes */}
         <Route element={<RequireAuth />} >
-          <Route path='/Login' element={<Login />} />
-
+          <Route path="/" element={<Layout />}>
+          <Route index element={<WeekOverzicht />} />
           <Route path='/Evenementen' element={<WeekOverzicht />} />
-          <Route path='/Nieuws' element={<WeekOverzicht />} />
+          <Route path='/Nieuws' element={<Nieuws />} />
           <Route path='/Morgen' element={<WeekOverzicht />} />
          </Route> 
       </Route>
