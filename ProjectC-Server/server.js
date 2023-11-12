@@ -37,9 +37,8 @@ app.get('/login/:email&:ww', (request, response) => {
 })
 
 function formatDate(date) {
-    const hoursToAdd = 1 * 60 * 60 * 1000;
-    date.setTime(date.getTime() + hoursToAdd);
-    return date;
+    const newDate = new Date(date);
+    return newDate;
   }
 
 app.get('/events', (request, response) => {
@@ -48,7 +47,8 @@ app.get('/events', (request, response) => {
         response.send(result.map((event) => {
             return {
                 ID: event.ID,
-                Date: formatDate(event.Date),
+                Date: event.Date,
+                Time: event.Time,
                 Title: event.Title,
                 Description: event.Description,
                 Location: event.Location,
@@ -65,7 +65,8 @@ app.get('/events/:date', (request, response) => {
         response.send(result.map((event) => {
             return {
                 ID: event.ID,
-                Date: formatDate(event.Date),
+                Date: event.Date,
+                Time: (event.Time.slice(0, -3)),
                 Title: event.Title,
                 Description: event.Description,
                 Location: event.Location,
