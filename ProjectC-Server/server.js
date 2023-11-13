@@ -154,7 +154,7 @@ app.post('/insert_news', (req, res) => {
 });
 
 app.get('/news', (req, res) => {
-    const sql = 'SELECT * FROM news';
+    const sql = 'SELECT * FROM news ORDER BY creation_time DESC';
     db.query(sql, (err, results) => {
         if (err) {
             console.log(error)
