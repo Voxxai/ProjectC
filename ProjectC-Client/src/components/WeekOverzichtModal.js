@@ -12,11 +12,11 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData}) {
         isOpen={isOpen} 
         onRequestClose={onRequestClose} 
         contentLabel="Example Modal"
-        className="event-modal p-3 mx-auto bg-white rounded-md shadow-lg relative"
+        className="event-modal p-3 mx-auto bg-white rounded-md shadow-lg relative outline-none"
         overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
         <div className='flex flex-col'>
           <button className='flex justify-end' onClick={onRequestClose}>
-            <FontAwesomeIcon icon={faTimes} className='ml-auto absolute top-1 right-1'/>
+            <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1'/>
           </button>
 
           <div className='flex flex-row'>
