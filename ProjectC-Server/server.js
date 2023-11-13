@@ -164,9 +164,29 @@ app.get('/news', (req, res) => {
     });
 });
 
+//add event
+app.post('/insert_event', (req, res) => {
+    const { title, date, time, summary, location, level } = req.body;
+
+    const sql = 'INSERT INTO events (Title, Date, Time, Description, Location, Level) VALUES (?, ?, ?, ?, ?)';
+    db.query(sql, [title, date, time, summary, location, level], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error inserting event data' });
+        } else {
+            res.status(200).json({ message: 'Event data inserted successfully' });
+        }
+    });
+});
+
 app.get('/events', (request, response) => {
     db.query("SELECT * FROM events", (error, result) => {
-        response.send(result);
+        if (error) {
+            console.log(error);
+            result.status(500).json({ message: 'Error retrieving event data' });
+        } else {
+            response.send(result);
+        }
     });
 })
 
