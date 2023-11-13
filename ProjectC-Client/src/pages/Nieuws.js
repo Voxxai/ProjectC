@@ -99,7 +99,7 @@ function Nieuws() {
   return (
     <div className='bg-slate-100 h-full'>
       {selectedArticle ? (
-        <div className="flex justify-center mx-auto max-w-[50%]">
+        <div className="flex justify-center mx-auto max-w-1/2">
           <NewsArticleFull
             title={selectedArticle.title}
             description={selectedArticle.description}
@@ -109,7 +109,7 @@ function Nieuws() {
         </div>
       ) : (
         <div>
-          <div className="p-3 grid grid-cols-3 justify-items-center gap-y-2">
+          <div className="flex-row p-3 w-full flex flex-wrap justify-center gap-4">
             {currentArticles.map((article) => (
               <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
                 <NewsArticle

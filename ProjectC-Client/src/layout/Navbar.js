@@ -47,14 +47,14 @@ function Navbar() {
                 <FontAwesomeIcon icon={Menu.src} className="w-8 fa-lg" />
                 <span className={`${!open && "hidden"} origin-left text-white no-underline text-base`}>
                   {Menu.title}
-                </span>
                 {Menu.title === 'Nieuws' && (
                   <>
-                    <span className="relative inline-flex h-3 w-3 bg-white opacity-75 animate-ping rounded-full">
-                      <span className="absolute inset-0 rounded-full h-full w-full bg-white"></span>
+                    <span className="relative inline-flex h-2 w-2 bg-white opacity-75 rounded-full bottom-2">
+                      <span className="animate-ping absolute inset-0 rounded-full h-full w-full bg-white"></span>
                     </span>
                   </>
                 )}
+                </span>
               </li>
             </Link>
           ))}
