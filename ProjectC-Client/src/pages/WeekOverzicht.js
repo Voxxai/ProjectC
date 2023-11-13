@@ -157,7 +157,7 @@ useEffect(() => {
                             {dates[index].Users.map((user, index) => (
                                  <div className='flex flex-row bg-cavero-purple-light w-full p-2 rounded-md place-items-center gap-x-2 mb-1'>
                                     <FontAwesomeIcon className='text-cavero-purple fa-2x' icon={faCircleUser}/>
-                                    <span className='text-slate-700 text-sm font-semibold'>{user.Voornaam} {user.Achternaam}</span>
+                                    <span className='text-slate-700 text-sm font-semibold'>{user.FirstName} {user.LastName}</span>
                                  </div>
                                  
                             ))}
