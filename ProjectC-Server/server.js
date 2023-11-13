@@ -131,6 +131,55 @@ app.get('/events', (request, response) => {
     });
 })
 
+function formatDate(date) {
+    const newDate = new Date(date);
+    return newDate;
+  }
+
+app.get('/events', (request, response) => {
+    
+    db.query("SELECT * FROM events", (error, result) => {
+        response.send(result.map((event) => {
+            return {
+                ID: event.ID,
+                Date: event.Date,
+                Time: event.Time,
+                Title: event.Title,
+                Description: event.Description,
+                Location: event.Location,
+                Level: event.Level
+            }
+        }));
+    });
+})
+
+app.get('/events/:date', (request, response) => {
+    db.query(`SELECT * FROM events WHERE Date = "${request.params.date}"`, (error, result) => {
+        if (error) console.log(error);
+        
+        response.send(result.map((event) => {
+            return {
+                ID: event.ID,
+                Date: event.Date,
+                Time: (event.Time.slice(0, -3)),
+                Title: event.Title,
+                Description: event.Description,
+                Location: event.Location,
+                Level: event.Level
+            }
+        }));
+    });
+})
+
+
+app.get('/users_day/:date', (request, response) => {
+    db.query(`SELECT accounts.Voornaam, accounts.Achternaam, Werknemer_rooster.Date FROM Werknemer_rooster LEFT JOIN accounts ON Werknemer_rooster.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
+        if (error) console.log(error);
+        
+        response.send(result);
+    });
+})
+
 app.listen(8080, () => {
     console.log("Server listing");
 })
