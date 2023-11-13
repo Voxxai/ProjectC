@@ -50,6 +50,45 @@ app.get('/users', (req, res) => {
     });
 })
 
+app.post('/user_update', (req, res) => {
+    const ID = req.body.ID;
+    const Email = req.body.Email;
+    const FirstName = req.body.FirstName;
+    const LastName = req.body.LastName;
+
+    db.query("UPDATE accounts SET Email=?, FirstName=?, LastName=? WHERE ID = ?", [Email, FirstName, LastName, ID], (error, result) => {
+        if (error) res.send(false);
+
+        res.send(true);
+    });
+
+
+})
+
+//Update Session cookie
+app.post("/session_update", (req, res) => {
+    const Email = req.body.Email;
+    const FirstName = req.body.FirstName;
+    const LastName = req.body.LastName;
+
+    if (req.session.user) {
+        req.session.user = {
+            ID: req.session.ID,
+            Email: Email,
+            Password: req.session.Wachtwoord,
+            FirstName: FirstName,
+            LastName: LastName,
+            Level: req.session.Level
+        };
+
+        req.session.save();
+        res.send(true);
+    } else {
+        res.send(false);
+    }
+})
+
+
 // Login GET
 app.get("/login", (req, res) => {
     if (req.session.user) {
@@ -62,9 +101,10 @@ app.get("/login", (req, res) => {
 // Login POST
 app.post('/login', (req, res) => {
     const email = req.body.email;
-    const password = sha1(req.body.password);
+    const password = req.body.password;
 
     db.query(`SELECT * FROM accounts WHERE Email = '${email}' AND Password = '${password}'`, (error, result) => {
+
         if (error) res.send(false);
 
         if (result.length > 0) {
@@ -125,19 +165,39 @@ app.get('/news', (req, res) => {
     });
 });
 
+//add event
+app.post('/insert_event', (req, res) => {
+    const { title, date, time, summary, location, level } = req.body;
+
+    const sql = 'INSERT INTO events (Title, Date, Time, Description, Location, Level) VALUES (?, ?, ?, ?, ?,?)';
+    db.query(sql, [title, date, time, summary, location, level], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error inserting event data' });
+        } else {
+            res.status(200).json({ message: 'Event data inserted successfully' });
+        }
+    });
+});
+
 app.get('/events', (request, response) => {
     db.query("SELECT * FROM events", (error, result) => {
-        response.send(result);
+        if (error) {
+            console.log(error);
+            result.status(500).json({ message: 'Error retrieving event data' });
+        } else {
+            response.send(result);
+        }
     });
 })
 
 function formatDate(date) {
     const newDate = new Date(date);
     return newDate;
-  }
+}
 
 app.get('/events', (request, response) => {
-    
+
     db.query("SELECT * FROM events", (error, result) => {
         response.send(result.map((event) => {
             return {
@@ -156,7 +216,7 @@ app.get('/events', (request, response) => {
 app.get('/events/:date', (request, response) => {
     db.query(`SELECT * FROM events WHERE Date = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
-        
+
         response.send(result.map((event) => {
             return {
                 ID: event.ID,
@@ -182,7 +242,7 @@ app.get('/event_users/:ID', (request, response) => {
 app.get('/users_day/:date', (request, response) => {
     db.query(`SELECT accounts.FirstName, accounts.LastName, Werknemer_rooster.Date FROM Werknemer_rooster LEFT JOIN accounts ON Werknemer_rooster.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
-        
+
         response.send(result);
     });
 })
