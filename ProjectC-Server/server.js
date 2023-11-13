@@ -127,10 +127,10 @@ app.get('/news', (req, res) => {
 
 //add event
 app.post('/insert_event', (req, res) => {
-    const { title, date, summary, location, level } = req.body;
+    const { title, date, time, summary, location, level } = req.body;
 
-    const sql = 'INSERT INTO events (Title, Date, Description, Location, Level) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [title, date, summary, location, level], (err, result) => {
+    const sql = 'INSERT INTO events (Title, Date, Time, Description, Location, Level) VALUES (?, ?, ?, ?, ?)';
+    db.query(sql, [title, date, time, summary, location, level], (err, result) => {
         if (err) {
             console.log(err);
             res.status(500).json({ message: 'Error inserting event data' });
