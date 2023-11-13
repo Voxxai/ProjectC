@@ -65,7 +65,7 @@ function Topbar() {
           {/* Next items */}
           <div className='flex gap-3 fa-lg items-center'>
             <FontAwesomeIcon icon={faBell} className='text-cavero-purple duration-300 hover:scale-110'/>
-            <FontAwesomeIcon icon={faSignOut} className='text-cavero-purple duration-300 hover:scale-110' onClick={handleSignOut}/>
+            <FontAwesomeIcon icon={faSignOut} className='text-cavero-purple duration-300 hover:scale-110 cursor-pointer' onClick={handleSignOut}/>
           </div>
         </div>
     </div>
