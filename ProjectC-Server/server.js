@@ -103,7 +103,7 @@ app.post('/login', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    db.query(`SELECT * FROM accounts WHERE Email = ? AND Wachtwoord = ?`, [email, password],(error, result) => {
+    db.query(`SELECT * FROM accounts WHERE Email = ? AND Wachtwoord = ?`, [email, password], (error, result) => {
         if (error) res.send(false);
 
         if (result.length > 0) {
@@ -168,7 +168,7 @@ app.get('/news', (req, res) => {
 app.post('/insert_event', (req, res) => {
     const { title, date, time, summary, location, level } = req.body;
 
-    const sql = 'INSERT INTO events (Title, Date, Time, Description, Location, Level) VALUES (?, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO events (Title, Date, Time, Description, Location, Level) VALUES (?, ?, ?, ?, ?,?)';
     db.query(sql, [title, date, time, summary, location, level], (err, result) => {
         if (err) {
             console.log(err);
@@ -193,10 +193,10 @@ app.get('/events', (request, response) => {
 function formatDate(date) {
     const newDate = new Date(date);
     return newDate;
-  }
+}
 
 app.get('/events', (request, response) => {
-    
+
     db.query("SELECT * FROM events", (error, result) => {
         response.send(result.map((event) => {
             return {
@@ -215,7 +215,7 @@ app.get('/events', (request, response) => {
 app.get('/events/:date', (request, response) => {
     db.query(`SELECT * FROM events WHERE Date = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
-        
+
         response.send(result.map((event) => {
             return {
                 ID: event.ID,
@@ -234,7 +234,7 @@ app.get('/events/:date', (request, response) => {
 app.get('/users_day/:date', (request, response) => {
     db.query(`SELECT accounts.Voornaam, accounts.Achternaam, Werknemer_rooster.Date FROM Werknemer_rooster LEFT JOIN accounts ON Werknemer_rooster.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
-        
+
         response.send(result);
     });
 })
