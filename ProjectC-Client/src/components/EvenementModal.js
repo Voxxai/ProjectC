@@ -1,7 +1,7 @@
 // EventModal.js
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import DatePicker from 'react-datepicker';
+//import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 
@@ -14,6 +14,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         summary: eventData?.Description || '',
         location: eventData?.Location || '',
         date: eventData?.Date || null,
+        time: eventData?.Time || null,
         level: eventData?.Level || 2,
     });
 
