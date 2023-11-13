@@ -1,8 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
+import EvenementInfoModal from '../components/EvenementInfoModal';
 
 function Evenement({ title, date, time, description, location, level, maxParticipants, currentParticipants }) {
+
+
+    const eventData = {
+        title: title,
+        date: date,
+        time: time,
+        description: description,
+        location: location,
+        level: level,
+        maxParticipants: maxParticipants,
+        currentParticipants: currentParticipants
+    }
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
     // Check if the event is level 3
     const isLevel2 = level == 2;
@@ -50,9 +73,11 @@ function Evenement({ title, date, time, description, location, level, maxPartici
 
             </div>
             <div className="flex   w-1/6">
-                <button className="w-4/5 p-1 self-center bg-cavero-purple text-white rounded-md">meer info</button>
+                <button onClick={openModal} className="w-4/5 p-1 self-center bg-cavero-purple text-white rounded-md">meer info</button>
             </div>
+            <EvenementInfoModal isOpen={isModalOpen} onRequestClose={closeModal} event={eventData} />
         </div>
+
     );
 }
 
