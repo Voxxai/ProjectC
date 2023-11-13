@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Layout from './layout/Layout';
 import WeekOverzicht from "./pages/WeekOverzicht";
 import RequireAuth from './components/RequireAuth';
+import Evenementen from './pages/Evenementen';
 import Nieuws from './pages/Nieuws';
 import Settings_Layout from './layout/Settings_Layout';
 import Profile from './pages/Profile';
@@ -21,7 +22,7 @@ function App() {
         <Route element={<RequireAuth />} >
           <Route path="/" element={<Layout />}>
             <Route index element={<WeekOverzicht />} />
-            <Route path='/evenementen' element={<WeekOverzicht />} />
+            <Route path='/evenementen' element={<Evenementen />} />
             <Route path='/nieuws' element={<Nieuws />} />
             <Route path='/morgen' element={<WeekOverzicht />} />
 
