@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightLong, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 import useAuth from '../hooks/useAuth';
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import Sha1 from 'sha1';
 
 //TODO encrypt wachtwoord voordat het gestuurd wordt naar de server op de params.
 //Token meesturen als je bent ingelogd.
@@ -19,7 +20,7 @@ function Login() {
 
     const [values, setValues] = useState({
         email: '',
-        password: ''
+        password: '',
     });
 
     const [error, setError] = useState(false);
@@ -37,6 +38,9 @@ function Login() {
         setError(false);
 
         try {
+            //Hashing the password
+            values.password = Sha1(values.password);
+            
             await axios.post(`http://localhost:8080/login`, values)
             .then(response => {
                 if (response.data.Login) {
@@ -104,8 +108,8 @@ function Login() {
             <div className='login-container h-screen w-screen flex items-center justify-center'>
                 <div className='form-login mb-32 bg-white shadow-2xl shadow-cavero-purple-light rounded'>
                     <div className='mt-6'>
-                        <h1>Login bij Cavero</h1>
-                        <p>Je kunt bij Cavero inloggen met de volgende gegevens.</p>
+                        <h1 className='text-cavero-purple font-semibold'>Login bij Cavero</h1>
+                        <p className='text-gray-600 text-md'>Je kunt bij Cavero inloggen met de volgende gegevens.</p>
                     </div>
                     <div className={`bg-red-200 h-10 rounded flex mb-1 ${!error && 'hidden'}`}>
                         <p className='text-black my-auto p-2 text-sm'>{errorMessage}</p>
