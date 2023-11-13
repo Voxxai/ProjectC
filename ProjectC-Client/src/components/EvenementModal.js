@@ -1,8 +1,6 @@
 // EventModal.js
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-//import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 
 

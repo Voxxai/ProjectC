@@ -34,12 +34,12 @@ function Evenementen() {
   };
 
   return (
-    <div className="mt-8 p-3  self-center space-y-5 md:space-y-0 md:flex md:flex-wrap md:justify-between items-center flex-col text-cavero-purple">
+    <div className="mt-8 p-3 w-full  self-center space-y-5 md:space-y-0 md:flex md:flex-wrap  justify-center items-center flex-row text-cavero-purple">
       <h2 className="w-2/3 flex items-center justify-between text-3xl font-bold border-b-2 border-cavero-purple mb-4">
         Toekomstige Evenementen
         {/* Admin button */}
         {isAdmin && (
-          <button className="bg-cavero-purple text-white text-base rounded-md px-1.5 py-0.5 hover:bg-cavero-purple-dark" onClick={openModal}>Voeg Evenement toe
+          <button className="bg-cavero-purple text-white text-base font-semibold rounded-md px-3 py-0.5 hover:bg-cavero-purple-dark" onClick={openModal}>Voeg Evenement toe
           </button>
         )}
       </h2>
@@ -52,7 +52,7 @@ function Evenementen() {
         <p className="text-center text-lg">Geen toekomstige of afgelopen events</p>
       ) : (
         // Container for the events with inline scrolling and hidden scrollbar
-        <div className="md:w-2/3 md:px-0 flex h-full flex-col justify-start items-start p-1.5 text-center  ">
+        <div className="md:w-2/3 md:px-0 flex h-5/6 overflow-y-auto flex-col justify-start items-start p-1.5 text-center  ">
           <div className="w-full overflow-y-auto">
             {events.sort((a, b) => new Date(a.Date) - new Date(b.Date))
               .sort((a, b) => {
