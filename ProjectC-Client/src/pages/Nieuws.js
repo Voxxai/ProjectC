@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NewsArticle from '../components/NewsArticle';
 import NewsArticleFull from '../components/NewsArticleFull';
+import CreateArticleModal from '../components/CreateArticleModal';
 import Topbar from '../layout/Topbar';
 import axios from 'axios';
 
@@ -22,6 +23,16 @@ function Nieuws() {
 
     fetchNieuwsData();
   }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const indexOfLastArticle = currentPage * articlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
@@ -47,8 +58,7 @@ function Nieuws() {
 
   const renderPagination = () => {
     const totalPageCount = Math.ceil(news.length / articlesPerPage);
-    const visiblePageCount = 4;
-
+    
     const renderPageButton = (pageNumber) => (
       <button
         key={pageNumber}
@@ -58,46 +68,25 @@ function Nieuws() {
         {pageNumber}
       </button>
     );
-
-    const renderDots = () => (
-      <span className="mx-2">...</span>
-    );
-
-    const renderArrow = (direction) => (
-      <button
-        key={direction}
-        onClick={() => handlePageClick(direction === 'left' ? currentPage - 1 : currentPage + 1)}
-        className={`border border-gray-200 px-3 py-1 mx-2 text-gray-500 transition-all duration-100 ease-in-out hover:bg-cavero-purple hover:text-white ${currentPage === 1 || currentPage === totalPageCount ? 'hidden' : ''}`}
-      >
-        {direction === 'left' ? '<' : '>'}
-      </button>
-    );
-
+  
     const paginationItems = [];
-
-    for (let i = 1; i <= visiblePageCount; i++) {
-      if (i > totalPageCount) break;
+  
+    for (let i = 1; i <= totalPageCount; i++) {
       paginationItems.push(renderPageButton(i));
     }
-
-    if (currentPage + Math.floor(visiblePageCount / 2) < totalPageCount) {
-      paginationItems.push(renderDots());
-    }
-
-    for (let i = Math.max(currentPage + Math.floor(visiblePageCount / 2) + 1, visiblePageCount + 1); i <= totalPageCount; i++) {
-      if (i > visiblePageCount && i < totalPageCount) {
-        paginationItems.push(renderPageButton(i));
-      }
-    }
-
-    paginationItems.unshift(renderArrow('left'));
-    paginationItems.push(renderArrow('right'));
-
+  
     return paginationItems;
   };
 
   return (
     <div className='bg-slate-100 h-full'>
+      <button
+        className="absolute top-15 right-10 bg-cavero-purple text-white px-2 py-1 rounded text-sm hover:shadow-lg transition-shadow"
+        onClick={openModal}
+      >
+        Nieuwsbericht aanmaken
+      </button>
+      {isModalOpen && <CreateArticleModal onClose={closeModal} />}
       {selectedArticle ? (
         <div className="flex justify-center mx-auto max-w-1/2">
           <NewsArticleFull
@@ -108,8 +97,8 @@ function Nieuws() {
           />
         </div>
       ) : (
-        <div>
-          <div className="flex-row p-3 w-full flex flex-wrap justify-center gap-4">
+        <div className='pt-3'>
+          <div className="flex-row w-full flex flex-wrap justify-center gap-4">
             {currentArticles.map((article) => (
               <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
                 <NewsArticle
@@ -121,7 +110,7 @@ function Nieuws() {
             ))}
           </div>
 
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center">
             {renderPagination()}
           </div>
         </div>
