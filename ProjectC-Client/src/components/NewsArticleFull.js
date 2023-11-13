@@ -5,7 +5,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 function NewsArticleFull({ title, description, onBackClick, creation_time }) {
 
     return (
-        <div className="py-8">
+        <div className="py-8 w-[800px]">
             <button onClick={onBackClick} className=" text-cavero-purple py-1 mb-2 text-xl font-medium font-['Poppins']">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-1" />
                 Back
