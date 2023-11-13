@@ -49,7 +49,7 @@ function Navbar() {
                   {Menu.title}
                 {Menu.title === 'Nieuws' && (
                   <>
-                    <span className="relative inline-flex h-2 w-2 bg-white opacity-75 rounded-full bottom-2">
+                    <span className="relative inline-flex h-2 w-2 bg-white rounded-full bottom-2">
                       <span className="animate-ping absolute inset-0 rounded-full h-full w-full bg-white"></span>
                     </span>
                   </>
