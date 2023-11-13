@@ -15,8 +15,7 @@ function App() {
   return (
     <Routes>
         {/* Public Routes */}
-        <Route path='/login' element={<Login />} />
-        
+        <Route path='/login' element={<Login />} />      
           
         {/* Private Routes */}
         <Route element={<RequireAuth />} >
