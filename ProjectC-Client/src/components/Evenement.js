@@ -5,7 +5,7 @@ import { faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
 function Evenement({ title, date, time, description, location, level, maxParticipants, currentParticipants }) {
 
     // Check if the event is level 3
-    const isLevel3 = level === 3;
+    const isLevel2 = level == 2;
 
     // Parse the date string into a Date object
     const eventDate = new Date(date);
@@ -27,11 +27,10 @@ function Evenement({ title, date, time, description, location, level, maxPartici
 
     return (
         <div className=
-            {`w-1/1 flex flex-row gap-x-2 mx-auto border place-content-between p-2.5 m-1 rounded-md text-center ${isPastEvent ? 'bg-gray-200 !important' : 'bg-slate-300'}
-            ${isLevel3 ? 'bg-cavero-gold/50' : ''}
+            {`w-1/1 flex flex-row gap-x-2 mx-auto border place-content-between p-2.5 m-1 rounded-md text-center ${(isPastEvent ? 'bg-gray-200 !important' : isLevel2 ? 'bg-cavero-purple-light' : 'bg-cavero-gold/50')}
         `}>
             <div className='flex justify-center w-1/12 text-center flex-col'>
-                <h2 className="flex w-full leading-5 text-xl justify-center text-center text-black whitespace-pre-line font-medium mb-1">{formattedDate.split(" ").join("\n")}</h2>
+                <h2 className="flex w-full leading-5 text-xl justify-center text-center text-gray-600 whitespace-pre-line font-medium mb-1">{formattedDate.split(" ").join("\n")}</h2>
             </div>
             <div className="pl-1 w-full flex flex-col items-start">
                 <h3 className="text-2xl font-semibold mb-1">{title}</h3>
