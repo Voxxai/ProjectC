@@ -8,33 +8,42 @@ import axios from 'axios';
 function Evenementen() {
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState(null);
+
+
   const isAdmin = true;
   const today = new Date();
   const twoWeeksAgo = new Date(today - 1000 * 60 * 60 * 24 * 14);
 
-  useEffect(() => {
-    const fetchEventsData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/events');
-        setEvents(response.data);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      }
-    };
+  const fetchEventsData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/events');
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+    }
+  };
 
+  useEffect(() => {
     fetchEventsData();
-  }, []);
+  }, [submissionStatus]);
+
+  const closeModal = (shouldReload) => {
+    setIsModalOpen(false);
+
+
+    if (shouldReload) {
+      setSubmissionStatus(Date.now());
+    }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
 
   return (
-    <div className="mt-8 p-3 w-full  self-center space-y-5 md:space-y-0 md:flex md:flex-wrap  justify-center items-center flex-row text-cavero-purple">
+    <div className=" p-3 w-full h-full self-center space-y-5 md:space-y-0 md:flex md:flex-wrap  justify-center items-center flex-row text-cavero-purple bg-slate-100">
       <h2 className="w-2/3 flex items-center justify-between text-3xl font-bold border-b-2 border-cavero-purple mb-4">
         Toekomstige Evenementen
         {/* Admin button */}
