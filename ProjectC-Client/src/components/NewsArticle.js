@@ -2,7 +2,7 @@ import React from 'react';
 
 function NewsArticle({ title, description }) {
   const truncatedDescription =
-    description.length > 100 ? `${description.slice(0, 100)}...` : description;
+    description.length > 120 ? `${description.slice(0, 120)}...` : description;
 
   return (
     <div className="w-[450px] mb-2 border border-gray-300 rounded-lg p-2 flex-1 hover:shadow-lg transition-shadow bg-white">
