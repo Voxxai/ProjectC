@@ -56,7 +56,7 @@ app.post('/user_update', (req, res) => {
     const FirstName = req.body.FirstName;
     const LastName = req.body.LastName;
 
-    db.query("UPDATE accounts SET Email=?, Voornaam=?, Achternaam=? WHERE ID = ?", [Email, FirstName, LastName, ID], (error, result) => {
+    db.query("UPDATE accounts SET Email=?, FirstName=?, LastName=? WHERE ID = ?", [Email, FirstName, LastName, ID], (error, result) => {
         if (error) res.send(false);
 
         res.send(true);
@@ -103,7 +103,8 @@ app.post('/login', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    db.query(`SELECT * FROM accounts WHERE Email = ? AND Wachtwoord = ?`, [email, password], (error, result) => {
+    db.query(`SELECT * FROM accounts WHERE Email = '${email}' AND Password = '${password}'`, (error, result) => {
+
         if (error) res.send(false);
 
         if (result.length > 0) {
@@ -111,9 +112,9 @@ app.post('/login', (req, res) => {
             req.session.user = {
                 ID: result[0].ID,
                 Email: result[0].Email,
-                Password: result[0].Wachtwoord,
-                FirstName: result[0].Voornaam,
-                LastName: result[0].Achternaam,
+                Password: result[0].Password,
+                FirstName: result[0].FirstName,
+                LastName: result[0].LastName,
                 Level: result[0].Level
             };
 
@@ -122,9 +123,9 @@ app.post('/login', (req, res) => {
                 Login: true,
                 ID: result[0].ID,
                 Email: result[0].Email,
-                Password: result[0].Wachtwoord,
-                FirstName: result[0].Voornaam,
-                LastName: result[0].Achternaam,
+                Password: result[0].Password,
+                FirstName: result[0].FirstName,
+                LastName: result[0].LastName,
                 Level: result[0].Level
             });
         }
@@ -230,9 +231,16 @@ app.get('/events/:date', (request, response) => {
     });
 })
 
+app.get('/event_users/:ID', (request, response) => {
+    db.query(`SELECT accounts.FirstName, accounts.LastName FROM event_users LEFT JOIN accounts ON event_users.User_ID=accounts.ID WHERE Event_ID = "${request.params.ID}"`, (error, result) => {
+        if (error) console.log(error);
+        
+        response.send(result);
+    });
+})
 
 app.get('/users_day/:date', (request, response) => {
-    db.query(`SELECT accounts.Voornaam, accounts.Achternaam, Werknemer_rooster.Date FROM Werknemer_rooster LEFT JOIN accounts ON Werknemer_rooster.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
+    db.query(`SELECT accounts.FirstName, accounts.LastName, Werknemer_rooster.Date FROM Werknemer_rooster LEFT JOIN accounts ON Werknemer_rooster.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
 
         response.send(result);
