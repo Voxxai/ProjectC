@@ -52,7 +52,7 @@ function Evenementen() {
         <p className="text-center text-lg">Geen toekomstige of afgelopen events</p>
       ) : (
         // Container for the events with inline scrolling and hidden scrollbar
-        <div className="md:w-2/3 md:px-0 flex h-5/6 overflow-y-auto flex-col justify-start items-start p-1.5 text-center  ">
+        <div className="md:w-2/3 md:px-0 flex h-full overflow-y-auto flex-col justify-start items-start p-1.5 text-center  ">
           <div className="w-full overflow-y-auto">
             {events.sort((a, b) => new Date(a.Date) - new Date(b.Date))
               .sort((a, b) => {
