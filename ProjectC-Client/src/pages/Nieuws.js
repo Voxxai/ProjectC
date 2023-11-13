@@ -97,7 +97,7 @@ function Nieuws() {
   };
 
   return (
-    <div>
+    <div className='bg-slate-100 h-full'>
       {selectedArticle ? (
         <div className="flex justify-center mx-auto max-w-[50%]">
           <NewsArticleFull
