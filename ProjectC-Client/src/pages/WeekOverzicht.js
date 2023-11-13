@@ -17,6 +17,7 @@ function WeekOverzicht() {
     const [ users, setUsers ] = useState([]);
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ eventData, setEventData ] = useState([]);
+    const [ eventUsers, setEventUsers ] = useState([]);
 
 // Onload set dates of this week
 useEffect(() => {
@@ -114,6 +115,20 @@ useEffect(() => {
         setIsModalOpen(false);
     };
 
+    const getEventUsers = async (eventID) => {
+        try {
+          await axios.get(`http://localhost:8080/event_users/${eventID}`)
+          .then(response => {
+            setEventUsers(response.data);
+            return;
+            // console.log(response.data);
+          });
+    
+        } catch (error) {
+          console.error('Error fetching data: ', error);
+        }
+      };
+
     // console.log(dates);
 
     return (
@@ -142,7 +157,7 @@ useEffect(() => {
                             {dates[index].Users.map((user, index) => (
                                  <div className='flex flex-row bg-cavero-purple-light w-full p-2 rounded-md place-items-center gap-x-2 mb-1'>
                                     <FontAwesomeIcon className='text-cavero-purple fa-2x' icon={faCircleUser}/>
-                                    <span className='text-slate-700 text-sm font-semibold'>{user.Voornaam} {user.Achternaam}</span>
+                                    <span className='text-slate-700 text-sm font-semibold'>{user.FirstName} {user.LastName}</span>
                                  </div>
                                  
                             ))}
@@ -151,7 +166,7 @@ useEffect(() => {
 
                         {/* Events Card */}
                         {dates[index].Events.map((event, index2) => (
-                                <div className='flex flex-row bg-cavero-purple-light rounded-md p-2 my-1 font-semibold cursor-pointer' onClick={() => { openModal(); setEventData(event); }}>
+                                <div className='flex flex-row bg-cavero-purple-light rounded-md p-2 my-1 font-semibold cursor-pointer' onClick={() => { openModal(); setEventData(event); getEventUsers(event.ID); }}>
                                     <div className='flex flex-row place-items-center gap-x-2'>
                                         <div className='w-2.5 h-2.5 bg-cavero-purple rounded-full'></div>
                                         <div className='flex flex-col leading-4 py-1'>
@@ -166,7 +181,7 @@ useEffect(() => {
                 ))}
 
             </div>
-            <Modal isOpen={isModalOpen} onRequestClose={closeModal} eventData={eventData} />
+            <Modal isOpen={isModalOpen} onRequestClose={closeModal} eventData={eventData} eventUsersData={eventUsers} />
         </div>
     
     );

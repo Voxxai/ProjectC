@@ -8,25 +8,25 @@ import axios from 'axios';
 function Profile() {
   const { auth, setAuth } = useAuth();
 
-  const [ loading, setLoading ] = useState(false);
-  const [ hidden, setHidden ] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [hidden, setHidden] = useState(true);
 
-  const [ error, setError ] = useState(false);
+  const [error, setError] = useState(false);
 
-  const [ changed, setChanged ] = useState(false);
+  const [changed, setChanged] = useState(false);
 
   // Setting default values to fields
-  const [ ProfileValues, setProfileValues ] = useState({
+  const [ProfileValues, setProfileValues] = useState({
     ID: auth.ID,
     FirstName: auth.FirstName,
     LastName: auth.LastName,
     Email: auth.Email
   });
 
-  const SaveProfile = async (e)=>{
+  const SaveProfile = async (e) => {
     // Check if values are changed before sending request
     if (!changed) return;
-    
+
     // Show loading icon
     setLoading(true);
     setHidden(false);
@@ -34,54 +34,54 @@ function Profile() {
     // Trying to update user to new values
     try {
       await axios.post(`http://localhost:8080/user_update`, ProfileValues)
-      .then(response => {
+        .then(response => {
           if (response) {
-              // Update succesfull
-              setChanged(false);
+            // Update succesfull
+            setChanged(false);
 
-              // Change auth values
-              setAuth(
-                {
-                  FirstName: ProfileValues.FirstName,
-                  LastName: ProfileValues.LastName,
-                  Email: ProfileValues.Email
-                }
-              );
-
-              // Trying to update session cookie to new values
-              try {
-                axios.post(`http://localhost:8080/session_update`, ProfileValues)
-                .then(response => {
-                    if (response) {
-                        // Sesison update succesfull
-                        return;
-                    } else {
-                        console.log("Opnieuw inloggen");
-                    }
-        
-                }).catch(err => {
-                        console.log(err);
-                });
-        
-              } catch (err) {
-                  console.log(err);
+            // Change auth values
+            setAuth(
+              {
+                FirstName: ProfileValues.FirstName,
+                LastName: ProfileValues.LastName,
+                Email: ProfileValues.Email
               }
+            );
 
-              // Hide loading icon
-              setTimeout(() => {
-                setLoading(false);
-              }, 1500)
-              
+            // Trying to update session cookie to new values
+            try {
+              axios.post(`http://localhost:8080/session_update`, ProfileValues)
+                .then(response => {
+                  if (response) {
+                    // Sesison update succesfull
+                    return;
+                  } else {
+                    console.log("Opnieuw inloggen");
+                  }
+
+                }).catch(err => {
+                  console.log(err);
+                });
+
+            } catch (err) {
+              console.log(err);
+            }
+
+            // Hide loading icon
+            setTimeout(() => {
+              setLoading(false);
+            }, 1500)
+
 
             return
           }
 
-      }).catch(err => {
-              console.log(err);
-      });
+        }).catch(err => {
+          console.log(err);
+        });
 
     } catch (err) {
-        console.log(err);
+      console.log(err);
     }
   }
 
@@ -94,17 +94,17 @@ function Profile() {
   return (
     <div className='flex flex-col gap-y-2 p-4 w-full'>
       <div className='flex'>
-      <span className='font-semibold text-2xl text-cavero-purple'>Uw profiel</span>
+        <span className='font-semibold text-2xl text-cavero-purple'>Uw profiel</span>
       </div>
 
       <div className='flex flex-col mb-10'>
         <span className='font-semibold text-lg'>Account gegevens</span>
         <div className='flex flex-col gap-x-2'>
           <label className='w-full'>Email</label>
-          <input type="text" name='Email' defaultValue={auth.Email} onChange={onChangeValues} className='shadow-md appearance-none border rounded w-min-2 w-4/6 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' placeholder='Email'/>
+          <input type="text" name='Email' defaultValue={auth.Email} onChange={onChangeValues} className='shadow-md appearance-none border rounded w-min-2 w-4/6 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' placeholder='Email' />
         </div>
       </div>
-      
+
 
       <div className='flex flex-col mb-5'>
         <span className='font-semibold text-lg'>Persoonlijke gegevens</span>
@@ -112,13 +112,13 @@ function Profile() {
 
           <div className='flex flex-col gap-x-2 w-full'>
             <label className='w-full'>Voornaam</label>
-            <input type="text" name='FirstName' defaultValue={auth.FirstName} onChange={onChangeValues} className='shadow-md appearance-none border rounded w-min-2 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none' placeholder='Voornaam'/>
+            <input type="text" name='FirstName' defaultValue={auth.FirstName} onChange={onChangeValues} placeholder='Voornaam' />
           </div>
 
           <div className='flex flex-col gap-x-2 w-full'>
             <label className='w-full'>Achternaam</label>
-            <input type="text" name='LastName' defaultValue={auth.LastName} onChange={onChangeValues} className='shadow-md appearance-none border rounded w-min-2 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none' placeholder='Achternaam'/>
-          </div>     
+            <input type="text" name='LastName' defaultValue={auth.LastName} onChange={onChangeValues} placeholder='Achternaam' />
+          </div>
 
         </div>
       </div>
@@ -126,10 +126,10 @@ function Profile() {
       <div className='flex flex-row-reverse'>
         <button type='submit' onClick={SaveProfile} className='flex gap-x-1.5 items-center justify-center px-4 py-1.5 bg-cavero-purple rounded-md text-white hover:bg-cavero-purple-dark hover:scale-105 duration-200'>
           Opslaan
-          <FontAwesomeIcon icon={loading ? faSpinner : faCheck} className={`${loading ? "animate-spin" : ""} ${hidden ? 'hidden' : ''}`}/>
-          </button>
+          <FontAwesomeIcon icon={loading ? faSpinner : faCheck} className={`${loading ? "animate-spin" : ""} ${hidden ? 'hidden' : ''}`} />
+        </button>
       </div>
-        
+
     </div>
   );
 }
