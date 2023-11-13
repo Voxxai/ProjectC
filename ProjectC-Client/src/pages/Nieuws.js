@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import NewsArticle from '../components/NewsArticle';
+import NewsArticleFull from '../components/NewsArticleFull';
+import CreateArticleModal from '../components/CreateArticleModal';
 import Topbar from '../layout/Topbar';
 import axios from 'axios';
 
 function Nieuws() {
   const [news, setNews] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedArticle, setSelectedArticle] = useState(null);
   const articlesPerPage = 6;
 
   useEffect(() => {
@@ -21,6 +24,16 @@ function Nieuws() {
     fetchNieuwsData();
   }, []);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const indexOfLastArticle = currentPage * articlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
   const currentArticles = news.slice(indexOfFirstArticle, indexOfLastArticle);
@@ -32,34 +45,76 @@ function Nieuws() {
 
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
+    setSelectedArticle(null);
+  };
+
+  const handleArticleClick = (article) => {
+    setSelectedArticle(article);
+  };
+
+  const handleBackClick = () => {
+    setSelectedArticle(null);
+  };
+
+  const renderPagination = () => {
+    const totalPageCount = Math.ceil(news.length / articlesPerPage);
+    
+    const renderPageButton = (pageNumber) => (
+      <button
+        key={pageNumber}
+        onClick={() => handlePageClick(pageNumber)}
+        className={`border border-gray-200 px-3 py-1 mx-2 text-gray-500 transition-all duration-100 ease-in-out hover:bg-cavero-purple hover:text-white ${currentPage === pageNumber ? 'bg-cavero-purple text-white' : ''}`}
+      >
+        {pageNumber}
+      </button>
+    );
+  
+    const paginationItems = [];
+  
+    for (let i = 1; i <= totalPageCount; i++) {
+      paginationItems.push(renderPageButton(i));
+    }
+  
+    return paginationItems;
   };
 
   return (
-    <div>
-      <div className="p-3 grid grid-cols-3 gap-4 justify-items-center">
-        {currentArticles.map((article) => (
-          <div key={article.id} className="">
-            <NewsArticle
-              title={article.title}
-              description={article.description}
-              creation_time={article.creation_time}
-            />
+    <div className='bg-slate-100 h-full'>
+      <button
+        className="absolute top-15 right-10 bg-cavero-purple text-white px-2 py-1 rounded text-sm hover:shadow-lg transition-shadow"
+        onClick={openModal}
+      >
+        Nieuwsbericht aanmaken
+      </button>
+      {isModalOpen && <CreateArticleModal onClose={closeModal} />}
+      {selectedArticle ? (
+        <div className="flex justify-center mx-auto max-w-1/2">
+          <NewsArticleFull
+            title={selectedArticle.title}
+            description={selectedArticle.description}
+            //creation_time={selectedArticle.creation_time}
+            onBackClick={handleBackClick}
+          />
+        </div>
+      ) : (
+        <div className='pt-3'>
+          <div className="flex-row w-full flex flex-wrap justify-center gap-4">
+            {currentArticles.map((article) => (
+              <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
+                <NewsArticle
+                  title={article.title}
+                  description={article.description}
+                  creation_time={article.creation_time}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div className="flex justify-center mt-4">
-        {pageNumbers.map((number) => (
-          <button
-            key={number}
-            onClick={() => handlePageClick(number)}
-            className={`px-3 py-1 mx-2 ${currentPage === number ? 'bg-cavero-purple text-white' : 'bg-gray-200'
-              }`}
-          >
-            {number}
-          </button>
-        ))}
-      </div>
+          <div className="flex justify-center">
+            {renderPagination()}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
