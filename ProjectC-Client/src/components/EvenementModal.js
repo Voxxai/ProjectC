@@ -51,7 +51,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         >
             <h2 className="text-2xl font-bold mb-4">{eventData ? 'Edit Event' : 'Voeg evenement toe'}</h2>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} >
                 <label className="block mb-2">
                     Titel:
                     <input type="text" placeholder="Naam van het evenement" name="title" value={formData.title} onChange={handleChange} />
@@ -67,15 +67,18 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                     <input type="text" placeholder="Locatie evenement" name="location" value={formData.location} onChange={handleChange} />
                 </label>
 
-                <label className="block mb-2 gap-x-2">
-                    Datum:
-                    <input type="date" name="date" value={formData.Date} onChange={handleChange} placeholder="dd-mm-yyyy" />
-                </label>
+                <div className='flex flex-row gap-x-2 mb-2'>
+                    <label className="block">
+                        Datum:
+                        <input type="date" name="date" value={formData.Date} onChange={handleChange} placeholder="dd-mm-yyyy" />
+                    </label>
 
-                <label className='block mb-2'>
-                    Start tijd:
-                    <input type="time" name="time" step="300" placeholder='00-00-AM' value={formData.Time} onChange={handleChange} />
-                </label>
+                    <label className='block'>
+                        Start tijd:
+                        <input type="time" name="time" step="300" placeholder='00-00-AM' value={formData.Time} onChange={handleChange} />
+                    </label>
+                </div>
+                
 
                 <button
                     type="submit"
