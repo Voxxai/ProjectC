@@ -44,7 +44,7 @@ function Evenementen() {
 
   return (
     <div className=" p-3 w-full h-full self-center space-y-5 md:space-y-0 md:flex md:flex-wrap  justify-center items-center flex-row text-cavero-purple bg-slate-100">
-      <h2 className="w-2/3 flex items-center justify-between text-3xl font-bold border-b-2 border-cavero-purple mb-4">
+      <h2 className="w-2/3 flex items-center justify-between text-3xl font-semibold border-b-2 border-cavero-purple">
         Toekomstige Evenementen
         {/* Admin button */}
         {isAdmin && (
