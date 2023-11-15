@@ -148,6 +148,22 @@ app.get("/login", (req, res) => {
     }
 })
 
+// create user session
+app.post('/session-create', (req, res) => {
+    console.log(req.body);
+    req.session.user = {
+        ID: req.body.ID,
+        Email: req.body.Email,
+        Password: req.body.Password,
+        FirstName: req.body.FirstName,
+        LastName: req.body.LastName,
+        Level: req.body.Level,
+        TFA: req.body.TFA
+    };
+
+    res.send(true);
+});
+
 // Login POST
 app.post('/login', (req, res) => {
     const email = req.body.email;
@@ -158,17 +174,6 @@ app.post('/login', (req, res) => {
         if (error) res.send(false);
 
         if (result.length > 0) {
-            // Create session with user results
-            req.session.user = {
-                ID: result[0].ID,
-                Email: result[0].Email,
-                Password: result[0].Password,
-                FirstName: result[0].FirstName,
-                LastName: result[0].LastName,
-                Level: result[0].Level,
-                TFA: result[0].TFA
-            };
-
             // Send JSON array back with data
             res.json({
                 Login: true,
