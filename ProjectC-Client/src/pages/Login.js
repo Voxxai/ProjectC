@@ -28,6 +28,18 @@ function Login() {
 
     axios.defaults.withCredentials = true;
 
+    const RedeemCode = async () => {
+
+        let difference = 999999 - 100000; 
+        let rand = Math.random();
+
+        rand = Math.floor( rand * difference);
+
+        rand = rand + 100000;
+
+        return rand;
+    }
+
     const getUser = async () => {
         if (!values.email.length > 0 || !values.password.length > 0) {
             setErrorMessage("Vul elk veld in!");
