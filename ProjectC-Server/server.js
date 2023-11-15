@@ -2,13 +2,18 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
+var mysql = require('mysql');
+
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 
 const sha1 = require('sha1');
 
-var mysql = require('mysql');
+const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 app.use(express.json());
 app.use(cors({
@@ -38,11 +43,54 @@ var db = mysql.createConnection({
     port: '8321'
 });
 
+// Start connection
 db.connect();
 
-app.get('/', (req, res) => {
-    console.log("Server on");
-})
+const transporter = nodemailer.createTransport({
+    host: process.env.HOST,
+    port: process.env.PORT,
+    secure: false,
+    auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+    },
+    tls: {
+        rejectUnauthorized: false,
+    },
+});
+
+app.post('/send-email', (req, res) => {
+    const { Code, Email } = req.body;
+
+    const mailOptions = {
+        from: process.env.USER,
+        to: Email,
+        subject: "Two-Factor-Authentication Code: " + Code  ,
+        html:   "<html>" + 
+                "<body>" + 
+                "<div style='width:100%; height:100%; background-color:#f4f4f4; padding:30px;'>" + 
+                "<div style='width:600px; height: auto; margin:0 auto; padding:25px; border-radius:5px; background-color:white;'>" + 
+                "<h1 style='color:#7F3689;'>Two-Factor-Authentication Code</h1>" + 
+                "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Deze code is voor de komende 5 min geldig. Als u te laat deze code invoert moet u een nieuwe ontvangen.</p>" + 
+                "<div style='text-align:center; padding:25px; background-color:#fafafa;'>" + 
+                "<h2 style='color:#7F3689; margin-bottom:10px;'>Code:</h2>" +
+                "<p style='color:black; font-size:32px; margin-bottom:25px; letter-spacing: 15px;'>" + Code + "</p>" +
+                "</div>" + 
+                "</div>" + 
+                "</div>" + 
+                "</body>" + 
+                "</html>",
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.status(200).send('Email sent successfully');
+        }
+    });
+});
 
 app.get('/users', (req, res) => {
     db.query("SELECT * FROM accounts", (error, result) => {
@@ -67,18 +115,20 @@ app.post('/user_update', (req, res) => {
 
 //Update Session cookie
 app.post("/session_update", (req, res) => {
-    const Email = req.body.Email;
-    const FirstName = req.body.FirstName;
-    const LastName = req.body.LastName;
+    const Email = req.body.Email == null ? null : req.body.Email;
+    const FirstName = req.body.FirstName == null ? null : req.body.FirstName;
+    const LastName = req.body.LastName == null ? null : req.body.LastName;
+    const TFA = req.body.TFA == null ? null : req.body.TFA;
 
     if (req.session.user) {
         req.session.user = {
             ID: req.session.ID,
-            Email: Email,
+            Email: Email == null ? req.session.Email : Email,
             Password: req.session.Wachtwoord,
-            FirstName: FirstName,
-            LastName: LastName,
-            Level: req.session.Level
+            FirstName: FirstName == null ? req.session.FirstName : FirstName,
+            LastName: LastName == null ? req.session.LastName : LastName,
+            Level: req.session.Level,
+            TFA: TFA == null ? req.session.TFA : TFA
         };
 
         req.session.save();
@@ -115,7 +165,8 @@ app.post('/login', (req, res) => {
                 Password: result[0].Password,
                 FirstName: result[0].FirstName,
                 LastName: result[0].LastName,
-                Level: result[0].Level
+                Level: result[0].Level,
+                TFA: result[0].TFA
             };
 
             // Send JSON array back with data
@@ -126,7 +177,8 @@ app.post('/login', (req, res) => {
                 Password: result[0].Password,
                 FirstName: result[0].FirstName,
                 LastName: result[0].LastName,
-                Level: result[0].Level
+                Level: result[0].Level,
+                TFA: result[0].TFA
             });
         }
     });

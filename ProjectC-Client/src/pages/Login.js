@@ -7,9 +7,6 @@ import useAuth from '../hooks/useAuth';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Sha1 from 'sha1';
 
-//TODO encrypt wachtwoord voordat het gestuurd wordt naar de server op de params.
-//Token meesturen als je bent ingelogd.
-
 function Login() {
     const { setAuth } = useAuth();
 
@@ -29,16 +26,29 @@ function Login() {
     axios.defaults.withCredentials = true;
 
     const RedeemCode = async () => {
-
         let difference = 999999 - 100000; 
         let rand = Math.random();
 
         rand = Math.floor( rand * difference);
-
+        // Prevent the number being under 100000
         rand = rand + 100000;
 
         return rand;
     }
+
+    const sendEmail = async () => {
+        const mailOptions = {
+            Code: await RedeemCode(),
+            Email: values.email,
+        }
+
+        await axios.post(`http://localhost:8080/send-email`, mailOptions)
+            .then(response => {
+                if (response.data.status === 200) {
+                    console.log('Email sent');
+                }
+            });
+    };
 
     const getUser = async () => {
         if (!values.email.length > 0 || !values.password.length > 0) {
@@ -63,8 +73,9 @@ function Login() {
                     const Email = response.data.Email;
                     const Password = response.data.Wachtwoord;
                     const Level = response.data.Level;
+                    const TFA = response.data.TFA;
     
-                    setAuth({ ID, FirstName, LastName, Email, Password, Level });
+                    setAuth({ ID, FirstName, LastName, Email, Password, Level, TFA });
                     navigate(from, { replace: true });
                 } else {
                     setErrorMessage("Emailadres of wachtwoord klopt niet!");
@@ -97,9 +108,10 @@ function Login() {
                 const Email = response.data.user.Email;
                 const Password = response.data.user.Wachtwoord;
                 const Level = response.data.user.Level;
+                const TFA = response.data.user.TFA;
                 
                 // Storing the user details to the authenticate
-                setAuth({ ID, FirstName, LastName, Email, Password, Level });
+                setAuth({ ID, FirstName, LastName, Email, Password, Level, TFA });
                 
                 // hide loading spinner
                 // setTimeout(() => {
@@ -121,6 +133,7 @@ function Login() {
                 <div className='form-login mb-32 bg-white shadow-2xl shadow-cavero-purple-light rounded'>
                     <div className='mt-6'>
                         <h1 className='text-cavero-purple font-semibold'>Login bij Cavero</h1>
+                        <button className='btn-register' onClick={sendEmail}>klik</button>
                         <p className='text-gray-600 text-md'>Je kunt bij Cavero inloggen met de volgende gegevens.</p>
                     </div>
                     <div className={`bg-red-200 h-10 rounded flex mb-1 ${!error && 'hidden'}`}>
