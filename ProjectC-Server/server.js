@@ -99,37 +99,38 @@ app.get('/users', (req, res) => {
 })
 
 app.post('/user_update', (req, res) => {
-    const ID = req.body.ID;
-    const Email = req.body.Email;
-    const FirstName = req.body.FirstName;
-    const LastName = req.body.LastName;
+    const { ID, Email = req.session.user.Email, FirstName = req.session.user.FirstName, LastName = req.session.user.LastName, TFA = req.session.user.TFA } = req.body;
 
-    db.query("UPDATE accounts SET Email=?, FirstName=?, LastName=? WHERE ID = ?", [Email, FirstName, LastName, ID], (error, result) => {
-        if (error) res.send(false);
-
-        res.send(true);
+    db.query("UPDATE accounts SET Email=?, FirstName=?, LastName=?, TFA=? WHERE ID = ?", 
+        [Email, FirstName, LastName, TFA, ID], 
+        (error, result) => {
+            if (error) {
+                console.error(error);
+                res.send(false);
+            } else {
+                if (result) {
+                    res.send(true);
+                } else {
+                    res.send(false);
+                }
+            }
     });
-
-
-})
+});
 
 //Update Session cookie
-app.post("/session_update", (req, res) => {
-    const Email = req.body.Email == null ? null : req.body.Email;
-    const FirstName = req.body.FirstName == null ? null : req.body.FirstName;
-    const LastName = req.body.LastName == null ? null : req.body.LastName;
-    const TFA = req.body.TFA == null ? null : req.body.TFA;
+app.post("/session-update", (req, res) => {
+    const { Email, FirstName, LastName, TFA } = req.body;
 
     if (req.session.user) {
         req.session.user = {
-            ID: req.session.ID,
-            Email: Email == null ? req.session.Email : Email,
-            Password: req.session.Wachtwoord,
-            FirstName: FirstName == null ? req.session.FirstName : FirstName,
-            LastName: LastName == null ? req.session.LastName : LastName,
-            Level: req.session.Level,
-            TFA: TFA == null ? req.session.TFA : TFA
+            ...req.session.user,
+            Email: Email ?? req.session.user.Email,
+            FirstName: FirstName ?? req.session.user.FirstName,
+            LastName: LastName ?? req.session.user.LastName,
+            TFA: TFA ?? req.session.user.TFA
         };
+
+        // console.log(req.session.user);
 
         req.session.save();
         res.send(true);
@@ -138,19 +139,9 @@ app.post("/session_update", (req, res) => {
     }
 })
 
-
-// Login GET
-app.get("/login", (req, res) => {
-    if (req.session.user) {
-        res.send({ loggedIn: true, user: req.session.user });
-    } else {
-        res.send({ loggedIn: false });
-    }
-})
-
 // create user session
 app.post('/session-create', (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     req.session.user = {
         ID: req.body.ID,
         Email: req.body.Email,
@@ -163,6 +154,15 @@ app.post('/session-create', (req, res) => {
 
     res.send(true);
 });
+
+// Login GET
+app.get("/login", (req, res) => {
+    if (req.session.user) {
+        res.send({ loggedIn: true, user: req.session.user });
+    } else {
+        res.send({ loggedIn: false });
+    }
+})
 
 // Login POST
 app.post('/login', (req, res) => {
@@ -185,6 +185,9 @@ app.post('/login', (req, res) => {
                 Level: result[0].Level,
                 TFA: result[0].TFA
             });
+        }
+        else {
+            res.json({ Login: false });
         }
     });
 })
