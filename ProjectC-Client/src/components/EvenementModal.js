@@ -4,6 +4,8 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -49,8 +51,12 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             onRequestClose={() => onRequestClose(false)}
             contentLabel="Add Event Modal"
             className="event-modal p-3 max-w-md mx-auto bg-white rounded shadow-lg border-2 relative outline-none"
+            className="event-modal p-3 max-w-md mx-auto bg-white rounded shadow-lg border-2 relative outline-none"
             overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
         >
+            <button className='flex justify-end' onClick={onRequestClose}>
+                <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1' />
+            </button>
             <button className='flex justify-end' onClick={onRequestClose}>
                 <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1' />
             </button>
