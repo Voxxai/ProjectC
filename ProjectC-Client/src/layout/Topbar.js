@@ -21,6 +21,7 @@ function Topbar() {
   const settingMenu = useRef(null);
   const [open, setOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [bellPressed, setBellPressed] = useState(false);
 
   const Menus = [
     { title: 'Profiel weergeven', src: faUser, link: '/instellingen/profiel' },
@@ -32,13 +33,14 @@ function Topbar() {
       try {
         const response = await axios.get(`http://localhost:8080/get_noticounter/${auth.ID}`);
         setNotificationCount(response.data[0].NotiCounter);
+        console.log("gedaan")
       } catch (error) {
         console.error('Error fetching notification count:', error);
       }
     };
 
     fetchNotificationCount();
-  }, [auth.ID]);
+  }, [bellPressed]);
 
   const closeOpenMenus = (e) => {
     if (settingMenu.current && open && !settingMenu.current.contains(e.target)) {
@@ -55,6 +57,10 @@ function Topbar() {
         navigate('/Login');
       }
     });
+  };
+
+  const handleBellPress = () => {
+    setBellPressed(true);
   };
 
   return (
@@ -91,17 +97,17 @@ function Topbar() {
         {/* Next items */}
         <div className="flex gap-3 fa-lg items-center relative">
           <Link to="/Nieuws" className="text-cavero-purple duration-300 hover:scale-110 relative fa-lg">
-            <FontAwesomeIcon icon={faBell} />
+            <FontAwesomeIcon icon={faBell} onClick={handleBellPress} />
           </Link>
           {notificationCount > 0 && (
-          <span className="absolute top-0 right-10 -mt-1 -mr-1">
-            <span className="relative inline-flex h-4 w-4 bg-red-600 rounded-full">
-              <span className="animate-ping absolute inset-0 rounded-full h-full w-full bg-red-600"></span>
-              <span className="absolute inset-0 flex items-center justify-center text-white text-xs">
-                {notificationCount}
+            <span className="absolute top-0 right-10 -mt-1 -mr-1">
+              <span className="relative inline-flex h-4 w-4 bg-red-600 rounded-full">
+                <span className="animate-ping absolute inset-0 rounded-full h-full w-full bg-red-600"></span>
+                <span className="absolute inset-0 flex items-center justify-center text-white text-xs">
+                  {notificationCount}
+                </span>
               </span>
             </span>
-          </span>
           )}
           <FontAwesomeIcon
             icon={faSignOut}
