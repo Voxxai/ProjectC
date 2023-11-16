@@ -73,65 +73,67 @@ function Login() {
     }
 
     const getUser = async () => {
-        if (!values.email.length > 0 || !values.password.length > 0) {
+        if (!values.email.length > 0) {
             setErrorMessage("Vul elk veld in!");
             setError(true);
             return;
         }
-        
-        setError(false);
 
-        try {
-            //Hashing the password
-            values.password = Sha1(values.password);
-            
-            await axios.post(`http://localhost:8080/login`, values)
-            .then(response => {
-                if (response.data.Login) {
-                    // Login succes
-                    const ID = response.data.ID;
-                    const FirstName = response.data.FirstName;
-                    const LastName = response.data.LastName;
-                    const Email = response.data.Email;
-                    const Password = response.data.Password;
-                    const Level = response.data.Level;
-                    const TFA = response.data.TFA;
+            setError(false);
 
-                    setResponseValues({ID, FirstName, LastName, Email, Password, Level, TFA});
-
-                    // Checking if 2FA is enabled
-                    if (TFA == 1) {
-                        setTFAContainer(true);
-                        sendEmail();
-                        return;
-
+            try {
+                //Hashing the password
+                values.password = Sha1(values.password);
+                
+                await axios.post(`http://localhost:8080/login`, values)
+                .then(response => {
+                    if (response.data.Login) {
+                        // Login succes
+                        const ID = response.data.ID;
+                        const FirstName = response.data.FirstName;
+                        const LastName = response.data.LastName;
+                        const Email = response.data.Email;
+                        const Password = response.data.Password;
+                        const Level = response.data.Level;
+                        const TFA = response.data.TFA;
+    
+                        setResponseValues({ID, FirstName, LastName, Email, Password, Level, TFA});
+    
+                        // Checking if 2FA is enabled
+                        if (TFA == 1) {
+                            setTFAContainer(true);
+                            sendEmail();
+                            return;
+    
+                        } else {
+                            // If not 2FA is enabled set the user details to the authenticate and session
+                            setSession(ID, FirstName, LastName, Email, Password, Level, TFA);
+    
+                            setAuth({ ID, FirstName, LastName, Email, Password, Level, TFA });
+                            navigate(from, { replace: true });
+                        }
+                        
                     } else {
-                        // If not 2FA is enabled set the user details to the authenticate and session
-                        setSession(ID, FirstName, LastName, Email, Password, Level, TFA);
-
-                        setAuth({ ID, FirstName, LastName, Email, Password, Level, TFA });
-                        navigate(from, { replace: true });
+                        setErrorMessage("Emailadres of wachtwoord klopt niet!");
+                        setError(true);
+                        return;
                     }
-                    
-                } else {
-                    setErrorMessage("Emailadres of wachtwoord klopt niet!");
+    
+                }).catch(err => {
+                    setErrorMessage("Er is iets fout gegaan bij het ophalen!");
                     setError(true);
+                    console.log(err);
                     return;
-                }
-
-            }).catch(err => {
-                setErrorMessage("Er is iets fout gegaan bij het ophalen!");
+                });
+    
+            } catch (err) {
+                setErrorMessage("Er is iets fout gegaan bij het versturen!");
                 setError(true);
                 console.log(err);
                 return;
-            });
+            }
 
-        } catch (err) {
-            setErrorMessage("Er is iets fout gegaan bij het versturen!");
-            setError(true);
-            console.log(err);
-            return;
-        }
+        
     }
 
     const handleInput = (e) => {
@@ -219,11 +221,13 @@ function Login() {
         }
     }
 
-    const ConfirmCode = () => {
+    const ConfirmCode = async () => {
         setError(false);
 
         if (TFAInputValues.join('') == TFACode.toString()) {
-            setSession(responseValues.ID, responseValues.FirstName, responseValues.LastName, responseValues.Email, responseValues.Password, responseValues.Level, responseValues.TFA);
+            await setSession(responseValues.ID, responseValues.FirstName, responseValues.LastName, responseValues.Email, responseValues.Password, responseValues.Level, responseValues.TFA);
+            setAuth(responseValues.ID, responseValues.FirstName, responseValues.LastName, responseValues.Email, responseValues.Password, responseValues.Level, responseValues.TFA);
+
             navigate(from, { replace: true });
         }
         else {
