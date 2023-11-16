@@ -12,7 +12,6 @@ function CreateArticleModal({ onClose }) {
         description,
       });
       onClose();
-      window.location.reload();
     } catch (error) {
       console.error('Error inserting data: ', error);
     }
