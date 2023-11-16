@@ -93,7 +93,7 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
 
         <div className='flex flex-col'>
           <span className='text-md text-cavero-purple font-semibold'>Deelnemers</span>        
-          <div className='flex bg-gray-100 w-full h-40 p-0.5 rounded-md overflow-y-auto gap-y-3'>
+          <div className='flex flex-col bg-gray-100 w-full h-40 p-0.5 rounded-md overflow-y-auto gap-y-1'>
             
             {eventUsersData.map((user, index) => (
               <div className='flex flex-row bg-cavero-purple-light rounded-md p-2 font-semibold cursor-pointer' key={index}>
