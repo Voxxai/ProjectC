@@ -1,6 +1,6 @@
 .form-login {
-    width: 500px ;
-    height: 500px ;
+    width: 500px;
+    height: 500px;
     padding: 50px;
 }
 
@@ -29,8 +29,8 @@
     width: 1.5rem;
     padding: 4px;
     position: absolute;
-    box-sizing:border-box;
-    top:50%;
+    box-sizing: border-box;
+    top: 50%;
     transform: translateY(-50%);
     color: #696969;
 }
@@ -62,4 +62,19 @@
 .btn-submit:hover {
     scale: 1.05;
     box-shadow: 5px 10px 10px 0 rgba(0, 0, 0, 0.20);
+}
+
+* {
+    scrollbar-width: thin;
+
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 15px;
+}
+
+*::-webkit-scrollbar-track {
+
+    border-radius: 5px;
 }
