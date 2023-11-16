@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Evenement from '../components/Evenement';
 import EventAddModal from '../components/EvenementModal';
+import EventAddModal from '../components/EvenementModal';
 import { } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
@@ -90,6 +91,7 @@ function Evenementen() {
           </div>
         </div>
       )}
+      <EventAddModal isOpen={isModalOpen} onRequestClose={closeModal} />
       <EventAddModal isOpen={isModalOpen} onRequestClose={closeModal} />
 
     </div>
