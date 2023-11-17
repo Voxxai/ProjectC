@@ -283,6 +283,19 @@ app.post('/leaveevent/:EventId/:UserId', (req, res) => {
     });
 });
 
+app.get('/eventsregistertime/:EventId', (req, res) => {
+    db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
+        if (error) console.log(error);
+
+        if (result.length > 0) {
+            res.send(true);
+        }
+        else {
+            res.send(false);
+        }
+    });
+});
+
 app.listen(8080, () => {
     console.log("Server listing");
 })
