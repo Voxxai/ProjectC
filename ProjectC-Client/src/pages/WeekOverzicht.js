@@ -20,6 +20,7 @@ function WeekOverzicht() {
     const [ eventData, setEventData ] = useState([]);
     const [ eventUsers, setEventUsers ] = useState([]);
     const [ joined, setJoined ] = useState(false);
+    const [ endJoinDate, setEndJoinDate ] = useState(false);
     const { auth } = useAuth();
 
 // Onload set dates of this week
@@ -135,7 +136,6 @@ useEffect(() => {
       async function checkIfJoined(eventID) {
         await axios.get(`http://localhost:8080/checkevent/${eventID}/${auth.ID}`)
         .then((response) => {
-          console.log(response.data);
           if (response.data === true) {
             setJoined(true)
           }
@@ -146,6 +146,20 @@ useEffect(() => {
           console.log(error);
         });
       }
+
+      async function checkEndJoinDate(eventID) {
+        await axios.get(`http://localhost:8080/eventsregistertime/${eventID}`)
+        .then((response) => {
+            if (response.data === true) {
+                setEndJoinDate(true)
+            }
+            else {
+                setEndJoinDate(false)
+            } 
+            }, (error) => {
+            console.log(error);
+            });
+        }
     
 
     // console.log(dates);
@@ -185,7 +199,7 @@ useEffect(() => {
 
                         {/* Events Card */}
                         {dates[index].Events.map((event, index2) => (
-                                <div className='flex flex-row bg-cavero-purple-light rounded-md p-2 my-1 font-semibold cursor-pointer' onClick={() => { openModal(); setEventData(event); getEventUsers(event.ID); checkIfJoined(event.ID); }}>
+                                <div className='flex flex-row bg-cavero-purple-light rounded-md p-2 my-1 font-semibold cursor-pointer' onClick={() => { openModal(); setEventData(event); getEventUsers(event.ID); checkIfJoined(event.ID); checkEndJoinDate(event.ID)}}>
                                     <div className='flex flex-row place-items-center gap-x-2'>
                                         <div className='w-2.5 h-2.5 bg-cavero-purple rounded-full'></div>
                                         <div className='flex flex-col leading-4 py-1'>
@@ -200,7 +214,7 @@ useEffect(() => {
                 ))}
 
             </div>
-            <Modal isOpen={isModalOpen} onRequestClose={closeModal} eventData={eventData} eventUsersData={eventUsers} joined={joined} SetJoined={setJoined}/>
+            <Modal isOpen={isModalOpen} onRequestClose={closeModal} eventData={eventData} eventUsersData={eventUsers} joined={joined} SetJoined={setJoined} endJoinDate={endJoinDate}/>
         </div>
     
     );
