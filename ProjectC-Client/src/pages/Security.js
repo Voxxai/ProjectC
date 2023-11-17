@@ -32,6 +32,8 @@ function Profile() {
   }
 
   const update_TFA = async () => {
+    document.getElementById('TFA').setAttribute('disabled', 'disabled');
+
     setLoading(true);
     setHidden(false);
   
@@ -47,6 +49,7 @@ function Profile() {
   
         setTimeout(() => {
           setLoading(false);
+          document.getElementById('TFA').removeAttribute('disabled');
         }, 1000);
 
       } else {
@@ -62,7 +65,6 @@ function Profile() {
     const CheckboxValue = isChecked === true ? 0 : 1;
   
     await setProfileValues((prev) => ({ ...prev, TFA: CheckboxValue }));
-    console.log(ProfileValues);
     await update_TFA();
   }
 
