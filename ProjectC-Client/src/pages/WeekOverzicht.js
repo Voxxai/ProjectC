@@ -214,7 +214,7 @@ useEffect(() => {
                 ))}
 
             </div>
-            <Modal isOpen={isModalOpen} onRequestClose={closeModal} eventData={eventData} eventUsersData={eventUsers} joined={joined} SetJoined={setJoined} endJoinDate={endJoinDate}/>
+            <Modal isOpen={isModalOpen} onRequestClose={closeModal} eventData={eventData} eventUsersData={eventUsers} joined={joined} SetJoined={setJoined} endJoinDate={endJoinDate} reloadEventUsers={getEventUsers}/>
         </div>
     
     );

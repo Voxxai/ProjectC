@@ -8,9 +8,13 @@ import axios, { all } from 'axios';
 import useAuth from '../hooks/useAuth';
 
 
-function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, joined, SetJoined, endJoinDate}) {
+function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, joined, SetJoined, endJoinDate, reloadEventUsers}) {
 
   const { auth } = useAuth();
+
+  useEffect(() => {
+    reloadEventUsers(eventData.ID);
+  }, [joined]);
 
   function joinEvent() {
     console.log(eventData.ID);
