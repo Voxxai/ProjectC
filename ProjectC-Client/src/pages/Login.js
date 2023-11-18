@@ -11,8 +11,10 @@ function Login() {
     const { setAuth } = useAuth();
 
     const [ TFAContainer, setTFAContainer ] = useState(false);
+    const [ TFATimer, setTFATimer ] = useState(true);
     const [ TFACode, setTFACode ] = useState('');
-    const [ TFAInputValues, setTFAInputValues ] = useState(['', '', '', '', '', '']);
+    const initialTFAInputValues  = ['', '', '', '', '', ''];
+    const [ TFAInputValues, setTFAInputValues ] = useState(initialTFAInputValues);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -41,13 +43,35 @@ function Login() {
         return rand;
     }
 
+    const setTimer = async () => {
+        setTFATimer(true);
+
+        setTimeout(() => {
+            setTFATimer(false);
+        }, 10000); // 5 min timer for the code or the user has to request a new code
+    }
+
+    const ResendMail = async () => {
+        setTFAInputValues(initialTFAInputValues);
+
+        if (!TFATimer) {
+            sendEmail();
+            return;
+        }
+        return;
+    }
+            
+
     const sendEmail = async () => {
         const mailOptions = {
             Code: await RedeemCode(),
             Email: values.email,
         }
+
+        setError(false);
         
         setTFACode(mailOptions.Code);
+        setTimer();
 
         await axios.post(`http://localhost:8080/send-email`, mailOptions)
             .then(response => {
@@ -224,15 +248,21 @@ function Login() {
     const ConfirmCode = async () => {
         setError(false);
 
-        if (TFAInputValues.join('') == TFACode.toString()) {
-            await setSession(responseValues.ID, responseValues.FirstName, responseValues.LastName, responseValues.Email, responseValues.Password, responseValues.Level, responseValues.TFA);
-            setAuth(responseValues.ID, responseValues.FirstName, responseValues.LastName, responseValues.Email, responseValues.Password, responseValues.Level, responseValues.TFA);
-
-            navigate(from, { replace: true });
-        }
-        else {
-            setErrorMessage('Code is niet gelijk aan de code die is verstuurd!');
+        if (TFATimer) {
+            if (TFAInputValues.join('') == TFACode.toString()) {
+                await setSession(responseValues.ID, responseValues.FirstName, responseValues.LastName, responseValues.Email, responseValues.Password, responseValues.Level, responseValues.TFA);
+                setAuth(responseValues.ID, responseValues.FirstName, responseValues.LastName, responseValues.Email, responseValues.Password, responseValues.Level, responseValues.TFA);
+    
+                navigate(from, { replace: true });
+            }
+            else {
+                setErrorMessage('Code is niet gelijk aan de code die is verstuurd!');
+                setError(true);
+            }
+        } else {
             setError(true);
+            setErrorMessage('Code is verlopen! Vraag een nieuwe code aan.');
+            return;
         }
     }
 
@@ -307,7 +337,7 @@ function Login() {
                     </form>
 
                     <div className='flex flex-row items-center mt-4'>
-                            <a className='flex-1 cursor-pointer'>Opnieuw code sturen</a>
+                            <a className='flex-1 cursor-pointer' onClick={ResendMail}>Opnieuw code sturen</a>
                             <button type="button" className='bg-gradient-to-r from-cavero-purple to-[#c279cc] text-white w-32 h-9 rounded-full duration-300 hover:scale-105 hover:shadow-lg' onClick={ConfirmCode}>Continue <FontAwesomeIcon icon={faArrowRightLong} color='white'/></button>
                         </div>
                 </div>
