@@ -21,11 +21,12 @@ function WeekOverzicht() {
     const [ eventUsers, setEventUsers ] = useState([]);
     const [ joined, setJoined ] = useState(false);
     const [ endJoinDate, setEndJoinDate ] = useState(false);
+    const [ currentDate, setCurrentDate ] = useState(new Date());
     const { auth } = useAuth();
 
 // Onload set dates of this week
 useEffect(() => {
-    const curr = new Date();
+    const curr = new Date(currentDate);
     const week = [];
 
     const getEvents = async (date) => {
@@ -87,13 +88,16 @@ useEffect(() => {
     }
 
     fetchData();
-}, []);
+}, [currentDate]);
 
-    function getMonthName(month) {
+    function getMonthName(month, short = true) {
         var monthNames = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun",
             "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
         ];
-        return monthNames[month];
+        var monthFullNames = ["Januari", "Febuari", "Maart", "April", "Mei", "Juni",
+            "Juli", "Augustus", "September", "Oktober", "November", "December"
+        ];
+        return short ? monthNames[month] : monthFullNames[month];
     }
 
     function getDayName(day) {
@@ -162,6 +166,17 @@ useEffect(() => {
         }
     
 
+    const handleWeek = (direction) => {
+        
+        setCurrentDate((prevDate) => {
+            // Create a new date of prevoius date
+            const newWeek = new Date(prevDate);
+            // Set a new date with the previous date + 7 days
+            newWeek.setDate(prevDate.getDate() + direction * 7); // direction * 7 to go 7 days forward or backward
+            return newWeek;
+        });
+    };
+
     // console.log(dates);
 
     return (
@@ -171,13 +186,13 @@ useEffect(() => {
                     <div className='flex items-center gap-x-5'>
                         <span className='text-gray-400 font-medium text-2xl'> Week 43 </span>
                         <div className='flex flex-row gap-x-1.5'>
-                            <FontAwesomeIcon icon={faChevronLeft} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
-                            <FontAwesomeIcon icon={faChevronRight} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
+                            <FontAwesomeIcon icon={faChevronLeft} onClick={() => handleWeek(-1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
+                            <FontAwesomeIcon icon={faChevronRight} onClick={() => handleWeek(1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
                         </div>
-                        <span className='text-gray-400 font-medium text-2xl'>November 2023</span>
+                        <span className='text-gray-400 font-medium text-2xl'>{getMonthName(new Date(currentDate).getMonth(), false)}</span>
                     </div>
                         <div className='flex'>
-                            <button className='bg-gray-200 rounded-md text-gray-400 text-base hover:bg-gray-300 hover:text-gray-500 border-2 p-2 duration-100'>Vandaag</button>
+                            <button onClick={() => setCurrentDate(new Date())} className='bg-gray-200 rounded-md text-gray-400 text-base hover:bg-gray-300 hover:text-gray-500 border-2 p-2 duration-100'>Vandaag</button>
                         </div>              
                     
                 </div>
