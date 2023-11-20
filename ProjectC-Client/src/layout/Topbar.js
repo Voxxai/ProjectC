@@ -33,7 +33,8 @@ function Topbar() {
       try {
         const response = await axios.get(`http://localhost:8080/get_noticounter/${auth.ID}`);
         setNotificationCount(response.data[0].NotiCounter);
-        console.log("gedaan")
+        
+        await axios.get(`http://localhost:8080/reset_noticounter/${auth.ID}`);
       } catch (error) {
         console.error('Error fetching notification count:', error);
       }
