@@ -9,7 +9,6 @@ function Navbar() {
   const Menus = [
     { title: "Week Overzicht", src: faHome, link: "/" },
     { title: "Evenementen", src: faCalendarDays, link: "/Evenementen" },
-    { title: "Nieuws", src: faBell, link: "/Nieuws" },
     { title: "Morgen ", src: faUsers, link: "/Morgen" },
   ];
 
