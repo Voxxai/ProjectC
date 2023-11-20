@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBell,
@@ -22,6 +22,7 @@ function Topbar() {
   const [open, setOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const [bellPressed, setBellPressed] = useState(false);
+  const location = useLocation();
 
   const Menus = [
     { title: 'Profiel weergeven', src: faUser, link: '/instellingen/profiel' },
@@ -68,8 +69,8 @@ function Topbar() {
   return (
     <div className="bg-white shadow-md w-full h-full max-h-20 flex justify-between items-center px-4">
       {/* Header */}
-      <div className="items-center mt-2">
-        <h2 className="">Week Overzicht</h2>
+      <div className='items-center mt-2'>
+        <h2 className=''>{location.pathname == "/" ? "Week Overzicht" : location.pathname.slice(1)}</h2>
       </div>
 
       {/* Account item */}
