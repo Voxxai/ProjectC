@@ -34,3 +34,7 @@ textarea {
   line-height: 1.25;
   outline: none;
 }
+
+label {
+  margin-right: 0.5rem;
+}

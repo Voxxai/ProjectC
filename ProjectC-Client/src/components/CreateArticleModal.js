@@ -31,7 +31,7 @@ function CreateArticleModal({ onClose }) {
           />
         </div>
         <div className="mb-6">
-          <label className="block text-sm font-medium text-black">Descriptie:</label>
+          <label className="block text-sm font-medium text-black">Beschrijving:</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
