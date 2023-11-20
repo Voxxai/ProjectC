@@ -40,6 +40,7 @@ function Topbar() {
       }
     };
 
+    setBellPressed(false)
     fetchNotificationCount();
   }, [bellPressed]);
 
@@ -101,14 +102,14 @@ function Topbar() {
             <FontAwesomeIcon icon={faBell} onClick={handleBellPress} />
           </Link>
           {notificationCount > 0 && (
-            <span className="absolute top-0 right-10 -mt-1 -mr-1">
+            <Link to="/Nieuws" onClick={handleBellPress} className="absolute top-0 right-10 -mt-1 -mr-1">
               <span className="relative inline-flex h-4 w-4 bg-red-600 rounded-full">
                 <span className="animate-ping absolute inset-0 rounded-full h-full w-full bg-red-600"></span>
                 <span className="absolute inset-0 flex items-center justify-center text-white text-xs">
                   {notificationCount}
                 </span>
               </span>
-            </span>
+            </Link>
           )}
           <FontAwesomeIcon
             icon={faSignOut}
