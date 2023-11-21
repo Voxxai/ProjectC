@@ -4,34 +4,40 @@ import NewsArticleFull from '../components/NewsArticleFull';
 import CreateArticleModal from '../components/CreateArticleModal';
 import Topbar from '../layout/Topbar';
 import axios from 'axios';
+import useAuth from '../hooks/useAuth';
 
 function Nieuws() {
+  const { auth } = useAuth();
   const [news, setNews] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [submissionStatus, setSubmissionStatus] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const articlesPerPage = 6;
 
+  const fetchNieuwsData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/news');
+      setNews(response.data);
+  
+      await axios.get(`http://localhost:8080/reset_noticounter/${auth.ID}`);
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+    }
+  };
+  
   useEffect(() => {
-    const fetchNieuwsData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/news');
-        setNews(response.data);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      }
-    };
-
     fetchNieuwsData();
-  }, []);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  }, [submissionStatus]);
+  
   const openModal = () => {
     setIsModalOpen(true);
   };
-
+  
   const closeModal = () => {
     setIsModalOpen(false);
+  
+    setSubmissionStatus(Date.now());
   };
 
   const indexOfLastArticle = currentPage * articlesPerPage;

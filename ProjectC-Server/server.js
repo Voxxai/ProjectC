@@ -148,7 +148,45 @@ app.post('/insert_news', (req, res) => {
             console.log(error)
             res.status(500).json({ message: 'Error inserting data' });
         } else {
-            res.status(200).json({ message: 'Data inserted successfully' });
+            const sql = 'UPDATE accounts SET NotiCounter = NotiCounter + 1';
+            db.query(sql, (err, results) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: 'Error updating NotiCounter' });
+                } else {
+                    res.status(200).json({ message: 'News article inserted successfully and NotiCounter updated' });
+                }
+            });
+        }
+    });
+});
+
+app.get('/reset_noticounter/:ID', (req, res) => {
+    const userId = req.params.ID;
+
+    const sql = 'UPDATE accounts SET NotiCounter = 0 WHERE ID = ?';
+    
+    db.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error resetting NotiCounter' });
+        } else {
+            res.status(200).json({ message: 'NotiCounter reset successfully' });
+        }
+    });
+});
+
+app.get('/get_noticounter/:ID', (req, res) => {
+    const userId = req.params.ID;
+
+    const sql = 'SELECT NotiCounter FROM accounts WHERE ID = ?';
+    
+    db.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error retrieving NotiCounter' });
+        } else {
+            res.status(200).send(results)
         }
     });
 });
