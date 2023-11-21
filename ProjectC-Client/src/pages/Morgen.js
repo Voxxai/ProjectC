@@ -4,7 +4,7 @@ import { faUserGroup, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
 function Morgen() {
-    const [users, setUsers] = useState([]);
+    const [ users, setUsers ] = useState([]);
 
     useEffect(() => {
         const tomorrow = new Date();
