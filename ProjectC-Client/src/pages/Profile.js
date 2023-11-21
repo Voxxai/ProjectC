@@ -27,6 +27,12 @@ function Profile() {
     // Check if values are changed before sending request
     if (!changed) return;
 
+    // Disable button and inputs
+    document.getElementById('ChangeProfile').setAttribute('disabled', 'disabled');
+    document.getElementById('Email').setAttribute('disabled', 'disabled');
+    document.getElementById('FirstName').setAttribute('disabled', 'disabled');
+    document.getElementById('LastName').setAttribute('disabled', 'disabled');
+
     // Show loading icon
     setLoading(true);
     setHidden(false);
@@ -50,7 +56,7 @@ function Profile() {
 
             // Trying to update session cookie to new values
             try {
-              axios.post(`http://localhost:8080/session_update`, ProfileValues)
+              axios.post(`http://localhost:8080/session-update`, ProfileValues)
                 .then(response => {
                   if (response) {
                     // Sesison update succesfull
@@ -70,6 +76,12 @@ function Profile() {
             // Hide loading icon
             setTimeout(() => {
               setLoading(false);
+
+              // Enable button and inputs
+              document.getElementById('ChangeProfile').removeAttribute('disabled');
+              document.getElementById('Email').removeAttribute('disabled');
+              document.getElementById('FirstName').removeAttribute('disabled');
+              document.getElementById('LastName').removeAttribute('disabled');
             }, 1500)
 
 
@@ -101,7 +113,7 @@ function Profile() {
         <span className='font-semibold text-lg'>Account gegevens</span>
         <div className='flex flex-col gap-x-2'>
           <label className='w-full'>Email</label>
-          <input type="text" name='Email' defaultValue={auth.Email} onChange={onChangeValues} className='shadow-md appearance-none border rounded w-min-2 w-4/6 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' placeholder='Email' />
+          <input type="text" id='Email' name='Email' defaultValue={auth.Email} onChange={onChangeValues} className='shadow-md appearance-none border rounded w-min-2 w-4/6 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' placeholder='Email' />
         </div>
       </div>
 
@@ -112,19 +124,19 @@ function Profile() {
 
           <div className='flex flex-col gap-x-2 w-full'>
             <label className='w-full'>Voornaam</label>
-            <input type="text" name='FirstName' defaultValue={auth.FirstName} onChange={onChangeValues} placeholder='Voornaam' />
+            <input type="text" id='FirstName' name='FirstName' defaultValue={auth.FirstName} onChange={onChangeValues} placeholder='Voornaam' />
           </div>
 
           <div className='flex flex-col gap-x-2 w-full'>
             <label className='w-full'>Achternaam</label>
-            <input type="text" name='LastName' defaultValue={auth.LastName} onChange={onChangeValues} placeholder='Achternaam' />
+            <input type="text" id='LastName' name='LastName' defaultValue={auth.LastName} onChange={onChangeValues} placeholder='Achternaam' />
           </div>
 
         </div>
       </div>
 
       <div className='flex flex-row-reverse'>
-        <button type='submit' onClick={SaveProfile} className='flex gap-x-1.5 items-center justify-center px-4 py-1.5 bg-cavero-purple rounded-md text-white hover:bg-cavero-purple-dark hover:scale-105 duration-200'>
+        <button type='submit' onClick={SaveProfile} id='ChangeProfile' className='flex gap-x-1.5 items-center justify-center px-4 py-1.5 bg-cavero-purple rounded-md text-white hover:bg-cavero-purple-dark hover:scale-105 duration-200'>
           Opslaan
           <FontAwesomeIcon icon={loading ? faSpinner : faCheck} className={`${loading ? "animate-spin" : ""} ${hidden ? 'hidden' : ''}`} />
         </button>
