@@ -2,13 +2,18 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
+var mysql = require('mysql');
+
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 
 const sha1 = require('sha1');
 
-var mysql = require('mysql');
+const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 app.use(express.json());
 app.use(cors({
@@ -38,11 +43,54 @@ var db = mysql.createConnection({
     port: '8321'
 });
 
+// Start connection
 db.connect();
 
-app.get('/', (req, res) => {
-    console.log("Server on");
-})
+const transporter = nodemailer.createTransport({
+    host: process.env.HOST,
+    port: process.env.PORT,
+    secure: false,
+    auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+    },
+    tls: {
+        rejectUnauthorized: false,
+    },
+});
+
+app.post('/send-email', (req, res) => {
+    const { Code, Email } = req.body;
+
+    const mailOptions = {
+        from: process.env.USER,
+        to: Email,
+        subject: "Two-Factor-Authentication Code: " + Code  ,
+        html:   "<html>" + 
+                "<body>" + 
+                "<div style='width:100%; height:100%; background-color:#f4f4f4; padding:30px;'>" + 
+                "<div style='width:600px; height: auto; margin:0 auto; padding:25px; border-radius:5px; background-color:white;'>" + 
+                "<h1 style='color:#7F3689;'>Two-Factor-Authentication Code</h1>" + 
+                "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Deze code is voor de komende 5 min geldig. Als u te laat deze code invoert moet u een nieuwe ontvangen.</p>" + 
+                "<div style='text-align:center; padding:25px; background-color:#fafafa;'>" + 
+                "<h2 style='color:#7F3689; margin-bottom:10px;'>Code:</h2>" +
+                "<p style='color:black; font-size:32px; margin-bottom:25px; letter-spacing: 15px;'>" + Code + "</p>" +
+                "</div>" + 
+                "</div>" + 
+                "</div>" + 
+                "</body>" + 
+                "</html>",
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.status(200).send('Email sent successfully');
+        }
+    });
+});
 
 app.get('/users', (req, res) => {
     db.query("SELECT * FROM accounts", (error, result) => {
@@ -51,35 +99,38 @@ app.get('/users', (req, res) => {
 })
 
 app.post('/user_update', (req, res) => {
-    const ID = req.body.ID;
-    const Email = req.body.Email;
-    const FirstName = req.body.FirstName;
-    const LastName = req.body.LastName;
+    const { ID, Email = req.session.user.Email, FirstName = req.session.user.FirstName, LastName = req.session.user.LastName, TFA = req.session.user.TFA } = req.body;
 
-    db.query("UPDATE accounts SET Email=?, FirstName=?, LastName=? WHERE ID = ?", [Email, FirstName, LastName, ID], (error, result) => {
-        if (error) res.send(false);
-
-        res.send(true);
+    db.query("UPDATE accounts SET Email=?, FirstName=?, LastName=?, TFA=? WHERE ID = ?", 
+        [Email, FirstName, LastName, TFA, ID], 
+        (error, result) => {
+            if (error) {
+                console.error(error);
+                res.send(false);
+            } else {
+                if (result) {
+                    res.send(true);
+                } else {
+                    res.send(false);
+                }
+            }
     });
-
-
-})
+});
 
 //Update Session cookie
-app.post("/session_update", (req, res) => {
-    const Email = req.body.Email;
-    const FirstName = req.body.FirstName;
-    const LastName = req.body.LastName;
+app.post("/session-update", (req, res) => {
+    const { Email, FirstName, LastName, TFA } = req.body;
 
     if (req.session.user) {
         req.session.user = {
-            ID: req.session.ID,
-            Email: Email,
-            Password: req.session.Wachtwoord,
-            FirstName: FirstName,
-            LastName: LastName,
-            Level: req.session.Level
+            ...req.session.user,
+            Email: Email ?? req.session.user.Email,
+            FirstName: FirstName ?? req.session.user.FirstName,
+            LastName: LastName ?? req.session.user.LastName,
+            TFA: TFA ?? req.session.user.TFA
         };
+
+        // console.log(req.session.user);
 
         req.session.save();
         res.send(true);
@@ -88,6 +139,21 @@ app.post("/session_update", (req, res) => {
     }
 })
 
+// create user session
+app.post('/session-create', (req, res) => {
+    // console.log(req.body);
+    req.session.user = {
+        ID: req.body.ID,
+        Email: req.body.Email,
+        Password: req.body.Password,
+        FirstName: req.body.FirstName,
+        LastName: req.body.LastName,
+        Level: req.body.Level,
+        TFA: req.body.TFA
+    };
+
+    res.send(true);
+});
 
 // Login GET
 app.get("/login", (req, res) => {
@@ -108,16 +174,6 @@ app.post('/login', (req, res) => {
         if (error) res.send(false);
 
         if (result.length > 0) {
-            // Create session with user results
-            req.session.user = {
-                ID: result[0].ID,
-                Email: result[0].Email,
-                Password: result[0].Password,
-                FirstName: result[0].FirstName,
-                LastName: result[0].LastName,
-                Level: result[0].Level
-            };
-
             // Send JSON array back with data
             res.json({
                 Login: true,
@@ -126,8 +182,12 @@ app.post('/login', (req, res) => {
                 Password: result[0].Password,
                 FirstName: result[0].FirstName,
                 LastName: result[0].LastName,
-                Level: result[0].Level
+                Level: result[0].Level,
+                TFA: result[0].TFA
             });
+        }
+        else {
+            res.json({ Login: false });
         }
     });
 })

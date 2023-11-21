@@ -11,7 +11,7 @@ function Layout() {
     return (
         <main className='flex flex-row'>
             <Navbar/>
-         
+            
             <div className="flex flex-1 flex-col">
             <Topbar/>
                 <Outlet />
