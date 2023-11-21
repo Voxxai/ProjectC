@@ -25,7 +25,7 @@ function Morgen() {
     }, []);
 
     return (
-        <div className="flex items-center justify-center h-screen bg-slate-100">
+        <div className="flex items-center justify-center h-full bg-slate-100">
             <div className="p-4 w-1/5 text-left overflow-y-auto bg-white rounded ml-auto mr-20 h-5/6">
                 <div className="flex items-center">
                     <FontAwesomeIcon icon={faUserGroup} className="mr-2" />

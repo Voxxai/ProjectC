@@ -48,7 +48,7 @@ function Login() {
 
         setTimeout(() => {
             setTFATimer(false);
-        }, 10000); // 5 min timer for the code or the user has to request a new code
+        }, 300000); // 5 min timer for the code or the user has to request a new code
     }
 
     const ResendMail = async () => {
