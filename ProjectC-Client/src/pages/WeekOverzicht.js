@@ -22,6 +22,7 @@ function WeekOverzicht() {
     const [ joined, setJoined ] = useState(false);
     const [ endJoinDate, setEndJoinDate ] = useState(false);
     const [ currentDate, setCurrentDate ] = useState(new Date());
+    const [ week, setWeek ] = useState(0);
     const { auth } = useAuth();
 
 // Onload set dates of this week
@@ -85,6 +86,7 @@ useEffect(() => {
         setEvents(eventData.flat()); // Flattening the array if needed
         setUsers(userData.flat()); // Flattening the array if needed
         setDates(week);
+        getWeek();
     }
 
     fetchData();
@@ -164,8 +166,15 @@ useEffect(() => {
             console.log(error);
             });
         }
-    
 
+    const getWeek = () => {
+        const curr = new Date(currentDate);
+        const start = new Date(curr.getFullYear(), 0, 1);
+        const days = Math.floor((curr - start) / (24 * 60 * 60 * 1000));
+
+        setWeek(Math.ceil(days / 7));
+    };
+    
     const handleWeek = (direction) => {
         
         setCurrentDate((prevDate) => {
@@ -184,8 +193,8 @@ useEffect(() => {
             <div className='flex flex-col gap-y-2 p-4 pt-2 h-full w-full'>
                 <div className='flex flex-row items-center rounded justify-between' >
                     <div className='flex items-center gap-x-5'>
-                        <span className='text-gray-400 font-medium text-2xl'> Week 43 </span>
-                        <div className='flex flex-row gap-x-1.5'>
+                        <span className='text-gray-400 font-medium text-2xl'>Week {week}</span>
+                        <div className='flex flex-row gap-x-1.5 select-none'>
                             <FontAwesomeIcon icon={faChevronLeft} onClick={() => handleWeek(-1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
                             <FontAwesomeIcon icon={faChevronRight} onClick={() => handleWeek(1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
                         </div>
