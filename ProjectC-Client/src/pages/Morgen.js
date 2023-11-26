@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserGroup, faCircleUser, faPen, faPlus, faCalendarDay, faCalendarDays, faUsers, faList, faListUl } from '@fortawesome/free-solid-svg-icons';
+import { faUserGroup, faCircleUser, faPen, faPlus, faCalendarDay, faCalendarDays, faUsers, faList, faListUl, faPenSquare, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Modal from '../components/MorgenModal';
 
@@ -57,15 +57,10 @@ function Morgen() {
             <div className='flex flex-col h-full gap-y-2 w-full'>
                 <div className='flex flex-row justify-between w-full'>
                     <span className='flex bg-cavero-purple p-1.5 px-2.5 text-white rounded-b font-medium'>{getDayName(new Date(currentDate).getDay())} {new Date(currentDate).getDate()} {getMonthName(new Date(currentDate).getMonth(), false)}</span>
-                    <div className='flex flex-row gap-x-1'>
-                        <button className='bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100 group'>
-                            <FontAwesomeIcon icon={faPen} className='group-hover:scale-110 duration-200' />
-                        </button>
-                        <button onClick={openModal} className='flex flex-row gap-x-1 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100 group'>
-                            <span>Week invoeren</span>
-                            <FontAwesomeIcon icon={faPlus} className='group-hover:scale-110 duration-100' />
-                        </button>
-                    </div>
+                    <button onClick={openModal} className='flex flex-row gap-x-1.5 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100 group'>
+                        <span>Mijn beschikbaarheid</span>
+                        <FontAwesomeIcon icon={faPenToSquare} />
+                    </button>
                 </div>
 
                 <div className='flex flex-row h-full gap-x-4'>
