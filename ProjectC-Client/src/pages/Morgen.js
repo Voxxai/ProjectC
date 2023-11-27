@@ -5,9 +5,10 @@ import axios from 'axios';
 import Modal from '../components/MorgenModal';
 
 function Morgen() {
-    const [ users, setUsers ] = useState([]);
-    const [ isModalOpen, setIsModalOpen ] = useState(false);
-    const [ currentDate ] = useState(new Date());
+    const [users, setUsers] = useState([]);
+    const [events, setEvents] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentDate] = useState(new Date());
 
     useEffect(() => {
         const tomorrow = new Date(currentDate);
@@ -17,10 +18,13 @@ function Morgen() {
 
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/users_day/${formattedTomorrow}`);
-                setUsers(response.data);
+                const userResponse = await axios.get(`http://localhost:8080/users_day/${formattedTomorrow}`);
+                setUsers(userResponse.data);
+
+                const eventResponse = await axios.get(`http://localhost:8080/events/${formattedTomorrow}`);
+                setEvents(eventResponse.data);
             } catch (error) {
-                console.error('Error fetching users:', error);
+                console.error('Error fetching data:', error);
             }
         };
 
@@ -90,10 +94,10 @@ function Morgen() {
                         </div>
                         <div className="border-2 border-cavero-purple my-2 rounded-full"></div>
                         <div>
-                            {users.map((user, index) => (
+                            {events.map((event, index) => (
                                 <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
-                                    <FontAwesomeIcon className='text-cavero-purple fa-2x' icon={faCircleUser} />
-                                    <span className='text-black text-sm font-semibold'>{user.FirstName} {user.LastName}</span>
+                                    <FontAwesomeIcon className='text-cavero-purple fa-2x' icon={faCalendarDay} />
+                                    <span className='text-black text-sm font-semibold'>{event.Title}</span>
                                 </div>
                             ))}
                         </div>
