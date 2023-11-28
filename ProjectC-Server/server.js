@@ -240,7 +240,7 @@ app.get('/event_users/:ID', (request, response) => {
 })
 
 app.get('/users_day/:date', (request, response) => {
-    db.query(`SELECT accounts.FirstName, accounts.LastName, Werknemer_rooster.Date FROM Werknemer_rooster LEFT JOIN accounts ON Werknemer_rooster.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
+    db.query(`SELECT accounts.FirstName, accounts.LastName, Employee_schedule.Date FROM Employee_schedule LEFT JOIN accounts ON Employee_schedule.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
 
         response.send(result);
