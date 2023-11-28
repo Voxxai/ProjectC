@@ -166,10 +166,7 @@ app.get("/login", (req, res) => {
 
 // Login POST
 app.post('/login', (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-
-    db.query(`SELECT * FROM accounts WHERE Email = '${email}' AND Password = '${password}'`, (error, result) => {
+    db.query(`SELECT * FROM accounts WHERE Email = "${req.body.email}" AND Password = "${req.body.password}"`, (error, result) => {
 
         if (error) res.send(false);
 
@@ -187,6 +184,7 @@ app.post('/login', (req, res) => {
             });
         }
         else {
+            // console.log("Wrong username/password");
             res.json({ Login: false });
         }
     });
@@ -300,7 +298,7 @@ app.get('/event_users/:ID', (request, response) => {
 })
 
 app.get('/users_day/:date', (request, response) => {
-    db.query(`SELECT accounts.FirstName, accounts.LastName, Werknemer_rooster.Date FROM Werknemer_rooster LEFT JOIN accounts ON Werknemer_rooster.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
+    db.query(`SELECT accounts.FirstName, accounts.LastName, Employee_Schedule.Date FROM Employee_Schedule LEFT JOIN accounts ON Employee_Schedule.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
 
         response.send(result);
