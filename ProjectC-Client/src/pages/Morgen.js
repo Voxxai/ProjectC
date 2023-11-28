@@ -9,6 +9,7 @@ function Morgen() {
     const [events, setEvents] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentDate] = useState(new Date());
+    const [tomorrowDate] = useState(new Date(currentDate).setDate(currentDate.getDate() + 1));
 
     useEffect(() => {
         const tomorrow = new Date(currentDate);
@@ -60,7 +61,7 @@ function Morgen() {
         <div className="flex items-center h-full bg-slate-100 p-4 pt-0 w-full">
             <div className='flex flex-col h-full gap-y-2 w-full'>
                 <div className='flex flex-row justify-between w-full'>
-                    <span className='flex bg-cavero-purple p-1.5 px-2.5 text-white rounded-b font-medium'>{getDayName(new Date(currentDate).getDay())} {new Date(currentDate).getDate()} {getMonthName(new Date(currentDate).getMonth(), false)}</span>
+                    <span className='flex bg-cavero-purple p-1.5 px-2.5 text-white rounded-b font-medium'>{getDayName(new Date(tomorrowDate).getDay())} {new Date(tomorrowDate).getDate()} {getMonthName(new Date(tomorrowDate).getMonth(), false)}</span>
                     <button onClick={openModal} className='flex flex-row gap-x-1.5 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100 group'>
                         <span>Mijn beschikbaarheid</span>
                         <FontAwesomeIcon icon={faPenToSquare} />
