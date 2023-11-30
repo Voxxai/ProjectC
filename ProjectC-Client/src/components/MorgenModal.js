@@ -14,7 +14,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
   const [ isDisabled, setIsDisabled ] = useState({});
   const [loading, setLoading] = useState(false);
   const [hidden, setHidden] = useState(true);
-  const [changed, setChanged] = useState(true);
+  const [changed, setChanged] = useState(false);
 
   const Menus = [
     ["Maandag"],
@@ -24,28 +24,79 @@ function MorgenModal({isOpen, onRequestClose, }) {
     ["Vrijdag"],
   ];
 
+  const getAllDatesOfWeek = () => {
+    let dates = [];
+    let date = new Date();
+    let day = date.getDay();
+    let diff = date.getDate() - day + (day == 0 ? -6:1);
+    let monday = new Date(date.setDate(diff));
+    for(let i = 0; i < 5; i++) {
+      let nextDay = new Date(monday);
+      nextDay.setDate(monday.getDate() + i);
+      dates.push(nextDay);
+    }
+
+    return dates;
+    
+  }
+
+  const getPossibleValues = async (Account_ID, Date) => {
+    await axios.get('http://localhost:8080/get-employee-schedule', {ID: Account_ID, Date: Date}).then((response) => {
+      return response.data.Room == null ? 0 : response.data.Room;
+    });
+  }
+
+  const setWeekValuesToDefault = () => {
+    const WeekDates = getAllDatesOfWeek();
+    for (let i = 0; i < 5; i++) {
+      let indexOfWeeks = WeekDates.indexOf(WeekDates[i]);
+      let WeekDate = WeekDates[i].getFullYear() + "-" + (WeekDates[i].getMonth() + 1) + "-" + WeekDates[i].getDate();
+      let WeekDateValue = getPossibleValues(auth.ID, WeekDate);
+
+      if (WeekDateValue != 0) {
+        setWeekValues({
+          ...weekValues,
+          ["Dag" + indexOfWeeks]: WeekDateValue,
+        });
+      }
+    }
+  }
+
+  useEffect(() => {
+    setWeekValuesToDefault();
+  }, []);
+
   const SendWeekSchedule = async (e) => {
     // Check if values are changed before sending request
-    if (!changed) return;
+    // if (!changed) return;
+
+    // Get all dates of the week
+    const WeekDates = getAllDatesOfWeek();
 
     // Show loading icon
     setLoading(true);
     setHidden(false);
 
-    // Send request
-    await axios.post('http://localhost:8080/scheduleweek', {
-      Account_ID: auth.ID,
-      Date: '2023-12-06',
-      Room: 'Stille Ruimte',
-    }).then((response) => {
-      console.log(response);
-      // setChanged(false);
-    
-    }).catch((error) => { 
-      console.log(error);
-    });
+    console.log(weekValues);
 
-    
+    // Send request
+    // for (let i = 0; i < 5; i++) {
+    //   let indexOfWeeks = WeekDates.indexOf(WeekDates[i]);
+    //   let WeekDate = WeekDates[i].getFullYear() + "-" + (WeekDates[i].getMonth() + 1) + "-" + WeekDates[i].getDate();
+    //   let WeekDateValue = weekValues["Dag" + indexOfWeeks];
+
+    //   await axios.post('http://localhost:8080/scheduleweek', {
+    //     Account_ID: auth.ID,
+    //     Date: WeekDate,
+    //     Room: WeekDateValue,
+    //   }).then((response) => {
+        
+    //     setChanged(false);
+      
+    //   }).catch((error) => { 
+    //     console.log(error);
+    //   });
+    // }
 
     setTimeout(() => {
       setLoading(false);
@@ -65,14 +116,17 @@ function MorgenModal({isOpen, onRequestClose, }) {
   };
 
   const handleSelectChange = async (e) => {
+    setChanged(true);
     setWeekValues({
       ...weekValues,
       [e.target.name]: e.target.value,
     });
+  }
 
-    setTimeout(() => {
-      console.log(weekValues);
-    }, 3000);
+  const handleSubmit = async (e) => {
+    // e.preventDefault();
+    // console.log(weekValues);
+    SendWeekSchedule();
   }
 
   return (
@@ -126,7 +180,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
         </div>
 
         <div className='flex flex-row-reverse'>
-          <button type='submit' onClick={SendWeekSchedule} id='ChangeProfile' className='flex gap-x-1.5 items-center justify-center px-4 py-1.5 bg-cavero-purple rounded-md text-white hover:bg-cavero-purple-dark hover:scale-105 duration-200'>
+          <button type='submit' onClick={(e) => handleSubmit(e)} id='ChangeProfile' className='flex gap-x-1.5 items-center justify-center px-4 py-1.5 bg-cavero-purple rounded-md text-white hover:bg-cavero-purple-dark hover:scale-105 duration-200'>
             Opslaan
             <FontAwesomeIcon icon={loading ? faSpinner : faCheck} className={`${loading ? "animate-spin" : ""} ${hidden ? 'hidden' : ''}`} />
           </button>

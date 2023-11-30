@@ -394,7 +394,15 @@ app.get('/eventsregistertime/:EventId', (req, res) => {
 
 app.post('/scheduleweek', (req, res) => { 
     db.query(`INSERT INTO Employee_Schedule (Account_ID, Date, Room) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE Room = ?`,
-   [req.body.Account_ID, req.body.Date, req.body.Room, req.body.Room], (error, result) => {
+   [req.body.Account_ID, req.body.Date, req.body.Room, req.body.Room], (error) => {
+        if (error) console.log(error);
+
+        res.send(true);
+    });
+});
+
+app.get('/get-employee-schedule', (req, res) => {
+    db.query(`SELECT * FROM Employee_Schedule WHERE Account_ID = ? AND Date = ?`, [req.body.ID, req.body.Date],  (error, result) => {
         if (error) console.log(error);
 
         res.send(result);
