@@ -166,10 +166,7 @@ app.get("/login", (req, res) => {
 
 // Login POST
 app.post('/login', (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-
-    db.query(`SELECT * FROM accounts WHERE Email = '${email}' AND Password = '${password}'`, (error, result) => {
+    db.query(`SELECT * FROM accounts WHERE Email = "${req.body.email}" AND Password = "${req.body.password}"`, (error, result) => {
 
         if (error) res.send(false);
 
@@ -187,6 +184,7 @@ app.post('/login', (req, res) => {
             });
         }
         else {
+            // console.log("Wrong username/password");
             res.json({ Login: false });
         }
     });
