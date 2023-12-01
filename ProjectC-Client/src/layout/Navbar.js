@@ -16,7 +16,7 @@ function Navbar() {
     <div className=''>
       <div className="flex">
         <div
-          className={`${open ? "w-72 max-sm:" : "w-20 max-sm:w-2"
+          className={`${open ? "w-72 max-sm:absolute z-10" : "w-20 max-sm:w-2"
             } bg-cavero-purple h-screen pt-2.5 relative duration-300`}
         >
           <FontAwesomeIcon
