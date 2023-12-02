@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios, { Axios } from 'axios';
+import "./Scrollbar.css";
 import "./Login.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightLong, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
@@ -34,35 +35,35 @@ function Login() {
             setError(true);
             return;
         }
-        
+
         setError(false);
 
         try {
             //Hashing the password
             values.password = Sha1(values.password);
-            
-            await axios.post(`http://localhost:8080/login`, values)
-            .then(response => {
-                if (response.data.Login) {
-                    // Login succes
-                    const ID = response.data.ID;
-                    const FirstName = response.data.FirstName;
-                    const LastName = response.data.LastName;
-                    const Email = response.data.Email;
-                    const Password = response.data.Wachtwoord;
-                    const Level = response.data.Level;
-    
-                    setAuth({ ID, FirstName, LastName, Email, Password, Level });
-                    navigate(from, { replace: true });
-                } else {
-                    setErrorMessage("Emailadres of wachtwoord klopt niet!");
-                    setError(true);
-                    return;
-                }
 
-            }).catch(err => {
+            await axios.post(`http://localhost:8080/login`, values)
+                .then(response => {
+                    if (response.data.Login) {
+                        // Login succes
+                        const ID = response.data.ID;
+                        const FirstName = response.data.FirstName;
+                        const LastName = response.data.LastName;
+                        const Email = response.data.Email;
+                        const Password = response.data.Wachtwoord;
+                        const Level = response.data.Level;
+
+                        setAuth({ ID, FirstName, LastName, Email, Password, Level });
+                        navigate(from, { replace: true });
+                    } else {
+                        setErrorMessage("Emailadres of wachtwoord klopt niet!");
+                        setError(true);
+                        return;
+                    }
+
+                }).catch(err => {
                     console.log(err);
-            });
+                });
 
         } catch (err) {
             console.log(err);
@@ -85,10 +86,10 @@ function Login() {
                 const Email = response.data.user.Email;
                 const Password = response.data.user.Wachtwoord;
                 const Level = response.data.user.Level;
-                
+
                 // Storing the user details to the authenticate
                 setAuth({ ID, FirstName, LastName, Email, Password, Level });
-                
+
                 // hide loading spinner
                 // setTimeout(() => {
                 //     setLoading(false);
@@ -96,7 +97,7 @@ function Login() {
 
                 // Redirect back to url
                 navigate(from, { replace: true });
-                
+
             }
         }, [])
 
@@ -114,28 +115,28 @@ function Login() {
                     <div className={`bg-red-200 h-10 rounded flex mb-1 ${!error && 'hidden'}`}>
                         <p className='text-black my-auto p-2 text-sm'>{errorMessage}</p>
                     </div>
-                <form>
-                    <div className='input-container'>
-                    <div className='input-group'>
-                        <FontAwesomeIcon icon={faEnvelope} color='black' className='field-icon'/>
-                        <input type="email" className='field-input' name='email' id="email" placeholder="E-mailadres" onChange={handleInput} required/>
-                    </div>
-                    <div className='ColoredLine'></div>
-                    </div>
-                    
-                    <div className='input-container'>
-                    <div className='input-group'>
-                        <FontAwesomeIcon icon={faLock} color='black' className='field-icon'/>
-                        <input type="password" className='field-input' name='password' id="password" placeholder="Wachtwoord" onChange={handleInput} required/>
-                    </div>
-                    <div className='ColoredLine'></div>
-                    </div>
-                    <div className='form-extras'>
-                    <a>Wachtwoord vergeten?</a>
-                    <button type="button" className='btn-submit' onClick={getUser}>Login <FontAwesomeIcon icon={faArrowRightLong} color='white'/></button>
-                    </div>
-                    
-                </form>
+                    <form>
+                        <div className='input-container'>
+                            <div className='input-group'>
+                                <FontAwesomeIcon icon={faEnvelope} color='black' className='field-icon' />
+                                <input type="email" className='field-input' name='email' id="email" placeholder="E-mailadres" onChange={handleInput} required />
+                            </div>
+                            <div className='ColoredLine'></div>
+                        </div>
+
+                        <div className='input-container'>
+                            <div className='input-group'>
+                                <FontAwesomeIcon icon={faLock} color='black' className='field-icon' />
+                                <input type="password" className='field-input' name='password' id="password" placeholder="Wachtwoord" onChange={handleInput} required />
+                            </div>
+                            <div className='ColoredLine'></div>
+                        </div>
+                        <div className='form-extras'>
+                            <a>Wachtwoord vergeten?</a>
+                            <button type="button" className='btn-submit' onClick={getUser}>Login <FontAwesomeIcon icon={faArrowRightLong} color='white' /></button>
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>
