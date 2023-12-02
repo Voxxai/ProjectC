@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faMapMarkerAlt, faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 
-function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, endJoinDate }) {
+function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, isPastEvent }) {
 
 
     const { auth } = useAuth();
@@ -37,7 +37,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
 
 
     const renderButtons = () => {
-        if (endJoinDate) {
+        if (isPastEvent) {
             return (
                 <div className='flex flex-row gap-x-2 justify-center'>
                     <button className='bg-gray-200 text-gray-500 rounded-md p-2 px-3' disabled>
