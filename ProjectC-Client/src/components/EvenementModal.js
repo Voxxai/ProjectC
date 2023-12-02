@@ -5,8 +5,6 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
-
-
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
     const [formData, setFormData] = useState({
