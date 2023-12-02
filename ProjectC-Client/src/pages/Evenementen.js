@@ -99,8 +99,8 @@ function Evenementen() {
                 <FontAwesomeIcon icon={faChevronDown} className={`${isDropdownOpen && "rotate-180"} duration-100`} />
               </h4>
               <ul className={`${isDropdownOpen ? 'block' : 'hidden'} absolute w-full min-w-fit max-w-fit bg-white border rounded-b  p-1 text-cavero-purple text-sm divide-y divide-gray-200 z-50`}>
-                <li className="block py-2 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" onClick={() => setSelectedDropdownOption('Toekomstig')}>Toekomstig</li>
-                <li className="block py-2 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" onClick={() => setSelectedDropdownOption('Verlopen')}>Verlopen</li>
+                <li className="block py-2 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" onClick={() => { setSelectedDropdownOption('Toekomstig'); setIsDropdownOpen(false); }}>Toekomstig</li>
+                <li className="block py-2 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" onClick={() => { setSelectedDropdownOption('Verlopen'); setIsDropdownOpen(false); }}>Verlopen</li>
               </ul>
             </div>
           </div>
@@ -132,7 +132,6 @@ function Evenementen() {
                 })
                 .filter(event => { return event.Level >= 2 })
                 .map((event) => (
-                  console.log(event),
                   <Evenement
                     key={event.ID}
                     id={event.ID}

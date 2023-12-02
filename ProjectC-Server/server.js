@@ -339,62 +339,63 @@ app.get('/event_users/:ID', (request, response) => {
 
 app.get('/users_day/:date', (request, response) => {
     db.query(`SELECT accounts.FirstName, accounts.LastName, Employee_Schedule.Date FROM Employee_Schedule LEFT JOIN accounts ON Employee_Schedule.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
-        db.query(`SELECT accounts.FirstName, accounts.LastName, Employee_Schedule.Date FROM Employee_Schedule LEFT JOIN accounts ON Employee_Schedule.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
-            if (error) console.log(error);
+        if (error) console.log(error);
 
-            response.send(result);
-        });
-    })
-
-    app.post('/joinevent', (req, res) => {
-        const { EventId, UserId } = req.body;
-
-
-        const sql = 'INSERT INTO event_users (Event_ID, User_ID) VALUES (?, ?)';
-        db.query(sql, [EventId, UserId], (err, result) => {
-            if (err) {
-                console.log(err);
-                res.status(500).json({ message: 'Error inserting event data' });
-            } else {
-                res.status(200).json({ message: 'Event data inserted successfully' });
-            }
-        });
+        response.send(result);
     });
+});
 
-    app.get('/checkevent/:EventId/:UserId', (req, res) => {
-        db.query(`SELECT * FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
-            if (error) console.log(error);
+app.post('/joinevent', (req, res) => {
+    const { EventId, UserId } = req.body;
 
-            if (result.length > 0) {
-                res.send(true);
-            }
-            else {
-                res.send(false);
-            }
-        });
+
+    const sql = 'INSERT INTO event_users (Event_ID, User_ID) VALUES (?, ?)';
+    db.query(sql, [EventId, UserId], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error inserting event data' });
+        } else {
+            res.status(200).json({ message: 'Event data inserted successfully' });
+        }
     });
+});
 
-    app.post('/leaveevent/:EventId/:UserId', (req, res) => {
-        db.query(`DELETE FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
-            if (error) console.log(error);
+app.get('/checkevent/:EventId/:UserId', (req, res) => {
+    db.query(`SELECT * FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
+        if (error) console.log(error);
 
-            res.send(result);
-        });
+        if (result.length > 0) {
+            res.send(true);
+        }
+        else {
+            res.send(false);
+        }
     });
+});
 
-    app.get('/eventsregistertime/:EventId', (req, res) => {
-        db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
-            if (error) console.log(error);
+app.post('/leaveevent/:EventId/:UserId', (req, res) => {
+    db.query(`DELETE FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
+        if (error) console.log(error);
 
-            if (result.length > 0) {
-                res.send(true);
-            }
-            else {
-                res.send(false);
-            }
-        });
+        res.send(result);
     });
+});
 
-    app.listen(8080, () => {
-        console.log("Server listing");
-    })
+app.get('/eventsregistertime/:EventId', (req, res) => {
+    db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
+        console.log("\n\n\n\n\n, ")
+        if (error) console.log(error);
+
+        if (result.length > 0) {
+            console.log('checkEndJoinDate response:', response.data);
+            res.send(true);
+        }
+        else {
+            res.send(false);
+        }
+    });
+});
+
+app.listen(8080, () => {
+    console.log("Server listing");
+});
