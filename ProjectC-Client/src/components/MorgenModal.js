@@ -12,9 +12,11 @@ function MorgenModal({isOpen, onRequestClose, }) {
   const { auth } = useAuth();
   const [ weekValues, setWeekValues ] = useState({});
   const [ isDisabled, setIsDisabled ] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [hidden, setHidden] = useState(true);
-  const [changed, setChanged] = useState(false);
+  const [ loading, setLoading ] = useState(false);
+  const [ hidden, setHidden ] = useState(true);
+  const [ changed, setChanged ] = useState(false);
+  const [ weekDates, setWeekDates ] = useState([]);
+  const [ weekNumber, setWeekNumber ] = useState('');
 
   const Menus = [
     ["Maandag"],
@@ -40,38 +42,38 @@ function MorgenModal({isOpen, onRequestClose, }) {
     
   }
 
-  const getPossibleValues = async (Account_ID, Date) => {
-    await axios.get('http://localhost:8080/get-employee-schedule', {ID: Account_ID, Date: Date}).then((response) => {
-      return response.data.Room == null ? 0 : response.data.Room;
+  const getWeek = (date) => {
+    const curr = new Date(date);
+    const start = new Date(curr.getFullYear(), 0, 1);
+    const days = Math.floor((curr - start) / (24 * 60 * 60 * 1000));
+
+    return Math.ceil(days / 7);
+};
+
+  const getPossibleValues = async () => {
+    await axios.get(`http://localhost:8080/get-employee-schedule/${auth.ID}`).then((response) => {
+      setWeekValues({
+        Dag0: response.data[0].Monday,
+        Dag1: response.data[0].Tuesday,
+        Dag2: response.data[0].Wednesday,
+        Dag3: response.data[0].Thursday,
+        Dag4: response.data[0].Friday
+      });
     });
   }
 
-  const setWeekValuesToDefault = () => {
-    const WeekDates = getAllDatesOfWeek();
-    for (let i = 0; i < 5; i++) {
-      let indexOfWeeks = WeekDates.indexOf(WeekDates[i]);
-      let WeekDate = WeekDates[i].getFullYear() + "-" + (WeekDates[i].getMonth() + 1) + "-" + WeekDates[i].getDate();
-      let WeekDateValue = getPossibleValues(auth.ID, WeekDate);
-
-      if (WeekDateValue != 0) {
-        setWeekValues({
-          ...weekValues,
-          ["Dag" + indexOfWeeks]: WeekDateValue,
-        });
-      }
-    }
-  }
-
   useEffect(() => {
-    setWeekValuesToDefault();
+    getPossibleValues();
+    setWeekDates(getAllDatesOfWeek().map((date) => {
+      return date.getDate() + " " + getMonthName(date.getMonth(), false);
+    }));
+    setWeekNumber(getWeek(new Date()));
+    
   }, []);
 
   const SendWeekSchedule = async (e) => {
     // Check if values are changed before sending request
-    // if (!changed) return;
-
-    // Get all dates of the week
-    const WeekDates = getAllDatesOfWeek();
+    if (!changed) return;
 
     // Show loading icon
     setLoading(true);
@@ -80,28 +82,35 @@ function MorgenModal({isOpen, onRequestClose, }) {
     console.log(weekValues);
 
     // Send request
-    // for (let i = 0; i < 5; i++) {
-    //   let indexOfWeeks = WeekDates.indexOf(WeekDates[i]);
-    //   let WeekDate = WeekDates[i].getFullYear() + "-" + (WeekDates[i].getMonth() + 1) + "-" + WeekDates[i].getDate();
-    //   let WeekDateValue = weekValues["Dag" + indexOfWeeks];
-
-    //   await axios.post('http://localhost:8080/scheduleweek', {
-    //     Account_ID: auth.ID,
-    //     Date: WeekDate,
-    //     Room: WeekDateValue,
-    //   }).then((response) => {
-        
-    //     setChanged(false);
+    await axios.post('http://localhost:8080/scheduleweek', {
+      Account_ID: auth.ID,
+      Monday: weekValues.Dag0,
+      Tuesday: weekValues.Dag1,
+      Wednesday: weekValues.Dag2,
+      Thursday: weekValues.Dag3,
+      Friday: weekValues.Dag4
+    }).then((response) => {
       
-    //   }).catch((error) => { 
-    //     console.log(error);
-    //   });
-    // }
+      setChanged(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    
+    }).catch((error) => { 
+      console.log(error);
+    });
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
   };
+
+  function getMonthName(month, short = true) {
+    var monthNames = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun",
+        "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
+    ];
+    var monthFullNames = ["Januari", "Febuari", "Maart", "April", "Mei", "Juni",
+        "Juli", "Augustus", "September", "Oktober", "November", "December"
+    ];
+    return short ? monthNames[month] : monthFullNames[month];
+}
 
 
   const handleCheckboxChange = (index, overwrite=false) => {
@@ -110,23 +119,41 @@ function MorgenModal({isOpen, onRequestClose, }) {
         ...isDisabled,
         [index]: !isDisabled[index],
       });
+
+      // Correct form if checkbox is disabled and value is not null
+      correctingForm(index);
     }
 
     return;
   };
 
+  const correctingForm = (index) => {
+    if (isDisabled[index] === false && weekValues["Dag" + index] !== null) {
+      setWeekValues((prevWeekValues) => ({
+        ...prevWeekValues,
+        ["Dag" + index]: null,
+      }));
+    }
+  }
+
   const handleSelectChange = async (e) => {
     setChanged(true);
     setWeekValues({
       ...weekValues,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value == 0 ? null : e.target.value,
     });
   }
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // console.log(weekValues);
     SendWeekSchedule();
+  }
+
+  const settingValue = (index) => {
+    if (weekValues["Dag" + index] != null) {
+      return weekValues["Dag" + index];
+    } else {
+      return 0;
+    } 
   }
 
   return (
@@ -152,7 +179,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
         </div>
 
         <span className='flex font-medium text-cavero-purple'>
-          Week 1: 4 januari t/m 8 januari
+          Week {weekNumber}: {weekDates[0]} t/m {weekDates[4]}
         </span>
 
         <div className='flex flex-col w-full gap-y-3'>
@@ -164,8 +191,12 @@ function MorgenModal({isOpen, onRequestClose, }) {
 
                   <div className='flex flex-col gap-y-1.5 w-full'> 
                     <span onClick={() => handleCheckboxChange(index, true)} className='cursor-pointer text-lg text-gray-700 font-medium w-full leading-none'>{menu}</span>
-                    <select onChange={(e) => handleSelectChange(e)} name={"Dag" + index} className={`font-normal w-full ${!isDisabled[index] && 'hidden'}`} placeholder='Kies een optie'>
-                      <option disabled={true} selected={true} value={0}>---</option>
+                    <select onChange={(e) => handleSelectChange(e)} 
+                            name={"Dag" + index} 
+                            value={settingValue(index)} 
+                            className={`font-normal w-full ${!isDisabled[index] && 'hidden'}`} 
+                            placeholder='Kies een optie'>
+                      <option value={0}>---</option>
                       <option value={"Stille Ruimte"}>Stille ruimte</option>
                       <option value={"Werk Ruimte 1"}>Werk Ruimte 1</option>
                       <option value={"Werk Ruimte 2"}>Werk Ruimte 2</option>
