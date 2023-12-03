@@ -393,19 +393,32 @@ app.get('/eventsregistertime/:EventId', (req, res) => {
 });
 
 app.post('/scheduleweek', (req, res) => { 
-    db.query(`INSERT INTO Employee_Schedule (Account_ID, Date, Room) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE Room = ?`,
-   [req.body.Account_ID, req.body.Date, req.body.Room, req.body.Room], (error) => {
+    db.query(`  INSERT INTO caverogroep2.Employee_Schedule2 (Account_ID, Monday, Tuesday, Wednesday, Thursday, Friday)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                    Monday = ?,
+                    Tuesday = ?,
+                    Wednesday = ?,
+                    Thursday = ?,
+                    Friday = ?;`,
+   [req.body.Account_ID, req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday,
+    req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday], 
+    (error) => {
         if (error) console.log(error);
 
         res.send(true);
     });
 });
 
-app.get('/get-employee-schedule', (req, res) => {
-    db.query(`SELECT * FROM Employee_Schedule WHERE Account_ID = ? AND Date = ?`, [req.body.ID, req.body.Date],  (error, result) => {
+app.get('/get-employee-schedule/:Account_ID', (req, res) => {
+    db.query(`SELECT * FROM Employee_Schedule2 WHERE Account_ID = ${req.params.Account_ID}`,  (error, result) => {
         if (error) console.log(error);
 
-        res.send(result);
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send(null);
+        }
     });
 });
 
