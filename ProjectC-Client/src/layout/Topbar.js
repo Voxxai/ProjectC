@@ -69,16 +69,16 @@ function Topbar() {
   return (
     <div className="bg-white shadow-md w-full h-full max-h-20 flex justify-between items-center px-4">
       {/* Header */}
-      <div className='items-center mt-2'>
-        <h2 className=''>{location.pathname == "/" ? "Week Overzicht" : location.pathname.slice(1)}</h2>
+      <div className='items-center'>
+        <span className='font-medium text-3xl'>{location.pathname == "/" ? "Week Overzicht" : location.pathname.slice(1)}</span>
       </div>
 
       {/* Account item */}
       <div ref={settingMenu} className="my-auto flex gap-10 items-center">
         <button className="flex gap-2 items-center" onClick={() => setOpen(!open)}>
-          <FontAwesomeIcon icon={faCircleUser} className="fa-xl text-cavero-purple" />
-          <span className="">Hallo, {auth.FirstName}</span>
-          <FontAwesomeIcon icon={faChevronDown} className={`${open && 'rotate-180'} duration-100`} />
+          <FontAwesomeIcon icon={faCircleUser} className="fa-xl text-cavero-purple " />
+          <span className="text-slate-700">Hallo, {auth.FirstName}</span>
+          <FontAwesomeIcon icon={faChevronDown} className={`${open && 'rotate-180'} duration-100 text-slate-700`} />
         </button>
 
         {/* Dropdown menu */}
@@ -98,14 +98,14 @@ function Topbar() {
         </div>
 
         {/* Next items */}
-        <div className="flex gap-3 fa-lg items-center relative">
-          <Link to="/Nieuws" className="text-cavero-purple duration-300 hover:scale-110 relative fa-lg">
-            <FontAwesomeIcon icon={faBell} onClick={handleBellPress} />
+        <div className="flex gap-x-4 text-sm items-center relative">
+          <Link to="/Nieuws" className="text-cavero-purple duration-300 hover:scale-110 relative">
+            <FontAwesomeIcon icon={faBell} onClick={handleBellPress} className='fa-xl' />
           </Link>
           {notificationCount > 0 && (
-            <Link to="/Nieuws" onClick={handleBellPress} className="absolute top-0 right-10 -mt-1 -mr-1">
-              <span className="relative inline-flex h-4 w-4 bg-red-600 rounded-full">
-                <span className="animate-ping absolute inset-0 rounded-full h-full w-full bg-red-600"></span>
+            <Link to="/Nieuws" onClick={handleBellPress} className="absolute top-0 right-10 -mt-1.5 -mr-3">
+              <span className="relative inline-flex h-4 w-4 bg-red-500 rounded-full">
+                <span className="animate-ping absolute inset-0 rounded-full h-full w-full bg-red-500"></span>
                 <span className="absolute inset-0 flex items-center justify-center text-white text-xs">
                   {notificationCount}
                 </span>
@@ -114,7 +114,7 @@ function Topbar() {
           )}
           <FontAwesomeIcon
             icon={faSignOut}
-            className="text-cavero-purple duration-300 hover:scale-110 cursor-pointer fa-lg"
+            className="text-cavero-purple duration-300 hover:scale-110 cursor-pointer fa-xl"
             onClick={handleSignOut}
           />
         </div>

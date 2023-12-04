@@ -112,8 +112,11 @@ function Profile() {
       <div className='flex flex-col mb-10'>
         <span className='font-semibold text-lg'>Account gegevens</span>
         <div className='flex flex-col gap-x-2'>
-          <label className='w-full'>Email</label>
-          <input type="text" id='Email' name='Email' defaultValue={auth.Email} onChange={onChangeValues} className='shadow-md appearance-none border rounded w-min-2 w-4/6 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' placeholder='Email' />
+          <label className='w-full'>Email
+            <div className='w-full'>
+              <input type="text" id='Email' name='Email' defaultValue={auth.Email} onChange={onChangeValues} className='w-3/4' placeholder='Email' />
+            </div>
+          </label>
         </div>
       </div>
 
@@ -122,14 +125,16 @@ function Profile() {
         <span className='font-semibold text-lg'>Persoonlijke gegevens</span>
         <div className='flex flex-row gap-x-2 '>
 
-          <div className='flex flex-col gap-x-2 w-full'>
-            <label className='w-full'>Voornaam</label>
-            <input type="text" id='FirstName' name='FirstName' defaultValue={auth.FirstName} onChange={onChangeValues} placeholder='Voornaam' />
+          <div className='flex flex-col gap-x-2 w-2/5'>
+            <label className='w-full'>Voornaam
+              <input type="text" id='FirstName' name='FirstName' defaultValue={auth.FirstName} onChange={onChangeValues} placeholder='Voornaam' />
+            </label>
           </div>
 
-          <div className='flex flex-col gap-x-2 w-full'>
-            <label className='w-full'>Achternaam</label>
-            <input type="text" id='LastName' name='LastName' defaultValue={auth.LastName} onChange={onChangeValues} placeholder='Achternaam' />
+          <div className='flex flex-col gap-x-2 w-3/5'>
+            <label className='w-full'>Achternaam
+              <input type="text" id='LastName' name='LastName' defaultValue={auth.LastName} onChange={onChangeValues} placeholder='Achternaam' />
+            </label>
           </div>
 
         </div>

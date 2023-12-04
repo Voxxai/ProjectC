@@ -39,27 +39,22 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
   }
 
   function renderButtons() {
-    console.log(endJoinDate);
     if (endJoinDate == true) {
       return (
-        <div className='flex flex-row gap-x-2 justify-center'>
           <button className='bg-gray-200 text-gray-500 rounded-md p-2 px-3' disabled>Inschrijftijd is verlopen</button>
-        </div>
       )
     }
     else {
       if (joined == false){
         return (
-          <div className='flex flex-row gap-x-2 justify-end'>
+          <div className='flex gap-x-2'>
             <button className='bg-cavero-purple text-white rounded-md p-2 px-3' onClick={() => joinEvent()}>Deelnemen</button>
             <button className='bg-gray-200 text-gray-500 rounded-md p-2 px-3' onClick={() => leaveEvent()}>Afwijzen</button>
           </div>
         )
       } else {
         return (
-          <div className='flex flex-row gap-x-2 justify-end'>
             <button className='bg-red-500 text-slate-50 rounded-md p-2 px-3' onClick={() => leaveEvent()}>Verlaten</button>
-          </div>
         )
       }
     }
@@ -106,7 +101,10 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
         </div>
 
 
-        {renderButtons()}
+        <div className={`flex flex-row py-2 gap-x-2 ${endJoinDate ? "justify-center" : "justify-end" }`}>
+          {renderButtons()}
+        </div>
+        
 
         <div className='flex flex-col'>
           <div className='flex flex-row gap-x-2 justify-evenly'>  
