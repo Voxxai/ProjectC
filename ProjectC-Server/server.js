@@ -335,8 +335,9 @@ app.get('/event_users/:ID', (request, response) => {
     });
 })
 
-app.get('/users_day/:date', (request, response) => {
-    db.query(`SELECT accounts.FirstName, accounts.LastName, Employee_Schedule.Date FROM Employee_Schedule LEFT JOIN accounts ON Employee_Schedule.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
+app.get('/users_day/:day', (request, response) => {
+    const day = request.params.day;
+    db.query('SELECT accounts.FirstName, accounts.LastName FROM Employee_Schedule2 LEFT JOIN accounts ON Employee_Schedule2.Account_ID = accounts.ID WHERE ?? IS NOT NULL OR ?? = ?', [day, day, 'Thuis'], (error, result) => {
         if (error) console.log(error);
 
         response.send(result);
