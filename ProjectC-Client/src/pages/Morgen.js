@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserGroup, faCircleUser, faPen, faPlus, faCalendarDay, faCalendarDays, faUsers, faList, faListUl, faPenSquare, faPenToSquare, faPeopleRoof, faHouse, faUserCheck, faLaptop } from '@fortawesome/free-solid-svg-icons';
+import { faUserGroup, faCircleUser, faPen, faPlus, faCalendarDay, faCalendarDays, faUsers, faList, faListUl, faPenSquare, faPenToSquare, faPeopleRoof, faHouse, faUserCheck, faLaptop, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Modal from '../components/MorgenModal';
 
@@ -128,7 +128,6 @@ function Morgen() {
                         <div>
                             {events.map((event, index) => (
                                 <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
-                                    <FontAwesomeIcon className='text-cavero-purple fa-2x' icon={faCalendarDay} />
                                     <span className='text-black text-sm font-semibold'>{event.Title}</span>
                                 </div>
                             ))}
