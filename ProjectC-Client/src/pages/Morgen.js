@@ -144,7 +144,7 @@ function Morgen() {
                         <div>
                             {users.map((user, index) => (
                                 <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
-                                    <FontAwesomeIcon className='text-cavero-purple fa-2x' icon={faCircleUser} />
+                                    <FontAwesomeIcon className='text-cavero-purple' icon={faCircleUser} />
                                     <span className='text-black text-sm font-semibold'>{user.FirstName} {user.LastName}</span>
                                 </div>
                             ))}
