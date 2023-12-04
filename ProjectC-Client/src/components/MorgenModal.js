@@ -53,11 +53,11 @@ function MorgenModal({isOpen, onRequestClose, }) {
   const getPossibleValues = async () => {
     await axios.get(`http://localhost:8080/get-employee-schedule/${auth.ID}`).then((response) => {
       setWeekValues({
-        Dag0: response.data[0].Monday,
-        Dag1: response.data[0].Tuesday,
-        Dag2: response.data[0].Wednesday,
-        Dag3: response.data[0].Thursday,
-        Dag4: response.data[0].Friday
+        Dag0: response.data[0]?.Monday ?? 0,
+        Dag1: response.data[0]?.Tuesday ?? 0,
+        Dag2: response.data[0]?.Wednesday ?? 0,
+        Dag3: response.data[0]?.Thursday ?? 0,
+        Dag4: response.data[0]?.Friday ?? 0
       });
     });
   }
