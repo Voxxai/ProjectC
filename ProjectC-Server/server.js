@@ -343,6 +343,15 @@ app.get('/users_day/:date', (request, response) => {
     });
 })
 
+app.get('/rooms_status/:day', (request, response) => {
+    db.query(`SELECT ${request.params.day} FROM Employee_Schedule2`, (error, result) => {
+        if (error) console.log(error);
+
+        const werkRuimtes = result.map(entry => entry[request.params.day]);
+        response.send(werkRuimtes);
+    });
+})
+
 app.post('/joinevent', (req, res) => {
     const { EventId, UserId } = req.body;
     
