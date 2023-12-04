@@ -20,7 +20,7 @@ function Morgen() {
 
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get(`http://localhost:8080/users_day/${formattedTomorrow}`);
+                const userResponse = await axios.get(`http://localhost:8080/users_day/${getDayNameEng(new Date(tomorrowDate).getDay())}`);
                 setUsers(userResponse.data);
 
                 const roomResponse = await axios.get(`http://localhost:8080/rooms_status/${getDayNameEng(new Date(tomorrowDate).getDay())}`);
