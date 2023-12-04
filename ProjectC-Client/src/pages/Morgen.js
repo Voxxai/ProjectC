@@ -103,13 +103,13 @@ function Morgen() {
                             <span className="text-xl font-semibold">Ruimtes</span>
                         </div>
                         <div className="border-2 border-cavero-purple my-2 rounded-full"></div>
-                        <div>
+                        <div className='flex flex-col gap-y-1'>
                             {/* Display the results of countWerkRuimteOccurrences */}
                             {Object.entries(rooms).map(([ruimte, count]) => (
-                                <div key={ruimte} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
-                                    <span className='text-black text-sm font-semibold'>{ruimte}</span>
+                                <div key={ruimte} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md'>
+                                    <span className='text-black font-semibold'>{ruimte}</span>
                                 <div className='flex items-center ml-auto'>
-                                    <span className='text-black text-sm font-semibold mr-2'>{count}</span>
+                                    <span className='text-black font-semibold mr-2'>{count}</span>
                                     <FontAwesomeIcon className='text-black' icon={faUserGroup} />
                                 </div>
                             </div>
@@ -128,7 +128,7 @@ function Morgen() {
                         <div>
                             {events.map((event, index) => (
                                 <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
-                                    <span className='text-black text-sm font-semibold'>{event.Title}</span>
+                                    <span className='text-black font-semibold'>{event.Title}</span>
                                 </div>
                             ))}
                         </div>
@@ -144,8 +144,8 @@ function Morgen() {
                         <div>
                             {users.map((user, index) => (
                                 <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
-                                    <FontAwesomeIcon className='text-cavero-purple' icon={faCircleUser} />
-                                    <span className='text-black text-sm font-semibold'>{user.FirstName} {user.LastName}</span>
+                                    <FontAwesomeIcon className='text-cavero-purple fa-lg' icon={faCircleUser} />
+                                    <span className='text-black font-semibold'>{user.FirstName} {user.LastName}</span>
                                 </div>
                             ))}
                         </div>
