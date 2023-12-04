@@ -198,10 +198,10 @@ app.get("/signout", (req, res) => {
 })
 
 app.post('/insert_news', (req, res) => {
-    const { title, description } = req.body;
+    const { title, description, image } = req.body;
 
-    const sql = 'INSERT INTO news (title, description) VALUES (?, ?)';
-    db.query(sql, [title, description], (err, result) => {
+    const sql = 'INSERT INTO news (title, description, image) VALUES (?, ?, ?)';
+    db.query(sql, [title, description, image], (err, result) => {
         if (err) {
             console.log(error)
             res.status(500).json({ message: 'Error inserting data' });
