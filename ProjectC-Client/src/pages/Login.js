@@ -105,12 +105,9 @@ function Login() {
         }
 
         setError(false);
-
-        try {
-            //Hashing the password
-            values.password = Sha1(values.password);
-
-            await axios.post(`http://localhost:8080/login`, values)
+      
+            try {                
+                await axios.post(`http://localhost:8080/login`, values)
                 .then(response => {
                     if (response.data.Login) {
                         // Login succes
@@ -162,7 +159,7 @@ function Login() {
     }
 
     const handleInput = (e) => {
-        setValues(prev => ({ ...prev, [e.target.name]: [e.target.value] }));
+        setValues(prev => ({ ...prev, [e.target.name]: e.target.name == 'password' ? [Sha1(e.target.value)] : [e.target.value] }));
     }
 
     useEffect(() => {
