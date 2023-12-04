@@ -9,15 +9,15 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 function Layout() {
     return (
-        <main className='flex flex-row'>
-            <Navbar/>
-            
-            <div className="flex flex-1 flex-col">
-            <Topbar/>
+        <main className='flex flex-row max-h-screen h-screen'>
+            <Navbar />
+
+            <div className="flex flex-grow flex-col max-h-screen overflow-hidden">
+                <Topbar />
                 <Outlet />
             </div>
         </main>
-      
+
     );
-  };
-  export default Layout;
+};
+export default Layout;

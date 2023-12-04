@@ -52,9 +52,6 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             <button className='flex justify-end' onClick={onRequestClose}>
                 <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1' />
             </button>
-            <button className='flex justify-end' onClick={onRequestClose}>
-                <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1' />
-            </button>
             <h2 className="text-2xl font-bold mb-4">{eventData ? 'Edit Event' : 'Voeg evenement toe'}</h2>
 
             <form onSubmit={handleSubmit} >
@@ -90,12 +87,12 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                             required
                         />
                     </label>
-
-                    <button
-                        type="submit"
-                        className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-purple-dark"
-                    >Submit</button>
                 </div>
+
+                <button
+                    type="submit"
+                    className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-purple-dark"
+                >Submit</button>
             </form>
         </Modal>
 
