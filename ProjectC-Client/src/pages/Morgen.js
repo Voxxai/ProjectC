@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserGroup, faCircleUser, faPen, faPlus, faCalendarDay, faCalendarDays, faUsers, faList, faListUl, faPenSquare, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faUserGroup, faCircleUser, faPen, faPlus, faCalendarDay, faCalendarDays, faUsers, faList, faListUl, faPenSquare, faPenToSquare, faPeopleRoof, faHouse, faUserCheck, faLaptop } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Modal from '../components/MorgenModal';
 
 function Morgen() {
     const [users, setUsers] = useState([]);
     const [events, setEvents] = useState([]);
+    const [rooms, setRooms] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentDate] = useState(new Date());
     const [tomorrowDate] = useState(new Date(currentDate).setDate(currentDate.getDate() + 1));
@@ -21,6 +22,9 @@ function Morgen() {
             try {
                 const userResponse = await axios.get(`http://localhost:8080/users_day/${formattedTomorrow}`);
                 setUsers(userResponse.data);
+
+                const roomResponse = await axios.get(`http://localhost:8080/rooms_status/${getDayNameEng(new Date(tomorrowDate).getDay())}`);
+                setRooms(countWerkRuimteOccurrences(roomResponse.data));
 
                 const eventResponse = await axios.get(`http://localhost:8080/events/${formattedTomorrow}`);
                 setEvents(eventResponse.data);
@@ -48,6 +52,28 @@ function Morgen() {
         var dayNames = [ "Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag" ];
         return dayNames[day];
     }
+
+    function getDayNameEng(day) {
+        var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        return dayNames[day];
+    }    
+
+    function countWerkRuimteOccurrences(inputArray) {
+        const werkRuimteCounts = {
+          'Werk Ruimte 1': 0,
+          'Werk Ruimte 2': 0,
+          'Werk Ruimte 3': 0,
+        };
+      
+        inputArray.forEach((werkRuimte) => {
+          if (werkRuimteCounts[werkRuimte] !== undefined) {
+            werkRuimteCounts[werkRuimte]++;
+          }
+        });
+      
+        return werkRuimteCounts;
+      }
+      
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -78,11 +104,16 @@ function Morgen() {
                         </div>
                         <div className="border-2 border-cavero-purple my-2 rounded-full"></div>
                         <div>
-                            {users.map((user, index) => (
-                                <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
-                                    <FontAwesomeIcon className='text-cavero-purple fa-2x' icon={faCircleUser} />
-                                    <span className='text-black text-sm font-semibold'>{user.FirstName} {user.LastName}</span>
+                            {/* Display the results of countWerkRuimteOccurrences */}
+                            {Object.entries(rooms).map(([ruimte, count]) => (
+                                <div key={ruimte} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
+                                    <span className='text-black text-sm font-semibold'>{ruimte}</span>
+                                <div className='flex items-center ml-auto'>
+                                    <span className='text-black text-sm font-semibold mr-2'>{count}</span>
+                                    <FontAwesomeIcon className='text-black' icon={faUserGroup} />
                                 </div>
+                            </div>
+                                                     
                             ))}
                         </div>
                     </div>
