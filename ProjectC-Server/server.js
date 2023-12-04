@@ -65,21 +65,21 @@ app.post('/send-email', (req, res) => {
     const mailOptions = {
         from: process.env.USER,
         to: Email,
-        subject: "Two-Factor-Authentication Code: " + Code  ,
-        html:   "<html>" + 
-                "<body>" + 
-                "<div style='width:100%; height:100%; background-color:#f4f4f4; padding:30px;'>" + 
-                "<div style='width:600px; height: auto; margin:0 auto; padding:25px; border-radius:5px; background-color:white;'>" + 
-                "<h1 style='color:#7F3689;'>Two-Factor-Authentication Code</h1>" + 
-                "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Deze code is voor de komende 5 min geldig. Als u te laat deze code invoert moet u een nieuwe ontvangen.</p>" + 
-                "<div style='text-align:center; padding:25px; background-color:#fafafa;'>" + 
-                "<h2 style='color:#7F3689; margin-bottom:10px;'>Code:</h2>" +
-                "<p style='color:black; font-size:32px; margin-bottom:25px; letter-spacing: 15px;'>" + Code + "</p>" +
-                "</div>" + 
-                "</div>" + 
-                "</div>" + 
-                "</body>" + 
-                "</html>",
+        subject: "Two-Factor-Authentication Code: " + Code,
+        html: "<html>" +
+            "<body>" +
+            "<div style='width:100%; height:100%; background-color:#f4f4f4; padding:30px;'>" +
+            "<div style='width:600px; height: auto; margin:0 auto; padding:25px; border-radius:5px; background-color:white;'>" +
+            "<h1 style='color:#7F3689;'>Two-Factor-Authentication Code</h1>" +
+            "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Deze code is voor de komende 5 min geldig. Als u te laat deze code invoert moet u een nieuwe ontvangen.</p>" +
+            "<div style='text-align:center; padding:25px; background-color:#fafafa;'>" +
+            "<h2 style='color:#7F3689; margin-bottom:10px;'>Code:</h2>" +
+            "<p style='color:black; font-size:32px; margin-bottom:25px; letter-spacing: 15px;'>" + Code + "</p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</body>" +
+            "</html>",
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -101,8 +101,8 @@ app.get('/users', (req, res) => {
 app.post('/user_update', (req, res) => {
     const { ID, Email = req.session.user.Email, FirstName = req.session.user.FirstName, LastName = req.session.user.LastName, TFA = req.session.user.TFA } = req.body;
 
-    db.query("UPDATE accounts SET Email=?, FirstName=?, LastName=?, TFA=? WHERE ID = ?", 
-        [Email, FirstName, LastName, TFA, ID], 
+    db.query("UPDATE accounts SET Email=?, FirstName=?, LastName=?, TFA=? WHERE ID = ?",
+        [Email, FirstName, LastName, TFA, ID],
         (error, result) => {
             if (error) {
                 console.error(error);
@@ -114,7 +114,7 @@ app.post('/user_update', (req, res) => {
                     res.send(false);
                 }
             }
-    });
+        });
 });
 
 //Update Session cookie
@@ -223,7 +223,7 @@ app.get('/reset_noticounter/:ID', (req, res) => {
     const userId = req.params.ID;
 
     const sql = 'UPDATE accounts SET NotiCounter = 0 WHERE ID = ?';
-    
+
     db.query(sql, [userId], (err, results) => {
         if (err) {
             console.log(err);
@@ -238,7 +238,7 @@ app.get('/get_noticounter/:ID', (req, res) => {
     const userId = req.params.ID;
 
     const sql = 'SELECT NotiCounter FROM accounts WHERE ID = ?';
-    
+
     db.query(sql, [userId], (err, results) => {
         if (err) {
             console.log(err);
@@ -330,7 +330,7 @@ app.get('/events/:date', (request, response) => {
 app.get('/event_users/:ID', (request, response) => {
     db.query(`SELECT accounts.FirstName, accounts.LastName FROM event_users LEFT JOIN accounts ON event_users.User_ID=accounts.ID WHERE Event_ID = "${request.params.ID}"`, (error, result) => {
         if (error) console.log(error);
-        
+
         response.send(result);
     });
 })
@@ -342,7 +342,7 @@ app.get('/users_day/:day', (request, response) => {
 
         response.send(result);
     });
-})
+});
 
 app.get('/rooms_status/:day', (request, response) => {
     db.query(`SELECT ${request.params.day} FROM Employee_Schedule2`, (error, result) => {
@@ -355,7 +355,7 @@ app.get('/rooms_status/:day', (request, response) => {
 
 app.post('/joinevent', (req, res) => {
     const { EventId, UserId } = req.body;
-    
+
 
     const sql = 'INSERT INTO event_users (Event_ID, User_ID) VALUES (?, ?)';
     db.query(sql, [EventId, UserId], (err, result) => {
@@ -391,9 +391,11 @@ app.post('/leaveevent/:EventId/:UserId', (req, res) => {
 
 app.get('/eventsregistertime/:EventId', (req, res) => {
     db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
+        console.log("\n\n\n\n\n, ")
         if (error) console.log(error);
 
         if (result.length > 0) {
+            console.log('checkEndJoinDate response:', response.data);
             res.send(true);
         }
         else {
@@ -434,4 +436,4 @@ app.get('/get-employee-schedule/:Account_ID', (req, res) => {
 
 app.listen(8080, () => {
     console.log("Server listing");
-})
+});
