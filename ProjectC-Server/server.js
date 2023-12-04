@@ -166,10 +166,7 @@ app.get("/login", (req, res) => {
 
 // Login POST
 app.post('/login', (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-
-    db.query(`SELECT * FROM accounts WHERE Email = '${email}' AND Password = '${password}'`, (error, result) => {
+    db.query(`SELECT * FROM accounts WHERE Email = "${req.body.email}" AND Password = "${req.body.password}"`, (error, result) => {
 
         if (error) res.send(false);
 
@@ -187,6 +184,7 @@ app.post('/login', (req, res) => {
             });
         }
         else {
+            // console.log("Wrong username/password");
             res.json({ Login: false });
         }
     });
@@ -337,13 +335,23 @@ app.get('/event_users/:ID', (request, response) => {
     });
 })
 
-app.get('/users_day/:date', (request, response) => {
-    db.query(`SELECT accounts.FirstName, accounts.LastName, Employee_Schedule.Date FROM Employee_Schedule LEFT JOIN accounts ON Employee_Schedule.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
+app.get('/users_day/:day', (request, response) => {
+    const day = request.params.day;
+    db.query('SELECT accounts.FirstName, accounts.LastName FROM Employee_Schedule2 LEFT JOIN accounts ON Employee_Schedule2.Account_ID = accounts.ID WHERE ?? IS NOT NULL OR ?? = ?', [day, day, 'Thuis'], (error, result) => {
         if (error) console.log(error);
 
         response.send(result);
     });
 });
+
+app.get('/rooms_status/:day', (request, response) => {
+    db.query(`SELECT ${request.params.day} FROM Employee_Schedule2`, (error, result) => {
+        if (error) console.log(error);
+
+        const werkRuimtes = result.map(entry => entry[request.params.day]);
+        response.send(werkRuimtes);
+    });
+})
 
 app.post('/joinevent', (req, res) => {
     const { EventId, UserId } = req.body;
@@ -392,6 +400,36 @@ app.get('/eventsregistertime/:EventId', (req, res) => {
         }
         else {
             res.send(false);
+        }
+    });
+});
+
+app.post('/scheduleweek', (req, res) => { 
+    db.query(`  INSERT INTO caverogroep2.Employee_Schedule2 (Account_ID, Monday, Tuesday, Wednesday, Thursday, Friday)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                    Monday = ?,
+                    Tuesday = ?,
+                    Wednesday = ?,
+                    Thursday = ?,
+                    Friday = ?;`,
+   [req.body.Account_ID, req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday,
+    req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday], 
+    (error) => {
+        if (error) console.log(error);
+
+        res.send(true);
+    });
+});
+
+app.get('/get-employee-schedule/:Account_ID', (req, res) => {
+    db.query(`SELECT * FROM Employee_Schedule2 WHERE Account_ID = ${req.params.Account_ID}`,  (error, result) => {
+        if (error) console.log(error);
+
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send(null);
         }
     });
 });
