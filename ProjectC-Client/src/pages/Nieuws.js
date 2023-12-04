@@ -104,7 +104,7 @@ function Nieuws() {
         </div>
       ) : (
         <div className='pt-3'>
-          <div className="flex-row w-full flex flex-wrap justify-center gap-4">
+          <div className="flex-row w-full flex flex-wrap justify-center gap-4 overflow-y-auto">
             {currentArticles.map((article) => (
               <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
                 <NewsArticle
