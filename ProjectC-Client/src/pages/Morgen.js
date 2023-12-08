@@ -10,20 +10,37 @@ function Morgen() {
     const [rooms, setRooms] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentDate] = useState(new Date());
-    const [tomorrowDate] = useState(new Date(currentDate).setDate(currentDate.getDate() + 1));
+    const [tomorrowDate, setTomorrowDate] = useState(new Date(currentDate).setDate(currentDate.getDate() + 1));
 
     useEffect(() => {
         const tomorrow = new Date(currentDate);
-        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        // Correcting the dates for the weekend.
+        // If tomorrow is Saturday, add 2 days.
+        if (tomorrow.getDay() === 5) {
+            setTomorrowDate(new Date(tomorrow).setDate(tomorrow.getDate() + 3));
+            tomorrow.setDate(tomorrow.getDate() + 3);
+            
+        } 
+        // If tomorrow is Sunday, add 1 day.
+        else if (tomorrow.getDay() === 6) {
+            setTomorrowDate(new Date(tomorrow).setDate(tomorrow.getDate() + 2));
+            tomorrow.setDate(tomorrow.getDate() + 2);
+            
+        }
+        // If tomorrow is not in the weekend just add 1 day.
+        else {
+            tomorrow.setDate(tomorrow.getDate() + 1);
+        }
 
         const formattedTomorrow = `${tomorrow.getFullYear()}-${(tomorrow.getMonth() + 1).toString().padStart(2, '0')}-${tomorrow.getDate().toString().padStart(2, '0')}`;
 
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get(`http://localhost:8080/users_day/${getDayNameEng(new Date(tomorrowDate).getDay())}`);
+                const userResponse = await axios.get(`http://localhost:8080/users_day/${getDayNameEng(new Date(tomorrow).getDay())}`);
                 setUsers(userResponse.data);
 
-                const roomResponse = await axios.get(`http://localhost:8080/rooms_status/${getDayNameEng(new Date(tomorrowDate).getDay())}`);
+                const roomResponse = await axios.get(`http://localhost:8080/rooms_status/${getDayNameEng(new Date(tomorrow).getDay())}`);
                 setRooms(countWerkRuimteOccurrences(roomResponse.data));
 
                 const eventResponse = await axios.get(`http://localhost:8080/events/${formattedTomorrow}`);
