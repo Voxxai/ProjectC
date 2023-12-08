@@ -210,13 +210,13 @@ useEffect(() => {
                         </div>              
                     
                 </div>
-                <div className="flex flex-row h-full w-full gap-x-4 overflow-x-auto">
+                <div className="flex flex-row h-full w-full gap-x-4 overflow-x-auto max-sm:flex-nowrap">
                     
                     {/* Items */}
                     {dates.map((Date, index) => (
-                        <div className="bg-white rounded-md text-gray-400 w-3/12 p-2 shadow-md max-sm:w-screen" key={index}>
+                        <div className="flex flex-col bg-white rounded-md text-gray-400 w-full p-2 shadow-md max-sm:w-full" key={index}>
                             <div className='relative'>
-                            <span className='font-medium text-lg'>{Date.Week}</span>
+                                <span className='font-medium text-lg'>{Date.Week}</span>
                             <div className="flex flex-row text-black items-end gap-1.5">
                                 <span className="text-slate-700 text-3xl font-medium">{Date.Day}</span>
                                 <span className='text-slate-700 text-lg font-semibold'>{Date.Month}</span>
