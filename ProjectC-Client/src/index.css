@@ -16,14 +16,14 @@ code {
     monospace;
 }
 
-input,
+input:not([type='checkbox']), input
 textarea {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   border-width: 1px;
-  border-radius: 0.25rem;
+  border-radius: 0.3rem;
   min-width: 2rem;
   width: 100%;
   padding-top: 0.5rem;
@@ -35,6 +35,17 @@ textarea {
   outline: none;
 }
 
-label {
-  margin-right: 0.5rem;
+select {
+  /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); */
+  border-width: 1px;
+  border-radius: 0.3rem;
+  min-width: 2rem;
+  width: 100%;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  color: #4a5568;
+  line-height: 1.25;
+  outline: none;
 }
