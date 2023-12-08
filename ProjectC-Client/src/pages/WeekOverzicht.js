@@ -43,7 +43,7 @@ useEffect(() => {
 
     const getUsers = async (date) => {
         try {
-            const response = await axios.get(`http://localhost:8080/users_day/${date}`);
+            const response = await axios.get(`http://localhost:8080/users_day/${getDayNameEng(new Date(date).getDay())}`);
             return response.data;
         }
         catch (err) {
@@ -106,6 +106,11 @@ useEffect(() => {
         var dayNames = [ "Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag" ];
         return dayNames[day];
     }
+
+    function getDayNameEng(day) {
+        var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        return dayNames[day];
+    } 
 
     function openDropdown(index) {
         const dropdownButton = document.getElementById(`dropdownbutton-${index}`);
