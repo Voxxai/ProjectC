@@ -85,7 +85,7 @@ function Nieuws() {
   };
 
   return (
-    <div className='bg-slate-100 h-full'>
+    <div className='bg-slate-100 h-full overflow-y-auto'>
       <button
         className="absolute top-15 right-10 bg-cavero-purple text-white px-2 py-1 rounded text-sm hover:shadow-lg transition-shadow"
         onClick={openModal}
@@ -98,7 +98,6 @@ function Nieuws() {
           <NewsArticleFull
             title={selectedArticle.title}
             description={selectedArticle.description}
-            //creation_time={selectedArticle.creation_time}
             onBackClick={handleBackClick}
           />
         </div>
