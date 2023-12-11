@@ -106,15 +106,15 @@ function Morgen() {
                 <div className='flex flex-row justify-between w-full'>
                     <span className='flex bg-cavero-purple p-1.5 px-2.5 text-white rounded-b font-medium'>{getDayName(new Date(tomorrowDate).getDay())} {new Date(tomorrowDate).getDate()} {getMonthName(new Date(tomorrowDate).getMonth(), false)}</span>
                     <button onClick={openModal} className='flex flex-row gap-x-1.5 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100 group'>
-                        <span>Mijn beschikbaarheid</span>
+                        <span className='max-sm:hidden'>Mijn beschikbaarheid</span>
                         <FontAwesomeIcon icon={faPenToSquare} />
                     </button>
                 </div>
 
-                <div className='flex flex-row h-full gap-x-4'>
+                <div className='flex flex-row h-full gap-4 max-sm:flex-wrap max-sm:overflow-y-auto'>
 
                     {/* Ruimtes Card */}
-                    <div className="flex flex-col p-2 shadow-md w-2/4 text-left overflow-y-auto bg-white rounded h-full">
+                    <div className="flex flex-col p-2 shadow-md w-2/4 text-left overflow-y-auto bg-white rounded h-full max-sm:w-full max-sm:h-1/2">
                         <div className="flex items-center">
                             <FontAwesomeIcon icon={faListUl} className="mr-2" />
                             <span className="text-xl font-semibold">Ruimtes</span>
@@ -136,7 +136,7 @@ function Morgen() {
                     </div>
 
                     {/* Events Card */}
-                    <div className="flex flex-col p-2 shadow-md w-1/4 text-left overflow-y-auto bg-white rounded h-full">
+                    <div className="flex flex-col p-2 shadow-md w-1/4 text-left overflow-y-auto bg-white rounded h-full max-sm:w-full max-sm:h-1/2">
                         <div className="flex items-center">
                             <FontAwesomeIcon icon={faCalendarDays} className="mr-2" />
                             <span className="text-xl font-semibold">Evenementen</span>
@@ -152,7 +152,7 @@ function Morgen() {
                     </div>
 
                     {/* Personen Card */}
-                    <div className="flex flex-col p-2 shadow-md w-1/4 text-left overflow-y-auto bg-white rounded h-full">
+                    <div className="flex flex-col p-2 shadow-md w-1/4 text-left overflow-y-auto bg-white rounded h-full max-sm:w-full max-sm:h-1/2">
                         <div className="flex items-center">
                             <FontAwesomeIcon icon={faUsers} className="mr-2" />
                             <span className="text-xl font-semibold">Personen</span>
