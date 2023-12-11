@@ -219,6 +219,37 @@ app.post('/insert_news', (req, res) => {
     });
 });
 
+app.post('/edit_article/:id', (req, res) => {
+    const articleId = req.params.id;
+    const { title, description } = req.body;
+
+    const sql = 'UPDATE news SET title = ?, description = ? WHERE id = ?';
+
+    db.query(sql, [title, description, req.params.id], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error editing article' });
+        } else {
+            res.status(200).json({ message: 'Article edit successfully' });
+        }
+    });
+});
+
+app.post('/delete_article/:id', (req, res) => {
+    const articleId = req.params.id;
+
+    const sql = 'DELETE FROM news WHERE id = ?';
+
+    db.query(sql, [articleId], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error deleting article' });
+        } else {
+            res.status(200).json({ message: 'Article deleted successfully' });
+        }
+    });
+});
+
 app.get('/reset_noticounter/:ID', (req, res) => {
     const userId = req.params.ID;
 
@@ -243,6 +274,21 @@ app.get('/get_noticounter/:ID', (req, res) => {
         if (err) {
             console.log(err);
             res.status(500).json({ message: 'Error retrieving NotiCounter' });
+        } else {
+            res.status(200).send(results)
+        }
+    });
+});
+
+app.get('/get_article/:id', (req, res) => {
+    const articleId = req.params.id;
+
+    const sql = 'SELECT title, description FROM news WHERE id = ?';
+
+    db.query(sql, [articleId], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error retrieving article' });
         } else {
             res.status(200).send(results)
         }

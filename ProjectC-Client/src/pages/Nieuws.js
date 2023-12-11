@@ -96,6 +96,7 @@ function Nieuws() {
       {selectedArticle ? (
         <div className="flex justify-center mx-auto max-w-1/2">
           <NewsArticleFull
+            id={selectedArticle.id}
             title={selectedArticle.title}
             description={selectedArticle.description}
             onBackClick={handleBackClick}
