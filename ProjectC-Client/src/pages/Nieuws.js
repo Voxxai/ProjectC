@@ -5,6 +5,8 @@ import CreateArticleModal from '../components/CreateArticleModal';
 import Topbar from '../layout/Topbar';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
 function Nieuws() {
   const { auth } = useAuth();
@@ -85,41 +87,46 @@ function Nieuws() {
   };
 
   return (
-    <div className='bg-slate-100 h-full overflow-y-auto'>
-      <button
-        className="absolute top-15 right-10 bg-cavero-purple text-white px-2 py-1 rounded text-sm hover:shadow-lg transition-shadow"
-        onClick={openModal}
-      >
-        Nieuwsbericht aanmaken
-      </button>
-      {isModalOpen && <CreateArticleModal onClose={closeModal} />}
-      {selectedArticle ? (
-        <div className="flex justify-center mx-auto max-w-1/2">
-          <NewsArticleFull
-            title={selectedArticle.title}
-            description={selectedArticle.description}
-            onBackClick={handleBackClick}
-          />
-        </div>
-      ) : (
-        <div className='pt-3'>
-          <div className="flex-row w-full flex flex-wrap justify-center gap-4">
-            {currentArticles.map((article) => (
-              <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
-                <NewsArticle
-                  title={article.title}
-                  description={article.description}
-                  creation_time={article.creation_time}
-                />
-              </div>
-            ))}
+    <div className='flex flex-col bg-slate-100 w-full h-full'>
+      <div className="flex flex-row-reverse justify-between px-4">
+        <button
+          className="flex flex-row gap-x-1.5 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100 group"
+          onClick={openModal}>
+          <span>Nieuwsbericht aanmaken</span>
+          <FontAwesomeIcon icon={faPenToSquare} />
+        </button>
+      </div>
+      
+      <div className="flex flex-row h-full overflow-y-auto">
+        {isModalOpen && <CreateArticleModal onClose={closeModal} />}
+        {selectedArticle ? (
+          <div className="flex justify-center mx-auto max-w-1/2">
+            <NewsArticleFull
+              title={selectedArticle.title}
+              description={selectedArticle.description}
+              onBackClick={handleBackClick}
+            />
           </div>
+        ) : (
+          <div className='flex flex-col h-full'>
+            <div className="flex-row w-full flex flex-wrap justify-center gap-4">
+              {currentArticles.map((article) => (
+                <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
+                  <NewsArticle
+                    title={article.title}
+                    description={article.description}
+                    creation_time={article.creation_time}
+                  />
+                </div>
+              ))}
+            </div>
 
-          <div className="flex justify-center">
-            {renderPagination()}
+            <div className="flex justify-center">
+              {renderPagination()}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
