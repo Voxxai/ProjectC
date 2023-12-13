@@ -174,7 +174,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
 
         <div>
           <p className='text-gray-500'>
-            Hieronder kunt u uw week indelen. U kunt ervoor kiezen om dagen open te houden.
+            Hieronder kunt u uw week indelen. Legen vaken wordt niet meegenomen in de planning oftewel afwezig.
           </p>
         </div>
 
