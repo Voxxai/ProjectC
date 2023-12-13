@@ -197,24 +197,24 @@ useEffect(() => {
         <div className="flex h-full bg-slate-100">
             <div className='flex flex-col gap-y-2 p-4 pt-2 h-full w-full'>
                 <div className='flex flex-row items-center rounded justify-between' >
-                    <div className='flex items-center gap-x-5'>
-                        <span className='text-gray-400 font-medium text-2xl'>Week {week}</span>
+                    <div className='flex items-center gap-x-5 max-sm:gap-x-2'>
                         <div className='flex flex-row gap-x-1.5 select-none'>
                             <FontAwesomeIcon icon={faChevronLeft} onClick={() => handleWeek(-1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
                             <FontAwesomeIcon icon={faChevronRight} onClick={() => handleWeek(1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
                         </div>
-                        <span className='text-gray-400 font-medium text-2xl'>{getMonthName(new Date(currentDate).getMonth(), false)}</span>
+                        <span className='text-gray-400 font-medium text-2xl max-sm:text-lg'>Week {week} - {getMonthName(new Date(currentDate).getMonth(), false)}</span>
+                        <span className='text-gray-400 font-medium text-2xl max-sm:text-lg'></span>
                     </div>
                         <div className='flex'>
                             <button onClick={() => setCurrentDate(new Date())} className='bg-gray-200 rounded-md text-gray-400 text-base hover:bg-gray-300 hover:text-gray-500 border-2 p-2 duration-100'>Vandaag</button>
                         </div>              
                     
                 </div>
-                <div className="flex flex-row h-full w-full gap-x-4 overflow-x-auto max-sm:flex-nowrap">
+                <div className="flex flex-row h-full gap-x-4 w-full overflow-x-auto max-sm:flex-nowrap">
                     
                     {/* Items */}
                     {dates.map((Date, index) => (
-                        <div className="flex flex-col bg-white rounded-md text-gray-400 w-full p-2 shadow-md max-sm:w-full" key={index}>
+                        <div className="flex flex-col bg-white rounded-md text-gray-400 w-full p-2 shadow-md" key={index}>
                             <div className='relative'>
                                 <span className='font-medium text-lg'>{Date.Week}</span>
                             <div className="flex flex-row text-black items-end gap-1.5">
