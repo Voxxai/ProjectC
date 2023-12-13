@@ -71,7 +71,7 @@ function Nieuws() {
       <button
         key={pageNumber}
         onClick={() => handlePageClick(pageNumber)}
-        className={`border border-gray-200 px-3 py-1 mx-2 text-gray-500 transition-all duration-100 ease-in-out hover:bg-cavero-purple hover:text-white ${currentPage === pageNumber ? 'bg-cavero-purple text-white' : ''}`}
+        className={`border border-gray-200 px-3 py-1 mx-2 rounded-sm text-gray-500 transition-all duration-100 ease-in-out hover:bg-cavero-purple hover:text-white ${currentPage === pageNumber ? 'bg-cavero-purple text-white' : ''}`}
       >
         {pageNumber}
       </button>
@@ -87,46 +87,52 @@ function Nieuws() {
   };
 
   return (
-    <div className='flex flex-col bg-slate-100 w-full h-full'>
-      <div className="flex flex-row-reverse justify-between px-4">
-        <button
-          className="flex flex-row gap-x-1.5 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100 group"
-          onClick={openModal}>
-          <span>Nieuwsbericht aanmaken</span>
-          <FontAwesomeIcon icon={faPenToSquare} />
-        </button>
-      </div>
-      
-      <div className="flex flex-row h-full overflow-y-auto">
-        {isModalOpen && <CreateArticleModal onClose={closeModal} />}
-        {selectedArticle ? (
-          <div className="flex justify-center mx-auto max-w-1/2">
-            <NewsArticleFull
-              title={selectedArticle.title}
-              description={selectedArticle.description}
-              onBackClick={handleBackClick}
-            />
-          </div>
-        ) : (
-          <div className='flex flex-col h-full'>
-            <div className="flex-row w-full flex flex-wrap justify-center gap-4">
-              {currentArticles.map((article) => (
-                <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
-                  <NewsArticle
-                    title={article.title}
-                    description={article.description}
-                    creation_time={article.creation_time}
-                  />
-                </div>
-              ))}
-            </div>
+    <div className="w-full h-full max-h-full px-4 self-center overflow-y-hidden md:flex md:flex-wrap justify-center text-cavero-purple bg-slate-100">
 
-            <div className="flex justify-center">
-              {renderPagination()}
-            </div>
+      <div className="flex flex-col w-full max-h-full h-full overflow-y-hidden">
+
+        <div className="w-full flex flex-row-reverse items-center justify-between">
+          <button
+            className="flex flex-row gap-x-1.5 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100 group"
+            onClick={openModal}>
+            <span>Nieuwsbericht aanmaken</span>
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </button>
+        </div>
+
+          <div className="w-full h-full mb-2 rounded-md flex overflow-y-auto">
+            {isModalOpen && <CreateArticleModal onClose={closeModal} />}
+            {selectedArticle ? (
+              <div className="flex justify-center mx-auto max-w-1/2">
+                <NewsArticleFull
+                  title={selectedArticle.title}
+                  description={selectedArticle.description}
+                  onBackClick={handleBackClick}
+                />
+              </div>
+            ) : (
+              <div className='flex flex-col h-full'>
+                <div className="flex-row w-full flex flex-wrap justify-center gap-4">
+                  {currentArticles.map((article) => (
+                    <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
+                      <NewsArticle
+                        title={article.title}
+                        description={article.description}
+                        creation_time={article.creation_time}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex justify-center ">
+                  {renderPagination()}
+                </div>
+              </div>
+            )}
           </div>
-        )}
+
       </div>
+
     </div>
   );
 }

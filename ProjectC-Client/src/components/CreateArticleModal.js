@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 function CreateArticleModal({ onClose }) {
   const [title, setTitle] = useState('');
@@ -24,26 +26,29 @@ function CreateArticleModal({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-8 rounded-lg max-w-2xl w-full">
-        <h2 className="text-2xl font-bold mb-6 text-cavero-purple">Nieuwsartikel</h2>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-1">
+      <div className="p-3 max-w-xl mx-auto bg-white rounded shadow-lg border-2 relative outline-none w-11/12">
+      <button className='flex justify-end' onClick={onClose}>
+          <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1'/>
+        </button>
+        <h2 className="text-2xl font-semibold mb-6 text-cavero-purple">Nieuwsartikel</h2>
         <div className="mb-6">
-          <label className="block text-sm font-medium text-black">Titel</label>
+          <label className="w-full">Titel:
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="mt-1 p-3 w-full border rounded-md"
           />
+          </label>
         </div>
         <div className="mb-6">
-          <label className="block text-sm font-medium text-black">Beschrijving:</label>
+          <label className="w-full">Beschrijving:
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="mt-1 p-3 w-full border rounded-md resize-none"
             rows="8"
           />
+          </label>
         </div>
         <div className="mb-6">
           <label className="block text-sm font-medium text-black">Upload Foto (Optioneel):</label>
