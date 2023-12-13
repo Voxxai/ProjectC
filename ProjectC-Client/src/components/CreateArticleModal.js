@@ -33,7 +33,7 @@ function CreateArticleModal({ onClose }) {
         </button>
         <h2 className="text-2xl font-semibold mb-6 text-cavero-purple">Nieuwsartikel</h2>
         <div className="mb-6">
-          <label className="w-full">Titel:
+          <label className="w-full text-gray-700">Titel:
           <input
             type="text"
             value={title}
@@ -42,7 +42,7 @@ function CreateArticleModal({ onClose }) {
           </label>
         </div>
         <div className="mb-6">
-          <label className="w-full">Beschrijving:
+          <label className="w-full text-gray-700">Beschrijving:
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -51,7 +51,7 @@ function CreateArticleModal({ onClose }) {
           </label>
         </div>
         <div className="mb-6">
-          <label className="block text-sm font-medium text-black">Upload Foto (Optioneel):</label>
+          <label className="block text-sm font-medium text-gray-700">Upload Foto (Optioneel):</label>
           <input
             type="file"
             accept="image/*"

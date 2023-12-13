@@ -22,7 +22,6 @@ function WeekOverzicht() {
     const [ joined, setJoined ] = useState(false);
     const [ endJoinDate, setEndJoinDate ] = useState(false);
     const [ currentDate, setCurrentDate ] = useState(new Date());
-    const [ week, setWeek ] = useState(0);
     const { auth } = useAuth();
 
 // Onload set dates of this week
@@ -177,7 +176,7 @@ useEffect(() => {
         const start = new Date(curr.getFullYear(), 0, 1);
         const days = Math.floor((curr - start) / (24 * 60 * 60 * 1000));
 
-        setWeek(Math.ceil(days / 7));
+        return Math.ceil(days / 7);
     };
     
     const handleWeek = (direction) => {
@@ -202,7 +201,7 @@ useEffect(() => {
                             <FontAwesomeIcon icon={faChevronLeft} onClick={() => handleWeek(-1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
                             <FontAwesomeIcon icon={faChevronRight} onClick={() => handleWeek(1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
                         </div>
-                        <span className='text-gray-400 font-medium text-2xl max-sm:text-lg'>Week {week} - {getMonthName(new Date(currentDate).getMonth(), false)}</span>
+                        <span className='text-gray-400 font-medium text-2xl max-sm:text-lg'>Week {getWeek()} - {getMonthName(new Date(currentDate).getMonth(), false)}</span>
                         <span className='text-gray-400 font-medium text-2xl max-sm:text-lg'></span>
                     </div>
                         <div className='flex'>
