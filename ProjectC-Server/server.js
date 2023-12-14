@@ -65,21 +65,21 @@ app.post('/send-email', (req, res) => {
     const mailOptions = {
         from: process.env.USER,
         to: Email,
-        subject: "Two-Factor-Authentication Code: " + Code  ,
-        html:   "<html>" + 
-                "<body>" + 
-                "<div style='width:100%; height:100%; background-color:#f4f4f4; padding:30px;'>" + 
-                "<div style='width:600px; height: auto; margin:0 auto; padding:25px; border-radius:5px; background-color:white;'>" + 
-                "<h1 style='color:#7F3689;'>Two-Factor-Authentication Code</h1>" + 
-                "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Deze code is voor de komende 5 min geldig. Als u te laat deze code invoert moet u een nieuwe ontvangen.</p>" + 
-                "<div style='text-align:center; padding:25px; background-color:#fafafa;'>" + 
-                "<h2 style='color:#7F3689; margin-bottom:10px;'>Code:</h2>" +
-                "<p style='color:black; font-size:32px; margin-bottom:25px; letter-spacing: 15px;'>" + Code + "</p>" +
-                "</div>" + 
-                "</div>" + 
-                "</div>" + 
-                "</body>" + 
-                "</html>",
+        subject: "Two-Factor-Authentication Code: " + Code,
+        html: "<html>" +
+            "<body>" +
+            "<div style='width:100%; height:100%; background-color:#f4f4f4; padding:30px;'>" +
+            "<div style='width:600px; height: auto; margin:0 auto; padding:25px; border-radius:5px; background-color:white;'>" +
+            "<h1 style='color:#7F3689;'>Two-Factor-Authentication Code</h1>" +
+            "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Deze code is voor de komende 5 min geldig. Als u te laat deze code invoert moet u een nieuwe ontvangen.</p>" +
+            "<div style='text-align:center; padding:25px; background-color:#fafafa;'>" +
+            "<h2 style='color:#7F3689; margin-bottom:10px;'>Code:</h2>" +
+            "<p style='color:black; font-size:32px; margin-bottom:25px; letter-spacing: 15px;'>" + Code + "</p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</body>" +
+            "</html>",
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -101,8 +101,8 @@ app.get('/users', (req, res) => {
 app.post('/user_update', (req, res) => {
     const { ID, Email = req.session.user.Email, FirstName = req.session.user.FirstName, LastName = req.session.user.LastName, TFA = req.session.user.TFA } = req.body;
 
-    db.query("UPDATE accounts SET Email=?, FirstName=?, LastName=?, TFA=? WHERE ID = ?", 
-        [Email, FirstName, LastName, TFA, ID], 
+    db.query("UPDATE accounts SET Email=?, FirstName=?, LastName=?, TFA=? WHERE ID = ?",
+        [Email, FirstName, LastName, TFA, ID],
         (error, result) => {
             if (error) {
                 console.error(error);
@@ -114,7 +114,7 @@ app.post('/user_update', (req, res) => {
                     res.send(false);
                 }
             }
-    });
+        });
 });
 
 //Update Session cookie
@@ -198,21 +198,59 @@ app.get("/signout", (req, res) => {
 })
 
 app.post('/insert_news', (req, res) => {
-    const { title, description } = req.body;
+    const { title, description, image } = req.body;
 
-    const sql = 'INSERT INTO news (title, description) VALUES (?, ?)';
-    db.query(sql, [title, description], (err, result) => {
+    const sql = 'INSERT INTO news (title, description, image) VALUES (?, ?, ?)';
+    db.query(sql, [title, description, image], (err, result) => {
         if (err) {
             console.log(error)
             res.status(500).json({ message: 'Error inserting data' });
         } else {
-            res.status(200).json({ message: 'Data inserted successfully' });
+            const sql = 'UPDATE accounts SET NotiCounter = NotiCounter + 1';
+            db.query(sql, (err, results) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: 'Error updating NotiCounter' });
+                } else {
+                    res.status(200).json({ message: 'News article inserted successfully and NotiCounter updated' });
+                }
+            });
+        }
+    });
+});
+
+app.get('/reset_noticounter/:ID', (req, res) => {
+    const userId = req.params.ID;
+
+    const sql = 'UPDATE accounts SET NotiCounter = 0 WHERE ID = ?';
+
+    db.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error resetting NotiCounter' });
+        } else {
+            res.status(200).json({ message: 'NotiCounter reset successfully' });
+        }
+    });
+});
+
+app.get('/get_noticounter/:ID', (req, res) => {
+    const userId = req.params.ID;
+
+    const sql = 'SELECT NotiCounter FROM accounts WHERE ID = ?';
+
+    db.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error retrieving NotiCounter' });
+        } else {
+            res.status(200).send(results)
         }
     });
 });
 
 app.get('/news', (req, res) => {
-    const sql = 'SELECT * FROM news';
+    const sql = 'SELECT * FROM news ORDER BY creation_time DESC';
     db.query(sql, (err, results) => {
         if (err) {
             console.log(error)
@@ -292,19 +330,110 @@ app.get('/events/:date', (request, response) => {
 app.get('/event_users/:ID', (request, response) => {
     db.query(`SELECT accounts.FirstName, accounts.LastName FROM event_users LEFT JOIN accounts ON event_users.User_ID=accounts.ID WHERE Event_ID = "${request.params.ID}"`, (error, result) => {
         if (error) console.log(error);
-        
+
         response.send(result);
     });
 })
 
-app.get('/users_day/:date', (request, response) => {
-    db.query(`SELECT accounts.FirstName, accounts.LastName, Employee_Schedule.Date FROM Employee_Schedule LEFT JOIN accounts ON Employee_Schedule.Account_ID=accounts.ID WHERE Date = "${request.params.date}"`, (error, result) => {
+app.get('/users_day/:day', (request, response) => {
+    const day = request.params.day;
+    db.query('SELECT accounts.FirstName, accounts.LastName FROM Employee_Schedule LEFT JOIN accounts ON Employee_Schedule.Account_ID = accounts.ID WHERE ?? IS NOT NULL OR ?? = ?', [day, day, 'Thuis'], (error, result) => {
         if (error) console.log(error);
 
         response.send(result);
     });
+});
+
+app.get('/rooms_status/:day', (request, response) => {
+    db.query(`SELECT ${request.params.day} FROM Employee_Schedule`, (error, result) => {
+        if (error) console.log(error);
+
+        const werkRuimtes = result.map(entry => entry[request.params.day]);
+        response.send(werkRuimtes);
+    });
 })
+
+app.post('/joinevent', (req, res) => {
+    const { EventId, UserId } = req.body;
+
+
+    const sql = 'INSERT INTO event_users (Event_ID, User_ID) VALUES (?, ?)';
+    db.query(sql, [EventId, UserId], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error inserting event data' });
+        } else {
+            res.status(200).json({ message: 'Event data inserted successfully' });
+        }
+    });
+});
+
+app.get('/checkevent/:EventId/:UserId', (req, res) => {
+    db.query(`SELECT * FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
+        if (error) console.log(error);
+
+        if (result.length > 0) {
+            res.send(true);
+        }
+        else {
+            res.send(false);
+        }
+    });
+});
+
+app.post('/leaveevent/:EventId/:UserId', (req, res) => {
+    db.query(`DELETE FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
+        if (error) console.log(error);
+
+        res.send(result);
+    });
+});
+
+app.get('/eventsregistertime/:EventId', (req, res) => {
+    db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
+        console.log("\n\n\n\n\n, ")
+        if (error) console.log(error);
+
+        if (result.length > 0) {
+            console.log('checkEndJoinDate response:', response.data);
+            res.send(true);
+        }
+        else {
+            res.send(false);
+        }
+    });
+});
+
+app.post('/scheduleweek', (req, res) => { 
+    db.query(`  INSERT INTO caverogroep2.Employee_Schedule (Account_ID, Monday, Tuesday, Wednesday, Thursday, Friday)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                    Monday = ?,
+                    Tuesday = ?,
+                    Wednesday = ?,
+                    Thursday = ?,
+                    Friday = ?;`,
+   [req.body.Account_ID, req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday,
+    req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday], 
+    (error) => {
+        if (error) console.log(error);
+
+        res.send(true);
+    });
+});
+
+app.get('/get-employee-schedule/:Account_ID', (req, res) => {
+    db.query(`SELECT * FROM Employee_Schedule WHERE Account_ID = ${req.params.Account_ID}`,  (error, result) => {
+        if (error) console.log(error);
+
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send(null);
+        }
+    });
+});
 
 app.listen(8080, () => {
     console.log("Server listing");
-})
+});
