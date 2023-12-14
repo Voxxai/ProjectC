@@ -233,6 +233,29 @@ function Login() {
         setTFAInputValues(newInputValues);
     };
 
+    const handleTFAchangeFocus = (index, value, event) => {
+        var keyCode = event.keyCode || event.which;
+        // If backspace or delete is pressed, focus the previous input
+        if (keyCode === 8 || keyCode === 46) {
+            // Prevent first one from focusing
+            if (index === 0) return;
+            
+            var previousInput = document.getElementById(`input-${index - 1}`);
+            previousInput.focus();
+            return;
+        }
+    
+        // If the input value is not empty, focus the next input
+        if (value !== '') {
+            // Prevent last one from focusing
+            if (index === 5) return;
+    
+            var nextInput = document.getElementById(`input-${index + 1}`);
+            nextInput.focus();
+            return;
+        }
+    };
+
     const preventJunk = (index, value) => {
         if (value === '' || !value.match(/[0-9]/)) {
             return;
@@ -322,6 +345,7 @@ function Login() {
                             {TFAInputValues.map((value, index) => (
                                 <input
                                     key={index}
+                                    id={`input-${index}`}
                                     type='tel'
                                     maxLength={1}
                                     className='shadow-none text-center h-20 text-4xl border-b-4 duration-300 focus:border-b-cavero-purple'
@@ -329,6 +353,7 @@ function Login() {
                                     value={value}
                                     onChange={(e) => handleTFAchange(index, e.target.value)}
                                     onPaste={handlePaste}
+                                    onKeyUp={(e) => handleTFAchangeFocus(index, e.target.value, e)}
                                 />
                             ))}
                         </div>
