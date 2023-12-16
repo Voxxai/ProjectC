@@ -11,12 +11,13 @@ import Settings_Layout from './layout/Settings_Layout';
 import Profile from './pages/Profile';
 import Security from './pages/Security';
 import Settings from './pages/Settings';
+import Morgen from './pages/Morgen';
 
 function App() {
   return (
     <Routes>
         {/* Public Routes */}
-        <Route path='/login' element={<Login />} />      
+        <Route path='/login' element={<Login />} />
           
         {/* Private Routes */}
         <Route element={<RequireAuth />} >
@@ -24,7 +25,7 @@ function App() {
             <Route index element={<WeekOverzicht />} />
             <Route path='/evenementen' element={<Evenementen />} />
             <Route path='/nieuws' element={<Nieuws />} />
-            <Route path='/morgen' element={<WeekOverzicht />} />
+            <Route path='/morgen' element={<Morgen />} />
 
             <Route path='/instellingen' element={<Settings_Layout />}>
               <Route path='/instellingen/profiel' element={<Profile />} />  
