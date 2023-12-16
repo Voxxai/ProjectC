@@ -11,6 +11,7 @@ import React, { useEffect, useState, useRef } from 'react';
 
 function WeekOverzicht() {
     const usersDropdown = useRef(null);
+    const dropdownMenus = useRef(null);
     const [ dates, setDates ] = useState([]);
     const [ open, setOpen ] = useState(false);
     const [ error, setError ] = useState(false);
@@ -122,6 +123,15 @@ useEffect(() => {
         dropdownIcon.classList.toggle('rotate-180'); 
     }
 
+    function closeDropdown() {
+        for (let i = 0; i < dates.length; i++) {
+            const dropdownItems = document.getElementById(`dropdownitems-${i}`);
+            
+            dropdownItems.classList.add('opacity-0');
+            dropdownItems.classList.add('hidden');
+        }
+    }
+
     const openModal = () => {
         setIsModalOpen(true);
       };
@@ -200,13 +210,13 @@ useEffect(() => {
                     <div className='flex items-center gap-x-5'>
                         <span className='text-gray-400 font-medium text-2xl'>Week {week}</span>
                         <div className='flex flex-row gap-x-1.5 select-none'>
-                            <FontAwesomeIcon icon={faChevronLeft} onClick={() => handleWeek(-1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
-                            <FontAwesomeIcon icon={faChevronRight} onClick={() => handleWeek(1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
+                            <FontAwesomeIcon icon={faChevronLeft} onClick={() => {handleWeek(-1); closeDropdown(); setOpen(false)}} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
+                            <FontAwesomeIcon icon={faChevronRight} onClick={() => {handleWeek(1); closeDropdown(); setOpen(false)}}  className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
                         </div>
                         <span className='text-gray-400 font-medium text-2xl'>{getMonthName(new Date(currentDate).getMonth(), false)}</span>
                     </div>
                         <div className='flex'>
-                            <button onClick={() => setCurrentDate(new Date())} className='bg-gray-200 rounded-md text-gray-400 text-base hover:bg-gray-300 hover:text-gray-500 border-2 p-2 duration-100'>Vandaag</button>
+                            <button onClick={() => {setCurrentDate(new Date()); closeDropdown(); setOpen(false)}} className='bg-gray-200 rounded-md text-gray-400 text-base hover:bg-gray-300 hover:text-gray-500 border-2 p-2 duration-100'>Vandaag</button>
                         </div>              
                     
                 </div>
@@ -223,24 +233,25 @@ useEffect(() => {
                             </div>
 
                             {/* Users button */}
-                            <div className='flex flex-row'>
-                                <button ref={usersDropdown} id={`dropdownbutton-${index}`} className='bg-cavero-purple text-white w-full p-1 text-left rounded-sm mt-2' onClick={() => openDropdown(index) && setOpen(!open)} >Personen    
-                                <FontAwesomeIcon id={`dropdownicon-${index}`} icon={ faChevronDown } className={`duration-100 float-right mt-1 ml-1 fa-sm`}/>
-                                </button>
+                            <div ref={dropdownMenus}>
+                                <div className='flex flex-row'>
+                                    <button ref={usersDropdown} id={`dropdownbutton-${index}`} className='bg-cavero-purple text-white w-full p-1 text-left rounded-sm mt-2' onClick={() => openDropdown(index) && setOpen(!open)} >Personen    
+                                    <FontAwesomeIcon id={`dropdownicon-${index}`} icon={ faChevronDown } className={`duration-100 float-right mt-1 ml-1 fa-sm`}/>
+                                    </button>
+                                </div>
+                                
+                                {/* Dropdown Items Users */}
+                                <div id={`dropdownitems-${index}`} className={`${ open ? "opacity-100" : "opacity-0 hidden" }  duration-150 flex flex-col bg-white w-full p-2.5 shadow-md rounded-sm absolute max-h-96 overflow-y-auto`}>
+                                    <p className='w-full'>{dates[index].Users.length > 0 ? "Deze medewerkers zijn aanwezig." : "Er zijn vandaag geen medewerkers aanwezig."}</p>
+                                    {dates[index].Users.map((user, index) => (
+                                        <div className='flex flex-row bg-cavero-purple-light w-full p-2 rounded-md place-items-center gap-x-2 mb-1'>
+                                            <FontAwesomeIcon className='text-cavero-purple fa-2x' icon={faCircleUser}/>
+                                            <span className='text-slate-700 text-sm font-semibold'>{user.FirstName} {user.LastName}</span>
+                                        </div>
+                                    ))}
+                                        
+                                </div> 
                             </div>
-                            
-                            {/* Dropdown Items Users */}
-                            <div id={`dropdownitems-${index}`} className={`${ open ? "opacity-100" : "opacity-0 hidden" }  duration-150 flex flex-col bg-white w-full p-2.5 shadow-md rounded-sm absolute`}>
-                                <p className='w-full'>{dates[index].Users.length > 0 ? "Deze medewerkers zijn aanwezig." : "Er zijn vandaag geen medewerkers aanwezig."}</p>
-                                {dates[index].Users.map((user, index) => (
-                                    <div className='flex flex-row bg-cavero-purple-light w-full p-2 rounded-md place-items-center gap-x-2 mb-1'>
-                                        <FontAwesomeIcon className='text-cavero-purple fa-2x' icon={faCircleUser}/>
-                                        <span className='text-slate-700 text-sm font-semibold'>{user.FirstName} {user.LastName}</span>
-                                    </div>
-                                    
-                                ))}
-                                    
-                            </div> 
 
                             {/* Events Card */}
                             {dates[index].Events.map((event, index2) => (
