@@ -4,15 +4,20 @@ import axios from 'axios';
 function CreateArticleModal({ onClose }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [photo, setPhoto] = useState(null);
+
+  const handleFileChange = (e) => {
+    setPhoto(e.target.files[0]);
+  };
 
   const handleSubmit = async () => {
     try {
       const response = await axios.post('http://localhost:8080/insert_news', {
         title,
         description,
+        photo
       });
       onClose();
-      window.location.reload();
     } catch (error) {
       console.error('Error inserting data: ', error);
     }
@@ -37,7 +42,16 @@ function CreateArticleModal({ onClose }) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="mt-1 p-3 w-full border rounded-md resize-none"
-            rows="8" // Increase the number of rows
+            rows="8"
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-black">Upload Foto (Optioneel):</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="mt-1 p-3 w-full border rounded-md"
           />
         </div>
         <div className="flex justify-end">
