@@ -198,10 +198,10 @@ app.get("/signout", (req, res) => {
 })
 
 app.post('/insert_news', (req, res) => {
-    const { title, description } = req.body;
+    const { title, description, image } = req.body;
 
-    const sql = 'INSERT INTO news (title, description) VALUES (?, ?)';
-    db.query(sql, [title, description], (err, result) => {
+    const sql = 'INSERT INTO news (title, description, image) VALUES (?, ?, ?)';
+    db.query(sql, [title, description, image], (err, result) => {
         if (err) {
             console.log(error)
             res.status(500).json({ message: 'Error inserting data' });
@@ -337,7 +337,7 @@ app.get('/event_users/:ID', (request, response) => {
 
 app.get('/users_day/:day', (request, response) => {
     const day = request.params.day;
-    db.query('SELECT accounts.FirstName, accounts.LastName FROM Employee_Schedule2 LEFT JOIN accounts ON Employee_Schedule2.Account_ID = accounts.ID WHERE ?? IS NOT NULL OR ?? = ?', [day, day, 'Thuis'], (error, result) => {
+    db.query('SELECT accounts.FirstName, accounts.LastName FROM Employee_Schedule LEFT JOIN accounts ON Employee_Schedule.Account_ID = accounts.ID WHERE ?? IS NOT NULL OR ?? = ?', [day, day, 'Thuis'], (error, result) => {
         if (error) console.log(error);
 
         response.send(result);
@@ -345,7 +345,7 @@ app.get('/users_day/:day', (request, response) => {
 });
 
 app.get('/rooms_status/:day', (request, response) => {
-    db.query(`SELECT ${request.params.day} FROM Employee_Schedule2`, (error, result) => {
+    db.query(`SELECT ${request.params.day} FROM Employee_Schedule`, (error, result) => {
         if (error) console.log(error);
 
         const werkRuimtes = result.map(entry => entry[request.params.day]);
@@ -405,7 +405,7 @@ app.get('/eventsregistertime/:EventId', (req, res) => {
 });
 
 app.post('/scheduleweek', (req, res) => { 
-    db.query(`  INSERT INTO caverogroep2.Employee_Schedule2 (Account_ID, Monday, Tuesday, Wednesday, Thursday, Friday)
+    db.query(`  INSERT INTO caverogroep2.Employee_Schedule (Account_ID, Monday, Tuesday, Wednesday, Thursday, Friday)
                 VALUES (?, ?, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE
                     Monday = ?,
@@ -423,7 +423,7 @@ app.post('/scheduleweek', (req, res) => {
 });
 
 app.get('/get-employee-schedule/:Account_ID', (req, res) => {
-    db.query(`SELECT * FROM Employee_Schedule2 WHERE Account_ID = ${req.params.Account_ID}`,  (error, result) => {
+    db.query(`SELECT * FROM Employee_Schedule WHERE Account_ID = ${req.params.Account_ID}`,  (error, result) => {
         if (error) console.log(error);
 
         if (result.length > 0) {
