@@ -110,8 +110,10 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
           <div className='flex flex-row gap-x-2 justify-evenly'>  
               <span className='text-md text-cavero-purple font-semibold'>Deelnemers</span>
               <div className='flex-grow border-b bg-white opacity-0'></div>
-              <FontAwesomeIcon icon={faUserAlt} className='text-cavero-purple'/>
-              <span className='text-md text-gray-700 font-semibold'>{eventUsersData.length}</span>
+              <div className='flex flex-row items-center gap-x-1'>
+                <FontAwesomeIcon icon={faUserAlt} className='text-cavero-purple'/>
+                <span className='text-md text-gray-700 font-semibold'>{eventUsersData.length}</span>
+              </div>
           </div>     
           <div className='flex flex-col bg-gray-100 w-full h-40 p-0.5 rounded-md overflow-y-auto gap-y-1'>
             
