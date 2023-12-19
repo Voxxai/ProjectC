@@ -7,7 +7,7 @@ import EditArticleModal from './EditArticleModal';
 function NewsArticleFull({ id, title, description, onBackClick, creation_time }) {
   const { auth } = useAuth();
   const [isEditModalOpen, setEditModalOpen] = React.useState(false);
-
+  
   const handleEditClick = () => {
     setEditModalOpen(true);
   };
