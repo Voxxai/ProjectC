@@ -10,7 +10,7 @@ function NewsArticle({ title, description }) {
       <div className="text-cavero-purple text-2xl font-semibold mt-4 h-16 overflow-hidden">
         {title}
       </div>
-      <div className="text-zinc-500 text-base mt-2">
+      <div className="text-zinc-500 text-sm mt-2 opacity-75">
         {truncatedDescription}
       </div>
     </div>

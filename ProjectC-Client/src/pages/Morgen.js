@@ -106,66 +106,82 @@ function Morgen() {
                 <div className='flex flex-row justify-between w-full'>
                     <span className='flex bg-cavero-purple p-1.5 px-2.5 text-white rounded-b font-medium'>{getDayName(new Date(tomorrowDate).getDay())} {new Date(tomorrowDate).getDate()} {getMonthName(new Date(tomorrowDate).getMonth(), false)}</span>
                     <button onClick={openModal} className='flex flex-row gap-x-1.5 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100 group'>
-                        <span>Mijn beschikbaarheid</span>
+                        <span className='max-sm:hidden'>Mijn beschikbaarheid</span>
                         <FontAwesomeIcon icon={faPenToSquare} />
                     </button>
                 </div>
 
-                <div className='flex flex-row h-full gap-x-4'>
+                <div className='flex flex-row h-full gap-4 max-sm:flex-wrap max-sm:overflow-y-auto'>
 
                     {/* Ruimtes Card */}
-                    <div className="flex flex-col p-2 shadow-md w-2/4 text-left overflow-y-auto bg-white rounded h-full">
+                    <div className="flex flex-col p-2 shadow-md w-2/4 text-left overflow-y-auto bg-white rounded h-full max-sm:w-full max-sm:h-1/2">
                         <div className="flex items-center">
                             <FontAwesomeIcon icon={faListUl} className="mr-2" />
                             <span className="text-xl font-semibold">Ruimtes</span>
                         </div>
                         <div className="border-2 border-cavero-purple my-2 rounded-full"></div>
-                        <div className='flex flex-col gap-y-1'>
-                            {/* Display the results of countWerkRuimteOccurrences */}
-                            {Object.entries(rooms).map(([ruimte, count]) => (
-                                <div key={ruimte} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md'>
-                                    <span className='text-black font-semibold'>{ruimte}</span>
-                                <div className='flex items-center ml-auto'>
-                                    <span className='text-black font-semibold mr-2'>{count}</span>
-                                    <FontAwesomeIcon className='text-black' icon={faUserGroup} />
+
+                        {rooms.length === 0 ? (
+                            <span className='text-gray-500 text-sm'>Geen gevulde ruimtes gevonden voor morgen.</span>
+                        ) : (
+                            <div className='flex flex-col gap-y-1'>
+                                {/* Display the results of countWerkRuimteOccurrences */}
+                                {Object.entries(rooms).map(([ruimte, count]) => (
+                                    <div key={ruimte} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md'>
+                                        <span className='text-black font-semibold'>{ruimte}</span>
+                                    <div className='flex items-center ml-auto'>
+                                        <span className='text-black font-semibold mr-2'>{count}</span>
+                                        <FontAwesomeIcon className='text-black' icon={faUserGroup} />
+                                    </div>
                                 </div>
+                                                        
+                                ))}
                             </div>
-                                                     
-                            ))}
-                        </div>
+                        )}
                     </div>
+                    
 
                     {/* Events Card */}
-                    <div className="flex flex-col p-2 shadow-md w-1/4 text-left overflow-y-auto bg-white rounded h-full">
+                    <div className="flex flex-col p-2 shadow-md w-1/4 text-left overflow-y-auto bg-white rounded h-full max-sm:w-full max-sm:h-1/2">
                         <div className="flex items-center">
                             <FontAwesomeIcon icon={faCalendarDays} className="mr-2" />
                             <span className="text-xl font-semibold">Evenementen</span>
                         </div>
                         <div className="border-2 border-cavero-purple my-2 rounded-full"></div>
-                        <div>
-                            {events.map((event, index) => (
-                                <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
-                                    <span className='text-black font-semibold'>{event.Title}</span>
-                                </div>
-                            ))}
-                        </div>
+
+                        {events.length === 0 ? (
+                            <span className='text-gray-500 text-sm'>Geen evenementen gevonden voor morgen.</span>
+                        ) : (
+                            <div>
+                                {events.map((event, index) => (
+                                    <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
+                                        <span className='text-black font-semibold'>{event.Title}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* Personen Card */}
-                    <div className="flex flex-col p-2 shadow-md w-1/4 text-left overflow-y-auto bg-white rounded h-full">
+                    <div className="flex flex-col p-2 shadow-md w-1/4 text-left overflow-y-auto bg-white rounded h-full max-sm:w-full max-sm:h-1/2">
                         <div className="flex items-center">
                             <FontAwesomeIcon icon={faUsers} className="mr-2" />
                             <span className="text-xl font-semibold">Personen</span>
                         </div>
                         <div className="border-2 border-cavero-purple my-2 rounded-full"></div>
-                        <div>
-                            {users.map((user, index) => (
-                                <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
-                                    <FontAwesomeIcon className='text-cavero-purple fa-lg' icon={faCircleUser} />
-                                    <span className='text-black font-semibold'>{user.FirstName} {user.LastName}</span>
-                                </div>
-                            ))}
-                        </div>
+
+                        {users.length === 0 ? (
+                            <span className='text-gray-500 text-sm'>Geen collega's gevonden voor morgen.</span>
+                        ) : (
+                            <div>
+                                {users.map((user, index) => (
+                                    <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
+                                        <FontAwesomeIcon className='text-cavero-purple fa-lg' icon={faCircleUser} />
+                                        <span className='text-black font-semibold'>{user.FirstName} {user.LastName}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>             
                 </div>
             </div>
