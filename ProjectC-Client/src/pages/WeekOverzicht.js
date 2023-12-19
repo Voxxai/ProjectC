@@ -24,7 +24,6 @@ function WeekOverzicht() {
     const [ joined, setJoined ] = useState(false);
     const [ endJoinDate, setEndJoinDate ] = useState(false);
     const [ currentDate, setCurrentDate ] = useState(new Date());
-    const [ week, setWeek ] = useState(0);
     const { auth } = useAuth();
 
 // Onload set dates of this week
@@ -188,7 +187,7 @@ useEffect(() => {
         const start = new Date(curr.getFullYear(), 0, 1);
         const days = Math.floor((curr - start) / (24 * 60 * 60 * 1000));
 
-        setWeek(Math.ceil(days / 7));
+        return Math.ceil(days / 7);
     };
     
     const handleWeek = (direction) => {
