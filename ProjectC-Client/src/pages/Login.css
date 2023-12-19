@@ -46,18 +46,3 @@
     scale: 1.05;
     box-shadow: 5px 10px 10px 0 rgba(0, 0, 0, 0.20);
 }
-
-* {
-    scrollbar-width: thin;
-
-}
-
-/* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-    width: 15px;
-}
-
-*::-webkit-scrollbar-track {
-
-    border-radius: 5px;
-}

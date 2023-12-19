@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios, { Axios } from 'axios';
-import "./Scrollbar.css";
 import "./Login.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightLong, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
