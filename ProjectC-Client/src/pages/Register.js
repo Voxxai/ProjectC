@@ -53,8 +53,8 @@ function Register() {
                 {/* Login container */}
                 <div className="w-[550px] p-12 py-24 bg-white shadow-2xl shadow-cavero-purple-light rounded">
                     <div className='mb-3'>
-                        <h1 className='text-cavero-purple font-semibold'>Login bij Cavero</h1>
-                        <p className='text-gray-600 text-md'>Je kunt bij Cavero inloggen met de volgende gegevens.</p>
+                        <h1 className='text-cavero-purple font-semibold'>Account Registreren</h1>
+                        <p className='text-gray-600 text-md'>Op deze pagina kan je registreren</p>
                     </div>
                     <div className={`bg-red-200 h-10 rounded flex mb-3 ${!error && 'hidden'}`}>
                         <p className='text-black my-auto p-2 text-sm'>{errorMessage}</p>
