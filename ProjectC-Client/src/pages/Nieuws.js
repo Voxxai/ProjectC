@@ -87,17 +87,22 @@ function Nieuws() {
   };
 
   return (
-    <div className="w-full h-full max-h-full px-4 self-center overflow-y-hidden md:flex md:flex-wrap justify-center text-cavero-purple bg-slate-100">
-
-      <div className="flex flex-col w-full max-h-full h-full overflow-y-hidden">
-
-        <div className="w-full flex flex-row-reverse items-center justify-between">
-          <button
-            className="flex flex-row gap-x-1.5 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100 group"
-            onClick={openModal}>
-            <span>Nieuwsbericht aanmaken</span>
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </button>
+    <div className='bg-slate-100 h-full overflow-y-auto'>
+      <button
+        className="absolute top-15 right-10 bg-cavero-purple text-white px-2 py-1 rounded text-sm hover:shadow-lg transition-shadow"
+        onClick={openModal}
+      >
+        Nieuwsbericht aanmaken
+      </button>
+      {isModalOpen && <CreateArticleModal onClose={closeModal} />}
+      {selectedArticle ? (
+        <div className="flex justify-center mx-auto max-w-1/2">
+          <NewsArticleFull
+            id={selectedArticle.id}
+            title={selectedArticle.title}
+            description={selectedArticle.description}
+            onBackClick={handleBackClick}
+          />
         </div>
 
           <div className="w-full h-full mb-2 rounded-md flex overflow-y-auto">
