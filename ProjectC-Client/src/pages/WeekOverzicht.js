@@ -207,7 +207,7 @@ useEffect(() => {
                         </div>             
                     
                 </div>
-                <div className="flex flex-row h-full gap-x-4 w-full overflow-x-auto max-sm:flex-nowrap">
+                <div className="flex flex-row h-full gap-x-4 w-full overflow-x-auto">
                     
                     {/* Items */}
                     {dates.map((Date, index) => (
