@@ -434,6 +434,33 @@ app.get('/get-employee-schedule/:Account_ID', (req, res) => {
     });
 });
 
+app.post('/register', (req, res) => {
+    const { email, password, firstname, lastname, level } = req.body;
+
+    db.query("SELECT * FROM accounts WHERE Email = ?", [email], (error, result) => {
+        if (error) {
+            console.log(error);
+            res.send({ error: "Error" });
+        }
+
+        if (result.length > 0) {
+            res.send({ error: "Email already exists" });
+        } else {
+            db.query("INSERT INTO accounts (Email, Password, FirstName, LastName, Level) VALUES (?, ?, ?, ?, ?)",
+                [email, password, firstname, lastname, level],
+                (error, result) => {
+                    if (error) {
+                        console.log(error);
+                        res.send({ error: "Error" });
+                    } else {
+                        res.send({ message: "User registered" });
+                    }
+                });
+        }
+    });
+}
+);
+
 app.listen(8080, () => {
     console.log("Server listing");
 });
