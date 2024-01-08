@@ -11,8 +11,6 @@ import React, { useEffect, useState, useRef } from 'react';
 
 function WeekOverzicht() {
     const usersDropdown = useRef(null);
-    const dropdownMenus = useRef(null);
-    const [ readyToLoad, setReadyToLoad ] = useState(false);
     const [ dates, setDates ] = useState([]);
     const [ open, setOpen ] = useState(false);
     const [ error, setError ] = useState(false);
@@ -24,7 +22,6 @@ function WeekOverzicht() {
     const [ joined, setJoined ] = useState(false);
     const [ endJoinDate, setEndJoinDate ] = useState(false);
     const [ currentDate, setCurrentDate ] = useState(new Date());
-    const [ week, setWeek ] = useState(0);
     const { auth } = useAuth();
 
 // Onload set dates of this week
@@ -124,15 +121,6 @@ useEffect(() => {
         dropdownIcon.classList.toggle('rotate-180'); 
     }
 
-    function closeDropdown() {
-        for (let i = 0; i < dates.length; i++) {
-            const dropdownItems = document.getElementById(`dropdownitems-${i}`);
-            
-            dropdownItems.classList.add('opacity-0');
-            dropdownItems.classList.add('hidden');
-        }
-    }
-
     const openModal = () => {
         setIsModalOpen(true);
       };
@@ -188,7 +176,7 @@ useEffect(() => {
         const start = new Date(curr.getFullYear(), 0, 1);
         const days = Math.floor((curr - start) / (24 * 60 * 60 * 1000));
 
-        setWeek(Math.ceil(days / 7));
+        return Math.ceil(days / 7);
     };
     
     const handleWeek = (direction) => {
@@ -279,7 +267,6 @@ useEffect(() => {
             </div>
             )}
         </div>
-        
     
     );
 }
