@@ -5,7 +5,7 @@ function NewsArticle({ title, description }) {
     description.length > 40 ? `${description.slice(0, 40)}...` : description;
 
   return (
-    <div className="w-[450px] h-11/12 mb-2 border border-gray-300 rounded-lg p-2 flex-1 hover:shadow-lg transition-shadow bg-white">
+    <div className="w-[450px] h-11/12 mb-2 border border-gray-300 rounded-lg p-2 flex-1 hover:shadow-lg transition-shadow bg-white max-sm:w-[330px]">
       <div className="bg-zinc-300 h-[182px]" />
       <div className="text-cavero-purple text-2xl font-semibold mt-4 h-16 overflow-hidden">
         {title}
