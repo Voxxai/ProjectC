@@ -85,7 +85,7 @@ function Evenementen() {
   return (
     <div className=" pt-4 px-4 w-full h-full max-h-full self-center overflow-y-hidden md:flex md:flex-wrap justify-center items-center text-cavero-purple bg-slate-100">
 
-      <div className="flex flex-col w-5/6 max-h-full h-full overflow-y-hidden p-1">
+      <div className="flex flex-col w-5/6 max-sm:w-full max-h-full h-full overflow-y-hidden p-1">
 
         <div className="w-full h-fit shrink flex-nowrap flex flex-row items-center justify-between border-b-2 border-cavero-purple mb-2">
           <div className='flex flex-row text-center items-end '>
