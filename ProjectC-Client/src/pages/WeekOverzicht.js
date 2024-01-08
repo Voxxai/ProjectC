@@ -198,7 +198,6 @@ useEffect(() => {
                 <div className='flex flex-row items-center rounded justify-between' >
                     <div className='flex gap-x-5 max-sm:gap-x-2 '>
                         <span className='text-gray-400 font-medium text-xl max-sm:text-lg '>Week {getWeek()} - {getMonthName(new Date(currentDate).getMonth(), false)} {new Date(currentDate).getFullYear()}</span>
-                        <span className='text-gray-400 font-medium text-2xl max-sm:text-lg '></span>
                     </div>
                         <div className='flex flex-row gap-x-1.5 select-none items-center '>
                             <FontAwesomeIcon icon={faChevronLeft} onClick={() => handleWeek(-1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-110 duration-100'/>
