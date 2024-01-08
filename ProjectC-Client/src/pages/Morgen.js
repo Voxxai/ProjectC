@@ -91,7 +91,7 @@ function Morgen() {
         return werkRuimteCounts;
       }
       
-
+    // Opening the week modal
     const openModal = () => {
         setIsModalOpen(true);
       };
