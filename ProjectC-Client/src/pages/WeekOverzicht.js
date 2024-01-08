@@ -1,6 +1,6 @@
 // import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp, faCircle, faCircleUser, faUserAlt } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp, faCircle, faCircleUser, faSpinner, faUserAlt } from '@fortawesome/free-solid-svg-icons'
 import axios, { all } from 'axios';
 import Modal from '../components/WeekOverzichtModal';
 import useAuth from '../hooks/useAuth';
@@ -194,6 +194,13 @@ useEffect(() => {
 
     return (
         <div className="flex h-full bg-slate-100">
+            {dates.length == 0 ? (
+                <div className='flex flex-row gap-x-2 w-full items-center justify-center'>
+                    <FontAwesomeIcon icon={faSpinner} className='text-cavero-purple fa-2x animate-spin'/>
+                    <span className='text-xl text-gray-500'>Loading...</span>
+                    </div>
+            ) : (
+                <div className='w-full h-full'>
             <div className='flex flex-col gap-y-2 p-4 pt-2 h-full w-full'>
                 <div className='flex flex-row items-center rounded justify-between' >
                     <div className='flex gap-x-5 max-sm:gap-x-2 '>
@@ -257,6 +264,8 @@ useEffect(() => {
                 </div>
             </div>
             <Modal isOpen={isModalOpen} onRequestClose={closeModal} eventData={eventData} eventUsersData={eventUsers} joined={joined} SetJoined={setJoined} endJoinDate={endJoinDate} reloadEventUsers={getEventUsers}/>
+            </div>
+            )}
         </div>
     
     );
