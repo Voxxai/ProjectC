@@ -12,12 +12,14 @@ import Profile from './pages/Profile';
 import Security from './pages/Security';
 import Settings from './pages/Settings';
 import Morgen from './pages/Morgen';
+import Register from './pages/Register';
 
 function App() {
   return (
     <Routes>
         {/* Public Routes */}
         <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
           
         {/* Private Routes */}
         <Route element={<RequireAuth />} >
