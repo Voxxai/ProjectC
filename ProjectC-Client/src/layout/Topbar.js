@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
+import Navbar from '../layout/Navbar';	
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faBars,
   faBell,
   faChevronDown,
   faChevronUp,
@@ -23,6 +25,8 @@ function Topbar() {
   const [notificationCount, setNotificationCount] = useState(0);
   const [bellPressed, setBellPressed] = useState(false);
   const location = useLocation();
+
+  console.log(NavOpen);
 
   const Menus = [
     { title: 'Profiel weergeven', src: faUser, link: '/instellingen/profiel' },
@@ -68,6 +72,11 @@ function Topbar() {
 
   return (
     <div className="bg-white shadow-md w-full h-full max-h-20 flex justify-between items-center px-4">
+      {/* Hamburger menu for mobile */}
+      <div className='items-center'>
+        <FontAwesomeIcon icon={faBars} className="fa-lg text-slate-700 hidden max-sm:visible" />
+      </div>
+
       {/* Header */}
       <div className='items-center'>
         <span className='font-medium text-3xl'>{location.pathname == "/" ? "Week Overzicht" : location.pathname.slice(1)}</span>
