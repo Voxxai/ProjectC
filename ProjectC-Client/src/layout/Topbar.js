@@ -73,7 +73,7 @@ function Topbar({ openNavbar, toggleOpen}) {
 
       {/* Header */}
       <div className='items-center flex flex-row gap-x-2'>
-        <FontAwesomeIcon icon={faBars} className="fa-xl text-slate-700 hidden max-sm:block" onClick={toggleOpen} />
+        <FontAwesomeIcon icon={faBars} className="fa-xl text-slate-700 hidden max-sm:block hover:scale-110" onClick={toggleOpen} />
         <span className='font-medium text-3xl'>{location.pathname == "/" ? "Week Overzicht" : location.pathname.slice(1)}</span>
       </div>
 

@@ -23,7 +23,7 @@ function Navbar({ openNavbar, toggleOpen }) {
           <FontAwesomeIcon
             icon={faChevronLeft}
             color='white'
-            className={`${!openNavbar ? "bg-cavero-hover-purple absolute cursor-pointer -right-3 top-6 w-4 border-dark-purple p-2 rounded-full duration-300 bg-opacity-75 hover:bg-opacity-100 max-sm:hidden" : 
+            className={`${!openNavbar ? "bg-cavero-hover-purple absolute cursor-pointer -right-3 top-6 w-4 border-dark-purple p-2 rounded-full duration-300 bg-opacity-75 hover:bg-opacity-100 rotate-180 max-sm:hidden" : 
             "bg-cavero-hover-purple absolute cursor-pointer -right-3 top-6 w-4 border-dark-purple p-2 rounded-full duration-300 bg-opacity-75 hover:bg-opacity-100"}`}
             onClick={toggleOpen}
           />
