@@ -5,7 +5,7 @@ import { faBell, faCalendarDays, faChevronLeft, faDashboard, faHome, faUser, faU
 import LogoIcon from '../images/Cavero_Icon_BW.png';
 
 function Navbar() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const Menus = [
     { title: "Week Overzicht", src: faHome, link: "/" },
     { title: "Evenementen", src: faCalendarDays, link: "/Evenementen" },
@@ -17,7 +17,7 @@ function Navbar() {
     <div className=''>
       <div className="flex">
         <div
-          className={`${open ? "w-72 max-sm:absolute max-sm:z-10" : "w-20 max-sm:w-2"
+          className={`${open ? "w-72 max-sm:absolute max-sm:z-10" : "w-20 max-sm:w-0"
             } bg-cavero-purple h-screen pt-2.5 max-sm:absolute relative duration-300`}
         >
           <FontAwesomeIcon
@@ -40,7 +40,7 @@ function Navbar() {
             </h1>
           </div>
           {Menus.map((Menu, index) => (
-            <Link to={Menu.link} className="no-underline" key={index}>
+            <Link to={Menu.link} className="no-underline" key={index} onClick={() => setOpen(false)}>
               <li
                 className={`flex h-16 min-w-max rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4 relative max-sm:${!open ? "hidden" : ""}`}
               >
