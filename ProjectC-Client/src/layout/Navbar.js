@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faCalendarDays, faChevronLeft, faDashboard, faHome, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import LogoIcon from '../images/Cavero_Icon_BW.png';
 
-function Navbar() {
-  const [open, setOpen] = useState(false);
+function Navbar({ openNavbar, toggleOpen }) {
+  // const [open, setOpen] = useState(false);
   const Menus = [
     { title: "Week Overzicht", src: faHome, link: "/" },
     { title: "Evenementen", src: faCalendarDays, link: "/Evenementen" },
@@ -17,14 +17,15 @@ function Navbar() {
     <div className=''>
       <div className="flex">
         <div
-          className={`${open ? "w-72 max-sm:absolute max-sm:z-10" : "w-20 max-sm:w-0"
+          className={`${openNavbar ? "w-72 max-sm:absolute max-sm:z-10" : "w-20 max-sm:w-0 max-sm:z-10"
             } bg-cavero-purple h-screen pt-2.5 max-sm:absolute relative duration-300`}
         >
           <FontAwesomeIcon
             icon={faChevronLeft}
             color='white'
-            className={`bg-cavero-hover-purple absolute cursor-pointer -right-3 top-6 w-4 border-dark-purple p-2 rounded-full duration-300 bg-opacity-75 hover:bg-opacity-100 ${!open && "rotate-180"}`}
-            onClick={() => setOpen(!open)}
+            className={`${!openNavbar ? "bg-cavero-hover-purple absolute cursor-pointer -right-3 top-6 w-4 border-dark-purple p-2 rounded-full duration-300 bg-opacity-75 hover:bg-opacity-100 max-sm:hidden" : 
+            "bg-cavero-hover-purple absolute cursor-pointer -right-3 top-6 w-4 border-dark-purple p-2 rounded-full duration-300 bg-opacity-75 hover:bg-opacity-100"}`}
+            onClick={toggleOpen}
           />
           <div className="flex min-w-max gap-x-2 items-center mb-4 max-sm:hidden">
             <img
@@ -32,7 +33,7 @@ function Navbar() {
               className={`cursor-pointer duration-500 w-20 px-2`}
             />
             <h1
-              className={`text-white mt-2 text-sm  ${!open && "invisible"
+              className={`text-white mt-2 text-sm  ${!openNavbar && "invisible"
                 }`}
             >
               Cavero<br />
@@ -40,12 +41,12 @@ function Navbar() {
             </h1>
           </div>
           {Menus.map((Menu, index) => (
-            <Link to={Menu.link} className="no-underline" key={index} onClick={() => setOpen(false)}>
+            <Link to={Menu.link} className="no-underline" key={index} onClick={toggleOpen}>
               <li
-                className={`flex h-16 min-w-max rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4 relative max-sm:${!open ? "hidden" : ""}`}
+                className={`flex h-16 min-w-max rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4 relative max-sm:${!openNavbar ? "hidden" : ""}`}
               >
                 <FontAwesomeIcon icon={Menu.src} className="w-8 fa-lg" />
-                <span className={`${!open && "hidden"} origin-left text-white no-underline text-base`}>
+                <span className={`${!openNavbar && "hidden"} origin-left text-white no-underline text-base`}>
                   {Menu.title}
                 </span>
               </li>
