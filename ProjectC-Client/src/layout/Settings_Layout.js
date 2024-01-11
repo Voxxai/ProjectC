@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear, faGears, faLock, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faCalendar, faGear, faGears, faLock, faUser } from '@fortawesome/free-solid-svg-icons'
 import useAuth from '../hooks/useAuth';
 import { Link, Outlet } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ function Settings() {
   const Menus = [
     { title: "Profiel", src: faUser, link: "/instellingen/profiel" },
     { title: "Beveiliging", src: faLock, link: "/instellingen/security" },
+    // { title: "Standaard Evenementen", src: faCalendar, link: "/instellingen/evenementen" },
     { title: "Instellingen", src: faGear, link: "/instellingen/options" },
   ];
 
