@@ -89,10 +89,13 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                     </label>
                 </div>
 
-                <button
-                    type="submit"
-                    className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-purple-dark"
-                >Submit</button>
+                <div className='flex flex-row-reverse'>
+                    <button
+                        type="submit"
+                        className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-purple-dark"
+                    >Submit</button>
+                </div>
+                
             </form>
         </Modal>
 
