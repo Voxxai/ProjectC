@@ -4,7 +4,7 @@ import Evenement from '../components/Evenement';
 import EventAddModal from '../components/EvenementModal';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 
 function Evenementen() {
@@ -90,7 +90,7 @@ function Evenementen() {
         <div className="w-full h-fit shrink flex-nowrap flex flex-row items-center justify-between border-b-2 border-cavero-purple mb-2">
           <div className='flex flex-row text-center items-end '>
             <div className='relative' ref={dropdownRef}>
-              <span className="truncate dropdown inline-block cursor-pointer text-2xl font-medium rounded-t m-0 p-0 " onClick={(e) => setIsDropdownOpen(!isDropdownOpen)}>{selectedDropdownOption}
+              <span className="truncate dropdown inline-block cursor-pointer text-2xl font-medium rounded-t " onClick={(e) => setIsDropdownOpen(!isDropdownOpen)}>{selectedDropdownOption}
                 {selectedDropdownOption === "Verlopen" ? <>&emsp;</> : <>&nbsp;</>}
                 <FontAwesomeIcon icon={faChevronDown} className={`${isDropdownOpen && "rotate-180"} duration-100`} />
               </span>
@@ -102,7 +102,9 @@ function Evenementen() {
           </div>
 
           {isAdmin && (
-            <button className="bg-cavero-purple text-white text-base font-semibold rounded-md px-3 py-0.5 hover:bg-cavero-purple-dark truncate" onClick={openModal}>Voeg Evenement toe
+            <button className="flex flex-row items-center bg-cavero-purple text-white text-base font-medium rounded-md px-3 py-1 hover:bg-cavero-purple-dark truncate gap-x-1.5" onClick={openModal}>
+              <span className='max-sm:hidden'>Voeg Evenement toe</span>
+              <FontAwesomeIcon className='' icon={faPlus} />
             </button>
           )}
           <EventAddModal isOpen={isModalOpen} onRequestClose={closeModal} />
