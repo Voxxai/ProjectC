@@ -11,15 +11,20 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 function Layout() {
     const [openNavbar, setOpenNavbar] = useState(false);
 
-    const toggleOpen = () => {
-        setOpenNavbar(!openNavbar);
+    const toggleOpen = (close = false) => {
+        setOpenNavbar(close ? !openNavbar : close);
     };
+
+    const toggleClose = () => {
+        setOpenNavbar(false);
+    };
+
     return (
         <main className='flex flex-row max-h-screen h-screen'>
-            <Navbar openNavbar={openNavbar} toggleOpen={toggleOpen} />
+            <Navbar openNavbar={openNavbar} toggleOpen={toggleOpen} toggleClose={toggleClose} />
 
             <div className="flex flex-grow flex-col max-h-screen overflow-hidden">
-                <Topbar openNavbar={openNavbar} toggleOpen={toggleOpen} />
+                <Topbar openNavbar={openNavbar} toggleOpen={toggleOpen} toggleClose={toggleClose} />
                 <Outlet />
             </div>
         </main>
