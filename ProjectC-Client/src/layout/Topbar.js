@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faBars,
   faBell,
   faChevronDown,
   faChevronUp,
@@ -15,7 +16,7 @@ import {
 import LogoIcon from '../images/Cavero_Icon_BW.png';
 import useAuth from '../hooks/useAuth';
 
-function Topbar() {
+function Topbar({ openNavbar, toggleOpen}) {
   const { auth } = useAuth();
   const navigate = useNavigate();
   const settingMenu = useRef(null);
@@ -68,8 +69,11 @@ function Topbar() {
 
   return (
     <div className="bg-white shadow-md w-full h-full max-h-20 flex justify-between items-center px-4">
+      {/* Hamburger menu for mobile */}
+
       {/* Header */}
-      <div className='items-center'>
+      <div className='items-center flex flex-row gap-x-2'>
+        <FontAwesomeIcon icon={faBars} className="fa-xl text-slate-700 hidden max-sm:block hover:scale-110" onClick={toggleOpen} />
         <span className='font-medium text-3xl'>{location.pathname == "/" ? "Week Overzicht" : location.pathname.slice(1)}</span>
       </div>
 

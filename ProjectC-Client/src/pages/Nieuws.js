@@ -94,9 +94,10 @@ function Nieuws() {
       >
         Nieuwsbericht aanmaken
       </button>
+      <div className="w-full h-full mb-2 rounded-md flex overflow-y-auto">
       {isModalOpen && <CreateArticleModal onClose={closeModal} />}
       {selectedArticle ? (
-        <div className="flex justify-center mx-auto max-w-1/2">
+        <div className="flex justify-center mx-auto max-w-1/2 max-md:w-full">
           <NewsArticleFull
             id={selectedArticle.id}
             title={selectedArticle.title}
@@ -110,7 +111,7 @@ function Nieuws() {
           <div className='flex flex-col h-full'>
             <div className="flex-row w-full flex flex-wrap justify-center gap-4">
               {currentArticles.map((article) => (
-                <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
+                <div key={article.id} className="cursor-pointer max-sm:w-full" onClick={() => handleArticleClick(article)}>
                   <NewsArticle
                     title={article.title}
                     description={article.description}

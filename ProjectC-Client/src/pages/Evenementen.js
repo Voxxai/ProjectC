@@ -4,7 +4,7 @@ import Evenement from '../components/Evenement';
 import EventAddModal from '../components/EvenementModal';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 
 function Evenementen() {
@@ -85,28 +85,26 @@ function Evenementen() {
   return (
     <div className=" pt-4 px-4 w-full h-full max-h-full self-center overflow-y-hidden md:flex md:flex-wrap justify-center items-center text-cavero-purple bg-slate-100">
 
-      <div className="flex flex-col w-5/6 max-h-full h-full overflow-y-hidden p-1">
+      <div className="flex flex-col w-5/6 max-sm:w-full max-h-full h-full overflow-y-hidden p-1">
 
         <div className="w-full h-fit shrink flex-nowrap flex flex-row items-center justify-between border-b-2 border-cavero-purple mb-2">
           <div className='flex flex-row text-center items-end '>
-            <h2 className=" truncate text-3xl font-semibold m-0 p-0">
-              Evenementen
-              <txt className="text-sm font-normal text-gray-500">/&nbsp;</txt>
-            </h2>
             <div className='relative' ref={dropdownRef}>
-              <h4 className="truncate dropdown inline-block cursor-pointer text-sm font-base rounded-t m-0 p-0 " onClick={(e) => setIsDropdownOpen(!isDropdownOpen)}>{selectedDropdownOption}
+              <span className="truncate dropdown inline-block cursor-pointer text-2xl font-medium rounded-t " onClick={(e) => setIsDropdownOpen(!isDropdownOpen)}>{selectedDropdownOption}
                 {selectedDropdownOption === "Verlopen" ? <>&emsp;</> : <>&nbsp;</>}
                 <FontAwesomeIcon icon={faChevronDown} className={`${isDropdownOpen && "rotate-180"} duration-100`} />
-              </h4>
-              <ul className={`${isDropdownOpen ? 'block' : 'hidden'} absolute w-full min-w-fit max-w-fit bg-white border rounded-b  p-1 text-cavero-purple text-sm divide-y divide-gray-200 z-50`}>
-                <li className="block py-2 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" onClick={() => { setSelectedDropdownOption('Toekomstig'); setIsDropdownOpen(false); }}>Toekomstig</li>
-                <li className="block py-2 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" onClick={() => { setSelectedDropdownOption('Verlopen'); setIsDropdownOpen(false); }}>Verlopen</li>
+              </span>
+              <ul className={`${isDropdownOpen ? 'block' : 'hidden'} absolute right-0 w-full min-w-fit max-w-fit bg-white border rounded-b px-2 text-cavero-purple text-md divide-y divide-gray-200 z-50`}>
+                <li className="block p-2 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" onClick={() => { setSelectedDropdownOption('Toekomstig'); setIsDropdownOpen(false); }}>Toekomstig</li>
+                <li className="block p-2 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" onClick={() => { setSelectedDropdownOption('Verlopen'); setIsDropdownOpen(false); }}>Verlopen</li>
               </ul>
             </div>
           </div>
 
           {isAdmin && (
-            <button className="bg-cavero-purple text-white text-base font-semibold rounded-md px-3 py-0.5 hover:bg-cavero-purple-dark truncate" onClick={openModal}>Voeg Evenement toe
+            <button className="flex flex-row items-center bg-cavero-purple text-white text-base font-medium rounded-md px-3 py-1 hover:bg-cavero-purple-dark truncate gap-x-1.5" onClick={openModal}>
+              <span className='max-sm:hidden'>Voeg Evenement toe</span>
+              <FontAwesomeIcon className='' icon={faPlus} />
             </button>
           )}
           <EventAddModal isOpen={isModalOpen} onRequestClose={closeModal} />
