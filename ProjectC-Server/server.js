@@ -2,6 +2,19 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
+const multer = require('multer');
+const path = require('path');
+const uuid = require('uuid');
+
+const storage = multer.diskStorage({
+    destination: 'images/',
+    filename: function (req, file, cb) {
+        const extension = path.extname(file.originalname);
+        const uniqueFilename = `${uuid.v4()}${extension}`;
+        cb(null, uniqueFilename);
+    }
+});
+
 var mysql = require('mysql');
 
 const cookieParser = require('cookie-parser');
@@ -13,6 +26,8 @@ const sha1 = require('sha1');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 
+const upload = multer({ storage: storage });
+
 dotenv.config();
 
 app.use(express.json());
@@ -21,6 +36,8 @@ app.use(cors({
     methods: ["GET", "POST"],
     credentials: true
 }));
+
+app.use('/images', express.static('images'));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -197,13 +214,14 @@ app.get("/signout", (req, res) => {
     res.end();
 })
 
-app.post('/insert_news', (req, res) => {
-    const { title, description, image } = req.body;
+app.post('/insert_news', upload.single('image'), (req, res) => {
+    const { title, description } = req.body;
+    const imageFilename = req.file ? req.file.filename : null;
 
     const sql = 'INSERT INTO news (title, description, image) VALUES (?, ?, ?)';
-    db.query(sql, [title, description, image], (err, result) => {
+    db.query(sql, [title, description, imageFilename], (err, result) => {
         if (err) {
-            console.log(error)
+            console.log(err);
             res.status(500).json({ message: 'Error inserting data' });
         } else {
             const sql = 'UPDATE accounts SET NotiCounter = NotiCounter + 1';
@@ -506,6 +524,12 @@ app.post('/register', (req, res) => {
     });
 }
 );
+
+function generateUniqueFilename(originalFilename) {
+    const extension = path.extname(originalFilename);
+    const uniqueFilename = `${uuid.v4()}${extension}`;
+    return uniqueFilename;
+}
 
 app.listen(8080, () => {
     console.log("Server listing");
