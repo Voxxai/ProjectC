@@ -101,6 +101,7 @@ function Nieuws() {
             id={selectedArticle.id}
             title={selectedArticle.title}
             description={selectedArticle.description}
+            image={selectedArticle.image}
             onBackClick={handleBackClick}
           />
         </div>
@@ -114,6 +115,7 @@ function Nieuws() {
                     title={article.title}
                     description={article.description}
                     creation_time={article.creation_time}
+                    image={article.image}
                   />
                 </div>
               ))}
