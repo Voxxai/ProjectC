@@ -14,36 +14,34 @@ function NewsArticleFull({ id, title, description, onBackClick, creation_time, i
 
   return (
     <div className="py-8 w-1/2 relative">
-      <button
-        onClick={onBackClick}
-        className="text-cavero-purple py-1 mb-2 text-xl font-medium font-['Poppins']"
-      >
-        <FontAwesomeIcon icon={faArrowLeft} className="mr-1" />
-        Back
-      </button>
-
-      {auth.Level === 3 && (
+      <div className='flex flex-row justify-between items-center'>
         <button
-          onClick={handleEditClick}
-          className="bg-cavero-purple text-white py-1 px-4 text-xl font-medium font-['Poppins'] absolute top-0 right-0"
-          style={{
-            borderBottomLeftRadius: '10px',
-            borderBottomRightRadius: '10px',
-          }}
+          onClick={onBackClick}
+          className="text-cavero-purple py-1 mb-2 text-xl font-medium"
         >
-          Bewerken
+          <FontAwesomeIcon icon={faArrowLeft} className="mr-1" />
+          Back
         </button>
-      )}
+
+        {auth.Level === 3 && (
+          <button
+            onClick={handleEditClick}
+            className="bg-gray-200 rounded-md text-gray-400 text-base hover:bg-gray-300 hover:text-gray-500 border-2 p-1.5 duration-100"
+          >
+            Bewerken / Verwijderen
+          </button>
+        )}
+      </div>
 
       {image && (
         <img
           src={`http://localhost:8080/images/${image}`}
           alt={title}
-          className="bg-zinc-300 h-[250px] object-cover w-full rounded-t-lg"
+          className="bg-zinc-300 h-[250px] object-cover w-full rounded-md"
         />
       )}
 
-      <div className="text-cavero-purple text-3xl font-semibold font-['Poppins'] mt-4">
+      <div className="text-cavero-purple text-3xl font-semibold mt-4">
         {title}
       </div>
       <div className="text-zinc-500 text-base mt-4">{description}</div>
