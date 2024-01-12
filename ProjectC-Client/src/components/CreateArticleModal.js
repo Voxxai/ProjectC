@@ -14,11 +14,17 @@ function CreateArticleModal({ onClose }) {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/insert_news', {
-        title,
-        description,
-        photo
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('image', photo);
+  
+      const response = await axios.post('http://localhost:8080/insert_news', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
+  
       onClose();
     } catch (error) {
       console.error('Error inserting data: ', error);

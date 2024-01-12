@@ -90,7 +90,9 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
 
     return (
         <div className=
-            {`w-1/1 md:w-1/1 lg:w-1/1 xl:w-1/1 flex flex-row grow flex-nowrap gap-x-2 mx-auto border place-content-between p-2.5 m-1 rounded-md text-center scroll-mb-1 scroll-smooth snap-end snap-normal ${(isPastEvent ? 'bg-gray-200 !important' : isLevel3 ? 'bg-cavero-gold/50' : 'bg-cavero-purple-light')}`}>
+            {`w-1/1 md:w-1/1 lg:w-1/1 xl:w-1/1 flex flex-row grow flex-nowrap gap-x-2 mx-auto place-content-between p-2.5 m-1 rounded-md text-center scroll-mb-1 scroll-smooth snap-end snap-normal 
+            ${(isPastEvent ? 'bg-gray-200 !important' : 
+            isLevel3 ? 'bg-gradient-to-r from-[#edc2ff] to-cavero-purple-light' : 'bg-cavero-purple-light')}`}>
             <div className='flex justify-center w-1/12 text-center flex-col'>
                 <h2 className="flex w-full leading-5 text-xl max-sm:text-base justify-center text-center text-gray-600 whitespace-pre-line font-medium mb-1">{formattedDate.split(" ").join("\n")}</h2>
             </div>
