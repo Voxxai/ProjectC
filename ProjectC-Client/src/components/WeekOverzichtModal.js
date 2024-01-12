@@ -39,7 +39,8 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
   }
 
   function renderButtons() {
-    if (endJoinDate == true) {
+    // register time expired when endJoinDate is true or when current time is greater than the endJoinDate -1 day
+    if (endJoinDate == true || Date.now() > new Date(eventData.Date).setDate(new Date(eventData.Date).getDate() - 1)) {
       return (
           <button className='bg-gray-200 text-gray-500 rounded-md p-2 px-3' disabled>Inschrijftijd is verlopen</button>
       )

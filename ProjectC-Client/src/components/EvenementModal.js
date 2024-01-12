@@ -26,6 +26,14 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         }));
     };
 
+    const handleCheckbox = (e) => {
+        const { name, checked } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: checked ? 3 : 2,
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -46,54 +54,69 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             isOpen={isOpen}
             onRequestClose={() => onRequestClose(false)}
             contentLabel="Add Event Modal"
-            className="event-modal p-3 max-w-md mx-auto bg-white rounded shadow-lg border-2 relative outline-none"
+            className="event-modal p-3 max-w-lg mx-auto bg-white rounded shadow-lg border-2 relative outline-none"
             overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
         >
             <button className='flex justify-end' onClick={onRequestClose}>
                 <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1' />
             </button>
-            <h2 className="text-2xl font-bold mb-4">{eventData ? 'Edit Event' : 'Voeg evenement toe'}</h2>
+            <h2 className="text-2xl text-gray-700 font-semibold mb-4">{eventData ? 'Edit Event' : 'Voeg evenement toe'}</h2>
 
             <form onSubmit={handleSubmit} >
-                <label className="block mb-2">
-                    Titel:
-                    <input type="text" placeholder="Naam van het evenement" name="title" value={formData.title} onChange={handleChange} />
-                </label>
+                <div className='flex flex-col gap-y-3 w-full'>
+                    <div>
+                        <label className="block">
+                            Titel:
+                            <input type="text" placeholder="Naam van het evenement" name="title" value={formData.title} onChange={handleChange} />
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <label className="flex flex-col">
+                            Beschrijving:
+                            <textarea name="summary" placeholder='beschrijf het evenement' value={formData.summary} onChange={handleChange} />
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <label className="flex flex-col">
+                            Location:
+                            <input type="text" placeholder="Locatie evenement" name="location" value={formData.location} onChange={handleChange} />
+                        </label>
+                    </div>
 
-                <label className="block mb-2">
-                    Beschrijving:
-                </label>
-                <textarea name="summary" placeholder='beschrijf het evenement' value={formData.summary} onChange={handleChange} />
+                    <div className='flex flex-row gap-x-2'>
+                        <label className="block">
+                            Datum:
+                            <input type="date" name="date" value={formData.Date} onChange={handleChange} placeholder="dd-mm-yyyy" />
+                        </label>
 
-                <label className="block mb-2">
-                    Location:
-                    <input type="text" placeholder="Locatie evenement" name="location" value={formData.location} onChange={handleChange} />
-                </label>
+                        <label className='block'>
+                            Start tijd:
+                            <input
+                                type="time"
+                                name="time"
+                                value={formData.Time}
+                                onChange={handleChange}
+                                step="300" // Set step to 300 seconds (5 minutes)
+                                required
+                            />
+                        </label>
+                    </div>
 
-                <div className='flex flex-row gap-x-2 mb-2'>
-                    <label className="block">
-                        Datum:
-                        <input type="date" name="date" value={formData.Date} onChange={handleChange} placeholder="dd-mm-yyyy" />
-                    </label>
+                    <div className='flex'>
+                        <label className="flex flex-row gap-x-2 text-gray-500 accent-cavero-purple">
+                            <input type="checkbox" name="level" value={formData.level} onChange={handleCheckbox} />
+                            Dit is een belangrijke gebeurtenis
+                        </label>
+                    </div>
 
-                    <label className='block mb-2'>
-                        Start tijd:
-                        <input
-                            type="time"
-                            name="time"
-                            value={formData.Time}
-                            onChange={handleChange}
-                            step="300" // Set step to 300 seconds (5 minutes)
-                            required
-                        />
-                    </label>
-                </div>
-
-                <div className='flex flex-row-reverse'>
-                    <button
-                        type="submit"
-                        className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-purple-dark"
-                    >Submit</button>
+                    <div className='flex flex-row-reverse'>
+                        <button
+                            type="submit"
+                            className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-hover-purple duration-150 hover:scale-105"
+                        >Submit</button>
+                    </div>
                 </div>
                 
             </form>
