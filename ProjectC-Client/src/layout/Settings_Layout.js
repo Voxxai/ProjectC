@@ -16,7 +16,7 @@ function Settings() {
 
   return (
     <div className="flex h-full bg-slate-100 ">
-      <div className='flex bg-white h-5/6 m-auto h-full w-4/6 p-4 rounded-md'>
+      <div className='flex bg-white h-5/6 m-auto w-4/6 p-4 rounded-md shadow-md'>
         <div className='flex flex-col w-3/12'>
           <span className='text-md italic font-semibol text-gray-400'>Account</span>
           <span className='text-xl'>{auth.FirstName} {auth.LastName}</span>
