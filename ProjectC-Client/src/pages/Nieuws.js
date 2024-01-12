@@ -5,6 +5,8 @@ import CreateArticleModal from '../components/CreateArticleModal';
 import Topbar from '../layout/Topbar';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
 function Nieuws() {
   const { auth } = useAuth();
@@ -69,7 +71,7 @@ function Nieuws() {
       <button
         key={pageNumber}
         onClick={() => handlePageClick(pageNumber)}
-        className={`border border-gray-200 px-3 py-1 mx-2 text-gray-500 transition-all duration-100 ease-in-out hover:bg-cavero-purple hover:text-white ${currentPage === pageNumber ? 'bg-cavero-purple text-white' : ''}`}
+        className={`border border-gray-200 px-3 py-1 mx-2 rounded-sm text-gray-500 transition-all duration-100 ease-in-out hover:bg-cavero-purple hover:text-white ${currentPage === pageNumber ? 'bg-cavero-purple text-white' : ''}`}
       >
         {pageNumber}
       </button>
@@ -96,27 +98,32 @@ function Nieuws() {
       {selectedArticle ? (
         <div className="flex justify-center mx-auto max-w-1/2">
           <NewsArticleFull
+            id={selectedArticle.id}
             title={selectedArticle.title}
             description={selectedArticle.description}
+            image={selectedArticle.image}
             onBackClick={handleBackClick}
           />
         </div>
       ) : (
-        <div className='pt-3'>
-          <div className="flex-row w-full flex flex-wrap justify-center gap-4">
-            {currentArticles.map((article) => (
-              <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
-                <NewsArticle
-                  title={article.title}
-                  description={article.description}
-                  creation_time={article.creation_time}
-                />
-              </div>
-            ))}
-          </div>
+        <div className='w-full h-full mb-2 rounded-md flex overflow-y-auto'>
+          <div className='flex flex-col h-full'>
+            <div className="flex-row w-full flex flex-wrap justify-center gap-4">
+              {currentArticles.map((article) => (
+                <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
+                  <NewsArticle
+                    title={article.title}
+                    description={article.description}
+                    creation_time={article.creation_time}
+                    image={article.image}
+                  />
+                </div>
+              ))}
+            </div>
 
-          <div className="flex justify-center">
-            {renderPagination()}
+            <div className="flex justify-center ">
+              {renderPagination()}
+            </div>
           </div>
         </div>
       )}

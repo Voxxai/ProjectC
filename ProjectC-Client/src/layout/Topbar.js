@@ -74,11 +74,11 @@ function Topbar() {
       </div>
 
       {/* Account item */}
-      <div ref={settingMenu} className="my-auto flex gap-10 items-center">
+      <div ref={settingMenu} className="my-auto flex gap-x-4 items-center">
         <button className="flex gap-2 items-center" onClick={() => setOpen(!open)}>
           <FontAwesomeIcon icon={faCircleUser} className="fa-xl text-cavero-purple " />
-          <span className="text-slate-700">Hallo, {auth.FirstName}</span>
-          <FontAwesomeIcon icon={faChevronDown} className={`${open && 'rotate-180'} duration-100 text-slate-700`} />
+          <span className="text-slate-700 max-sm:hidden">Hallo, {auth.FirstName}</span>
+          <FontAwesomeIcon icon={faChevronDown} className={`${open && 'rotate-180'} duration-100 text-slate-700 max-sm:hidden`} />
         </button>
 
         {/* Dropdown menu */}
