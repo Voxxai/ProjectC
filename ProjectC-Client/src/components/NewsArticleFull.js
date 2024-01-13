@@ -13,8 +13,8 @@ function NewsArticleFull({ id, title, description, onBackClick, creation_time, i
   };
 
   return (
-    <div className="py-8 w-full md:w-1/2 relative mx-auto md:mx-0"> {/* Responsive padding */}
-      <div className='flex flex-col md:flex-row justify-between items-start'>
+    <div className="max-md:w-full w-1/2 relative">
+      <div className='flex flex-row justify-between items-center'>
         <button
           onClick={onBackClick}
           className="text-cavero-purple py-1 mb-2 md:mb-0 text-xl font-medium"

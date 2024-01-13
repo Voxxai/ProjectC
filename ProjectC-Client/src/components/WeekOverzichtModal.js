@@ -73,7 +73,7 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
       isOpen={isOpen} 
       onRequestClose={onRequestClose} 
       contentLabel="Example Modal"
-      className="event-modal p-3 max-w-md mx-auto bg-white rounded shadow-lg border-2 relative outline-none w-1/4"
+      className="event-modal p-3 max-w-md mx- max-sm:w-11/12 bg-white rounded shadow-lg border-2 relative outline-none w-1/4"
       overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className='flex flex-col gap-y-2'>
         <button className='flex justify-end' onClick={onRequestClose}>
