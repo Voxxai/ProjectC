@@ -119,7 +119,6 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                     </div>
                 </div>
                 
-                
             </form>
         </Modal>
 
