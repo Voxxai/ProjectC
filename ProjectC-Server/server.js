@@ -531,5 +531,5 @@ function generateUniqueFilename(originalFilename) {
 }
 
 app.listen(8080, () => {
-    console.log("Server listing");
+    console.log("Server listening");
 });

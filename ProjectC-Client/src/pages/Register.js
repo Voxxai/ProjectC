@@ -24,7 +24,19 @@ function Register() {
 
 
     const registerUser = async () => {
-        
+        // if one of the fields is empty
+        if (values.email == '' || values.password == '' || values.firstname == '' || values.lastname == '') {
+            setError(true);
+            setErrorMessage("Vul alle velden in");
+            return;
+        }
+        // if email is not valid or password is not valid
+        else if (!values.email.includes('@') || values.password.length <6) {
+              setError(true);
+            setErrorMessage("Vul een geldig emailadres en wachtwoord in Wachtwoord moet minimaal 6 tekens bevatten Email moet een @ bevatten");
+            return;
+        }
+
         try {
             const response = await axios.post('http://localhost:8080/register', values);
             console.log(response);
@@ -42,6 +54,7 @@ function Register() {
     }
 
     const handleInput = (e) => {
+
         setValues(prev => ({ ...prev, [e.target.name]: e.target.name == 'password' ? [Sha1(e.target.value)] : [e.target.value] }));
     }
 
@@ -56,7 +69,7 @@ function Register() {
                         <h1 className='text-cavero-purple font-semibold'>Account Registreren</h1>
                         <p className='text-gray-600 text-md'>Op deze pagina kan je registreren</p>
                     </div>
-                    <div className={`bg-red-200 h-10 rounded flex mb-3 ${!error && 'hidden'}`}>
+                    <div className={`bg-red-200 h-13 rounded flex mb-3 ${!error && 'hidden'}`}>
                         <p className='text-black my-auto p-2 text-sm'>{errorMessage}</p>
                     </div>
 
