@@ -13,7 +13,7 @@ function NewsArticle({ title, description, creation_time, image }) {
           className="bg-zinc-300 h-[182px] object-cover w-full rounded-t-lg"
         />
       )}
-      <div className="text-cavero-purple text-2xl font-semibold mt-4 h-16 overflow-hidden">
+      <div className="text-cavero-purple text-2xl font-semibold mt-2 h-16 overflow-hidden">
         {title}
       </div>
       <div className="text-zinc-500 text-sm mt-2 opacity-75">
