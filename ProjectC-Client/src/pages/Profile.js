@@ -104,7 +104,7 @@ function Profile() {
   };
 
   return (
-    <div className='flex flex-col gap-y-2 w-full p-4 max-sm:p-0'>
+    <div className='flex flex-col gap-y-2 w-full p-4'>
       <div className='flex'>
         <span className='font-semibold text-2xl text-cavero-purple'>Uw profiel</span>
       </div>
@@ -123,7 +123,7 @@ function Profile() {
 
       <div className='flex flex-col mb-5'>
         <span className='font-semibold text-lg'>Persoonlijke gegevens</span>
-        <div className='flex  gap-x-2 max-sm:flex-col max-lg:flex-row'>
+        <div className='flex gap-2 max-sm:flex-col max-lg:flex-row'>
 
           <div className='flex-col gap-x-2 w-2/5 max-sm:w-full'>
             <label className='w-full'>Voornaam

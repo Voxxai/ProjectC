@@ -30,9 +30,9 @@ function App() {
             <Route path='/morgen' element={<Morgen />} />
 
             <Route path='/instellingen' element={<Settings_Layout />}>
-              <Route path='/instellingen/profiel' element={<Profile />} />  
-              <Route path='/instellingen/security' element={<Security />} />  
-              <Route path='/instellingen/options' element={<Settings />} />  
+              <Route path='/instellingen/Profiel' element={<Profile />} />  
+              <Route path='/instellingen/Security' element={<Security />} />  
+              <Route path='/instellingen/Options' element={<Settings />} />  
             </Route>
 
           </Route> 

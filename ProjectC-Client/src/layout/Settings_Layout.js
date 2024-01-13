@@ -9,15 +9,15 @@ function Settings() {
   const { auth } = useAuth();
 
   const Menus = [
-    { title: "Profiel", src: faUser, link: "/instellingen/profiel" },
-    { title: "Beveiliging", src: faLock, link: "/instellingen/security" },
-    { title: "Instellingen", src: faGear, link: "/instellingen/options" },
+    { title: "Profiel", src: faUser, link: "/instellingen/Profiel" },
+    { title: "Beveiliging", src: faLock, link: "/instellingen/Security" },
+    { title: "Instellingen", src: faGear, link: "/instellingen/Options" },
   ];
 
   return (
     <div className="flex h-full bg-slate-100 ">
       <div className='flex bg-white h-5/6 m-auto w-4/6 max-sm:w-full p-4 rounded-md shadow-md'>
-        <div className='flex flex-col w-3/12 max-sm:w-6/12'>
+        <div className='flex flex-col w-4/12 max-sm:w-6/12'>
           <span className='text-md italic font-semibol text-gray-400'>Account</span>
           <span className='text-xl'>{auth.FirstName} {auth.LastName}</span>
 
