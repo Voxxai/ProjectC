@@ -8,7 +8,7 @@ import axios, { all } from 'axios';
 import useAuth from '../hooks/useAuth';
 
 
-function MorgenModal({isOpen, onRequestClose, }) {
+function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
   const { auth } = useAuth();
   const [ weekValues, setWeekValues ] = useState({});
   const [ isDisabled, setIsDisabled ] = useState({});
@@ -94,6 +94,11 @@ function MorgenModal({isOpen, onRequestClose, }) {
       setChanged(false);
       setTimeout(() => {
         setLoading(false);
+        
+        setTimeout(() => {
+          onRequestClose();
+          toggleNotification();
+        }, 500);
       }, 2000);
     
     }).catch((error) => { 
