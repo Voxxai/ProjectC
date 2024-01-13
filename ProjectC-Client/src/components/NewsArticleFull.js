@@ -7,7 +7,7 @@ import EditArticleModal from './EditArticleModal';
 function NewsArticleFull({ id, title, description, onBackClick, creation_time, image }) {
   const { auth } = useAuth();
   const [isEditModalOpen, setEditModalOpen] = React.useState(false);
-  
+
   const handleEditClick = () => {
     setEditModalOpen(true);
   };
@@ -17,7 +17,7 @@ function NewsArticleFull({ id, title, description, onBackClick, creation_time, i
       <div className='flex flex-row justify-between items-center'>
         <button
           onClick={onBackClick}
-          className="text-cavero-purple py-1 mb-2 text-xl font-medium"
+          className="text-cavero-purple py-1 mb-2 md:mb-0 text-xl font-medium"
         >
           <FontAwesomeIcon icon={faArrowLeft} className="mr-1" />
           Back
@@ -26,7 +26,7 @@ function NewsArticleFull({ id, title, description, onBackClick, creation_time, i
         {auth.Level === 3 && (
           <button
             onClick={handleEditClick}
-            className="bg-gray-200 rounded-md text-gray-400 text-base hover:bg-gray-300 hover:text-gray-500 border-2 p-1.5 duration-100"
+            className="bg-gray-200 rounded-md text-gray-400 text-sm md:text-base hover:bg-gray-300 hover:text-gray-500 border-2 p-1.5 md:p-2 duration-100" // Smaller button
           >
             Bewerken / Verwijderen
           </button>
