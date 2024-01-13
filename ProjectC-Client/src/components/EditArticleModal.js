@@ -14,6 +14,7 @@ function EditArticleModal({ id, title: initialTitle, description: initialDescrip
         description,
       });
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error('Error updating data: ', error);
     }

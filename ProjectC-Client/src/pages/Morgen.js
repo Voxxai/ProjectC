@@ -77,6 +77,7 @@ function Morgen() {
 
     function countWerkRuimteOccurrences(inputArray) {
         const werkRuimteCounts = {
+          'Stille Ruimte': 0,
           'Werk Ruimte 1': 0,
           'Werk Ruimte 2': 0,
           'Werk Ruimte 3': 0,

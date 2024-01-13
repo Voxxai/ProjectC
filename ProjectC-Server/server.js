@@ -216,7 +216,7 @@ app.get("/signout", (req, res) => {
 
 app.post('/insert_news', upload.single('image'), (req, res) => {
     const { title, description } = req.body;
-    const imageFilename = req.file ? req.file.filename : null;
+    const imageFilename = req.file ? req.file.filename : 'standard.png';
 
     const sql = 'INSERT INTO news (title, description, image) VALUES (?, ?, ?)';
     db.query(sql, [title, description, imageFilename], (err, result) => {
@@ -255,7 +255,6 @@ app.post('/edit_article/:id', (req, res) => {
 
 app.post('/delete_article/:id', (req, res) => {
     const articleId = req.params.id;
-
     const sql = 'DELETE FROM news WHERE id = ?';
 
     db.query(sql, [articleId], (err, results) => {
