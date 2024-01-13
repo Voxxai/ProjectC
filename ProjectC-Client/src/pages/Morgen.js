@@ -107,23 +107,27 @@ function Morgen() {
     }
 
     useEffect(() => {
-        document.getElementById('showNotification').classList.remove('scale-0');
-        document.getElementById('showNotification').classList.add('scale-100');
+        if (showNotification) {
+            document.getElementById('showNotification').classList.remove('scale-0');
+            document.getElementById('showNotification').classList.add('scale-100');
 
-        setTimeout(() => {
-            document.getElementById('showNotification').classList.remove('scale-100');
-            document.getElementById('showNotification').classList.add('scale-0');
-        }, 7000);
+            setTimeout(() => {
+                document.getElementById('showNotification').classList.remove('scale-100');
+                document.getElementById('showNotification').classList.add('scale-0');
+            }, 7000);
 
-        setTimeout(() => {
-            setShowNotification(false); 
-        },7500);
+            setTimeout(() => {
+                setShowNotification(false); 
+            },7500);
+        }
+
+    return;
         
     }, [showNotification]);
 
     return (
         <div className="flex items-center h-full bg-slate-100 p-4 pt-0 w-full">
-            <div id='showNotification' className={`${!showNotification && "hidden"} absolute top-2 left-1/2 transform -translate-x-1/2 justify-center transition-all duration-150 ease-in-out scale-0`}>
+            <div id='showNotification' className={`${!showNotification && "hidden"} max-sm:w-11/12 absolute top-2 max-sm:top-20 left-1/2 transform -translate-x-1/2 justify-center transition-all duration-150 ease-in-out`}>
                 <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
                     <div class="flex flex-row items-center gap-2">
                         <FontAwesomeIcon icon={faInfoCircle} className="text-teal-500 mr-2 text-2xl" />
