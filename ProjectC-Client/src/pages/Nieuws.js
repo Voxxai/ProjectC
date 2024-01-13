@@ -99,7 +99,7 @@ function Nieuws() {
         <div className="w-full h-full mb-2 rounded-md flex overflow-y-auto">
           {isModalOpen && <CreateArticleModal onClose={closeModal} />}
           {selectedArticle ? (
-            <div className="flex justify-center mx-auto max-w-1/2 max-md:w-full">
+            <div className="flex justify-center mx-auto w-full">
               {/* Single Article */}
               <NewsArticleFull
                 id={selectedArticle.id}
