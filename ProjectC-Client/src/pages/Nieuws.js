@@ -87,9 +87,9 @@ function Nieuws() {
   };
 
   return (
-    <div className='bg-slate-100 h-full overflow-y-auto'>
+    <div className='bg-slate-100 h-full overflow-y-auto p-4'>
       <button
-        className="absolute top-15 right-10 bg-cavero-purple text-white px-2 py-1 rounded text-sm hover:shadow-lg transition-shadow"
+        className="absolute top-15 right-6 bg-cavero-purple text-white px-2 py-1 rounded text-sm hover:shadow-lg transition-shadow"
         onClick={openModal}
       >
         Nieuwsbericht aanmaken
@@ -106,8 +106,8 @@ function Nieuws() {
           />
         </div>
       ) : (
-        <div className='w-full h-full mb-2 rounded-md flex overflow-y-auto'>
-          <div className='flex flex-col h-full'>
+        <div className='w-full h-full mb-2 rounded-md flex justify-center my-4'>
+          <div className='flex flex-col w-full'>
             <div className="flex-row w-full flex flex-wrap justify-center gap-4">
               {currentArticles.map((article) => (
                 <div key={article.id} className="cursor-pointer" onClick={() => handleArticleClick(article)}>
@@ -120,8 +120,8 @@ function Nieuws() {
                 </div>
               ))}
             </div>
-
-            <div className="flex justify-center ">
+  
+            <div className="flex justify-center mt-4">
               {renderPagination()}
             </div>
           </div>
