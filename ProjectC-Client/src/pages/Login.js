@@ -3,7 +3,7 @@ import axios, { Axios } from 'axios';
 import "./Scrollbar.css";
 import "./Login.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRightLong, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeftLong, faArrowRightLong, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 import useAuth from '../hooks/useAuth';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Sha1 from 'sha1';
@@ -16,6 +16,8 @@ function Login() {
     const [TFACode, setTFACode] = useState('');
     const initialTFAInputValues = ['', '', '', '', '', ''];
     const [TFAInputValues, setTFAInputValues] = useState(initialTFAInputValues);
+
+    const [FPWContainer, setFPWContainer] = useState(false);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -287,12 +289,54 @@ function Login() {
         }
     }
 
+    // Forgot password section
+    const ForgotPasswordSendEmail = async () => {
+        try {
+            const userID = await GetIDbyEmail(values.email);
+    
+            if (userID === null) {
+                setError(true);
+                setErrorMessage('Emailadres is niet gevonden!');
+                return;
+            }
+    
+            const mailOptions = {
+                ID: userID,
+                Email: values.email,
+            };
+    
+            await axios.post(`http://localhost:8080/forgot-password-email`, mailOptions)
+                .then(response => {
+                    if (response.data.status === 200) {
+                        console.log('Email sent');
+                    }
+                });
+        } catch (err) {
+            console.log(err);
+        }
+    };    
+
+    const GetIDbyEmail = async (Email) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/get-id-by-email/${Email}`);
+    
+            if (response.status === 200) {
+                return response.data[0].ID;
+            }
+    
+            return null;
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
+    };
+
     return (
         <div className='bg-gradient-to-br from-white to-cavero-purple-light'>
             <div className='h-screen w-screen flex items-center justify-center'>
 
                 {/* Login container */}
-                <div className={`${TFAContainer && 'hidden'} w-[550px] p-12 py-24 bg-white shadow-2xl shadow-cavero-purple-light rounded`}>
+                <div className={`${TFAContainer && 'hidden' || FPWContainer && 'hidden'} w-[550px] p-12 py-24 bg-white shadow-2xl shadow-cavero-purple-light rounded`}>
                     <div className='mb-3'>
                         <h1 className='text-cavero-purple font-semibold'>Login bij Cavero</h1>
                         <p className='text-gray-600 text-md'>Je kunt bij Cavero inloggen met de volgende gegevens.</p>
@@ -318,7 +362,7 @@ function Login() {
                             <div className='h-[3px] bg-cavero-purple duration-300 rounded-full ColoredLine'></div>
                         </div>
                         <div className='flex flex-row items-center mb-3'>
-                            <a className='flex-1'>Wachtwoord vergeten?</a>
+                            <a className='flex-1 cursor-pointer' onClick={() => setFPWContainer(true)}>Wachtwoord vergeten?</a>
                             <button type="button" className='bg-gradient-to-r from-cavero-purple to-[#c279cc] text-white w-32 h-9 rounded-full duration-300 hover:scale-105 hover:shadow-lg' onClick={getUser}>Login <FontAwesomeIcon icon={faArrowRightLong} color='white' /></button>
                         </div>
 
@@ -362,6 +406,39 @@ function Login() {
                     <div className='flex flex-row items-center mt-4'>
                         <a className='flex-1 cursor-pointer' onClick={ResendMail}>Opnieuw code sturen</a>
                         <button type="button" className='bg-gradient-to-r from-cavero-purple to-[#c279cc] text-white w-32 h-9 rounded-full duration-300 hover:scale-105 hover:shadow-lg' onClick={ConfirmCode}>Continue <FontAwesomeIcon icon={faArrowRightLong} color='white' /></button>
+                    </div>
+                </div>
+
+                {/* Forgot Password Container */}
+                <div className={`${!FPWContainer && 'hidden'} w-[550px] p-12 py-24 bg-white shadow-2xl shadow-cavero-purple-light rounded`}>
+                    <div className='' >
+                        <button className='flex flex-row items-center gap-1' onClick={() => setFPWContainer(false)}>
+                            <FontAwesomeIcon icon={faArrowLeftLong} className='text-gray-400' onClick={() => setTFAContainer(false)} />
+                            <span className='font-medium text-gray-400'>Terug</span>
+                        </button>
+                    </div>
+                    <div className=''>
+                        <div>
+                            <h2 className='text-cavero-purple font-semibold'>Wachtwoord vergeten</h2>
+                            <p className='text-gray-600 text-md'>Er wordt een e-mail gestuurd naar u met een link waarmee u uw wachtwoord kunt aanpassen.</p>
+                        </div>
+                        <div className={`bg-red-200 h-10 rounded flex mb-3 ${!error && 'hidden'}`}>
+                            <p className='text-black my-auto p-2 text-sm'>{errorMessage}</p>
+                        </div>
+
+                        <div className='mt-4'>
+                            <div className='input-container mb-4'>
+                                <div className='flex relative items-center'>
+                                    <FontAwesomeIcon icon={faEnvelope} color='black' className='w-6 h-6 text-gray-500 p-1' />
+                                    <input type="email" className='w-full h-12 border-none outline-none rounded shadow-none' name='email' id="email" placeholder="E-mailadres" onChange={handleInput} required />
+                                </div>
+                                <div className='h-[3px] bg-cavero-purple duration-300 rounded-full ColoredLine'></div>
+                            </div>
+
+                            <div className='flex flex-row-reverse items-center mb-3'>
+                                <button type="button" className='bg-gradient-to-r from-cavero-purple to-[#c279cc] text-white w-32 h-9 rounded-full duration-300 hover:scale-105 hover:shadow-lg' onClick={ForgotPasswordSendEmail}>Versturen <FontAwesomeIcon icon={faArrowRightLong} color='white' /></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
