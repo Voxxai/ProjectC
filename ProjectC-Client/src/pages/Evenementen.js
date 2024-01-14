@@ -30,7 +30,7 @@ function Evenementen() {
       if (!isModalOpen) {
         fetchEventsData();
       }
-    }, 30000);
+    }, 15000);
 
     // Clear the interval when the component is unmounted
     return () => clearInterval(intervalId);
@@ -170,7 +170,8 @@ function Evenementen() {
                     isAdmin={isAdmin}
                     auth={auth}
                   />
-                ))}
+                )
+                )}
             </div>
           </div>
 
