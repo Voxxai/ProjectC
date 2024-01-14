@@ -20,7 +20,7 @@ function Profile() {
     const userDetails = { TFA };
 
     try {
-        await axios.post(`http://localhost:8080/session-update`, userDetails)
+        await axios.post(process.env.REACT_APP_API_URL + `/session-update`, userDetails)
                     .then(response => {
                         return true;
                     });
@@ -38,7 +38,7 @@ function Profile() {
     setHidden(false);
   
     try {
-      const response = await axios.post(`http://localhost:8080/user_update`, ProfileValues);
+      const response = await axios.post(process.env.REACT_APP_API_URL + `/user_update`, ProfileValues);
   
       if (response) {
         // Change session values

@@ -38,7 +38,7 @@ function Register() {
         }
 
         try {
-            const response = await axios.post('http://localhost:8080/register', values);
+            const response = await axios.post(process.env.REACT_APP_API_URL + '/register', values);
             console.log(response);
             if (response.data.error) {
                 setError(true);
