@@ -3,3 +3,19 @@
 * {
   font-family: 'Poppins', sans-serif;
 }
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 7.5px;
+  height: 7.5px;
+}
+
+*::-webkit-scrollbar-track {
+
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background: lightgray; 
+}

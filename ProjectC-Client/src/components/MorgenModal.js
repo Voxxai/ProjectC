@@ -8,7 +8,7 @@ import axios, { all } from 'axios';
 import useAuth from '../hooks/useAuth';
 
 
-function MorgenModal({isOpen, onRequestClose, }) {
+function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
   const { auth } = useAuth();
   const [ weekValues, setWeekValues ] = useState({});
   const [ isDisabled, setIsDisabled ] = useState({});
@@ -53,11 +53,11 @@ function MorgenModal({isOpen, onRequestClose, }) {
   const getPossibleValues = async () => {
     await axios.get(`http://localhost:8080/get-employee-schedule/${auth.ID}`).then((response) => {
       setWeekValues({
-        Dag0: response.data[0]?.Monday ?? 0,
-        Dag1: response.data[0]?.Tuesday ?? 0,
-        Dag2: response.data[0]?.Wednesday ?? 0,
-        Dag3: response.data[0]?.Thursday ?? 0,
-        Dag4: response.data[0]?.Friday ?? 0
+        Dag0: response.data[0]?.Monday ?? null,
+        Dag1: response.data[0]?.Tuesday ?? null,
+        Dag2: response.data[0]?.Wednesday ?? null,
+        Dag3: response.data[0]?.Thursday ?? null,
+        Dag4: response.data[0]?.Friday ?? null
       });
     });
   }
@@ -79,7 +79,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
     setLoading(true);
     setHidden(false);
 
-    console.log(weekValues);
+    // console.log(weekValues);
 
     // Send request
     await axios.post('http://localhost:8080/scheduleweek', {
@@ -94,6 +94,11 @@ function MorgenModal({isOpen, onRequestClose, }) {
       setChanged(false);
       setTimeout(() => {
         setLoading(false);
+        
+        setTimeout(() => {
+          onRequestClose();
+          toggleNotification();
+        }, 500);
       }, 2000);
     
     }).catch((error) => { 
@@ -119,7 +124,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
         ...isDisabled,
         [index]: !isDisabled[index],
       });
-
+      
       // Correct form if checkbox is disabled and value is not null
       correctingForm(index);
     }
@@ -128,7 +133,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
   };
 
   const correctingForm = (index) => {
-    if (isDisabled[index] === false && weekValues["Dag" + index] !== null) {
+    if (isDisabled[index] === true && weekValues["Dag" + index] !== null) {
       setWeekValues((prevWeekValues) => ({
         ...prevWeekValues,
         ["Dag" + index]: null,
@@ -161,7 +166,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
       isOpen={isOpen} 
       onRequestClose={onRequestClose} 
       contentLabel="Example Modal"
-      className="event-modal p-3 max-w-md mx-auto bg-white rounded shadow-lg border-2 relative outline-none w-5/12"
+      className="event-modal p-3 max-w-md mx-auto bg-white rounded shadow-lg border-2 relative outline-none w-5/12 max-sm:w-11/12"
       overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className='flex flex-col gap-y-2'>
         <button className='flex justify-end' onClick={onRequestClose}>
@@ -174,7 +179,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
 
         <div>
           <p className='text-gray-500'>
-            Hieronder kunt u uw week indelen. U kunt ervoor kiezen om dagen open te houden.
+            Hieronder kunt u uw week indelen. Legen vaken wordt niet meegenomen in de planning oftewel afwezig.
           </p>
         </div>
 

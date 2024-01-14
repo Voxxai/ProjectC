@@ -1,6 +1,6 @@
 // import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp, faCircle, faCircleUser, faUserAlt } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp, faCircle, faCircleUser, faSpinner, faUserAlt } from '@fortawesome/free-solid-svg-icons'
 import axios, { all } from 'axios';
 import Modal from '../components/WeekOverzichtModal';
 import useAuth from '../hooks/useAuth';
@@ -22,7 +22,6 @@ function WeekOverzicht() {
     const [ joined, setJoined ] = useState(false);
     const [ endJoinDate, setEndJoinDate ] = useState(false);
     const [ currentDate, setCurrentDate ] = useState(new Date());
-    const [ week, setWeek ] = useState(0);
     const { auth } = useAuth();
 
 // Onload set dates of this week
@@ -177,7 +176,7 @@ useEffect(() => {
         const start = new Date(curr.getFullYear(), 0, 1);
         const days = Math.floor((curr - start) / (24 * 60 * 60 * 1000));
 
-        setWeek(Math.ceil(days / 7));
+        return Math.ceil(days / 7);
     };
     
     const handleWeek = (direction) => {
@@ -195,28 +194,32 @@ useEffect(() => {
 
     return (
         <div className="flex h-full bg-slate-100">
+            {dates.length == 0 ? (
+                <div className='flex flex-row gap-x-2 w-full items-center justify-center'>
+                    <FontAwesomeIcon icon={faSpinner} className='text-cavero-purple fa-2x animate-spin'/>
+                    <span className='text-xl text-gray-500'>Loading...</span>
+                    </div>
+            ) : (
+                <div className='w-full h-full'>
             <div className='flex flex-col gap-y-2 p-4 pt-2 h-full w-full'>
                 <div className='flex flex-row items-center rounded justify-between' >
-                    <div className='flex items-center gap-x-5'>
-                        <span className='text-gray-400 font-medium text-2xl'>Week {week}</span>
-                        <div className='flex flex-row gap-x-1.5 select-none'>
-                            <FontAwesomeIcon icon={faChevronLeft} onClick={() => handleWeek(-1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
-                            <FontAwesomeIcon icon={faChevronRight} onClick={() => handleWeek(1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-105 duration-100'/>
-                        </div>
-                        <span className='text-gray-400 font-medium text-2xl'>{getMonthName(new Date(currentDate).getMonth(), false)}</span>
+                    <div className='flex gap-x-5 max-sm:gap-x-2 '>
+                        <span className='text-gray-400 font-medium text-xl max-sm:text-lg '>Week {getWeek()} - {getMonthName(new Date(currentDate).getMonth(), false)} {new Date(currentDate).getFullYear()}</span>
                     </div>
-                        <div className='flex'>
-                            <button onClick={() => setCurrentDate(new Date())} className='bg-gray-200 rounded-md text-gray-400 text-base hover:bg-gray-300 hover:text-gray-500 border-2 p-2 duration-100'>Vandaag</button>
-                        </div>              
+                        <div className='flex flex-row gap-x-1.5 select-none items-center '>
+                            <FontAwesomeIcon icon={faChevronLeft} onClick={() => handleWeek(-1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-110 duration-100'/>
+                            <button onClick={() => setCurrentDate(new Date())} className='bg-gray-200 rounded-md text-gray-400 text-base hover:bg-gray-300 hover:text-gray-500 border-2 p-1.5 duration-100'>Vandaag</button>
+                            <FontAwesomeIcon icon={faChevronRight} onClick={() => handleWeek(1)} className='cursor-pointer w-5 h-5 bg-gray-200 rounded-full p-1 text-gray-400 text-lg hover:bg-gray-300 hover:text-gray-500 hover:scale-110 duration-100'/>
+                        </div>             
                     
                 </div>
-                <div className="flex flex-row h-full w-full gap-x-4">
+                <div className="flex flex-row h-full gap-x-4 max-md:max-w-[1000px] w-full overflow-x-auto snap-x">
                     
                     {/* Items */}
                     {dates.map((Date, index) => (
-                        <div className="bg-white rounded-md text-gray-400 w-3/12 p-2 shadow-md" key={index}>
+                        <div className="flex flex-col bg-white rounded-md text-gray-400 snap-start w-full max-md:min-w-[300px] p-2 shadow-md" key={index}>
                             <div className='relative'>
-                            <span className='font-medium text-lg'>{Date.Week}</span>
+                                <span className='font-medium text-lg'>{Date.Week}</span>
                             <div className="flex flex-row text-black items-end gap-1.5">
                                 <span className="text-slate-700 text-3xl font-medium">{Date.Day}</span>
                                 <span className='text-slate-700 text-lg font-semibold'>{Date.Month}</span>
@@ -261,6 +264,8 @@ useEffect(() => {
                 </div>
             </div>
             <Modal isOpen={isModalOpen} onRequestClose={closeModal} eventData={eventData} eventUsersData={eventUsers} joined={joined} SetJoined={setJoined} endJoinDate={endJoinDate} reloadEventUsers={getEventUsers}/>
+            </div>
+            )}
         </div>
     
     );
