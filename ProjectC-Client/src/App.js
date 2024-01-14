@@ -13,6 +13,7 @@ import Security from './pages/Security';
 import Settings from './pages/Settings';
 import Morgen from './pages/Morgen';
 import ForgotPassword from './pages/ForgotPassword';
+import Register from './pages/Register';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         {/* Public Routes */}
         <Route path='/login' element={<Login />} />
         <Route path='/forgotpassword/:id' element={<ForgotPassword />} />
+        <Route path='/register' element={<Register />} />
           
         {/* Private Routes */}
         <Route element={<RequireAuth />} >

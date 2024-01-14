@@ -2,6 +2,19 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
+const multer = require('multer');
+const path = require('path');
+const uuid = require('uuid');
+
+const storage = multer.diskStorage({
+    destination: 'images/',
+    filename: function (req, file, cb) {
+        const extension = path.extname(file.originalname);
+        const uniqueFilename = `${uuid.v4()}${extension}`;
+        cb(null, uniqueFilename);
+    }
+});
+
 var mysql = require('mysql');
 
 const cookieParser = require('cookie-parser');
@@ -13,6 +26,8 @@ const sha1 = require('sha1');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 
+const upload = multer({ storage: storage });
+
 dotenv.config();
 
 app.use(express.json());
@@ -21,6 +36,8 @@ app.use(cors({
     methods: ["GET", "POST"],
     credentials: true
 }));
+
+app.use('/images', express.static('images'));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -257,13 +274,14 @@ app.get("/signout", (req, res) => {
     res.end();
 })
 
-app.post('/insert_news', (req, res) => {
-    const { title, description, image } = req.body;
+app.post('/insert_news', upload.single('image'), (req, res) => {
+    const { title, description } = req.body;
+    const imageFilename = req.file ? req.file.filename : null;
 
     const sql = 'INSERT INTO news (title, description, image) VALUES (?, ?, ?)';
-    db.query(sql, [title, description, image], (err, result) => {
+    db.query(sql, [title, description, imageFilename], (err, result) => {
         if (err) {
-            console.log(error)
+            console.log(err);
             res.status(500).json({ message: 'Error inserting data' });
         } else {
             const sql = 'UPDATE accounts SET NotiCounter = NotiCounter + 1';
@@ -275,6 +293,37 @@ app.post('/insert_news', (req, res) => {
                     res.status(200).json({ message: 'News article inserted successfully and NotiCounter updated' });
                 }
             });
+        }
+    });
+});
+
+app.post('/edit_article/:id', (req, res) => {
+    const articleId = req.params.id;
+    const { title, description } = req.body;
+
+    const sql = 'UPDATE news SET title = ?, description = ? WHERE id = ?';
+
+    db.query(sql, [title, description, req.params.id], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error editing article' });
+        } else {
+            res.status(200).json({ message: 'Article edit successfully' });
+        }
+    });
+});
+
+app.post('/delete_article/:id', (req, res) => {
+    const articleId = req.params.id;
+
+    const sql = 'DELETE FROM news WHERE id = ?';
+
+    db.query(sql, [articleId], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error deleting article' });
+        } else {
+            res.status(200).json({ message: 'Article deleted successfully' });
         }
     });
 });
@@ -303,6 +352,21 @@ app.get('/get_noticounter/:ID', (req, res) => {
         if (err) {
             console.log(err);
             res.status(500).json({ message: 'Error retrieving NotiCounter' });
+        } else {
+            res.status(200).send(results)
+        }
+    });
+});
+
+app.get('/get_article/:id', (req, res) => {
+    const articleId = req.params.id;
+
+    const sql = 'SELECT title, description FROM news WHERE id = ?';
+
+    db.query(sql, [articleId], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error retrieving article' });
         } else {
             res.status(200).send(results)
         }
@@ -451,7 +515,6 @@ app.post('/leaveevent/:EventId/:UserId', (req, res) => {
 
 app.get('/eventsregistertime/:EventId', (req, res) => {
     db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
-        console.log("\n\n\n\n\n, ")
         if (error) console.log(error);
 
         if (result.length > 0) {
@@ -494,6 +557,39 @@ app.get('/get-employee-schedule/:Account_ID', (req, res) => {
     });
 });
 
+app.post('/register', (req, res) => {
+    const { email, password, firstname, lastname, level } = req.body;
+
+    db.query("SELECT * FROM accounts WHERE Email = ?", [email], (error, result) => {
+        if (error) {
+            console.log(error);
+            res.send({ error: "Error" });
+        }
+
+        if (result.length > 0) {
+            res.send({ error: "Email already exists" });
+        } else {
+            db.query("INSERT INTO accounts (Email, Password, FirstName, LastName, Level) VALUES (?, ?, ?, ?, ?)",
+                [email, password, firstname, lastname, level],
+                (error, result) => {
+                    if (error) {
+                        console.log(error);
+                        res.send({ error: "Error" });
+                    } else {
+                        res.send({ message: "User registered" });
+                    }
+                });
+        }
+    });
+}
+);
+
+function generateUniqueFilename(originalFilename) {
+    const extension = path.extname(originalFilename);
+    const uniqueFilename = `${uuid.v4()}${extension}`;
+    return uniqueFilename;
+}
+
 app.listen(8080, () => {
-    console.log("Server listing");
+    console.log("Server listening");
 });
