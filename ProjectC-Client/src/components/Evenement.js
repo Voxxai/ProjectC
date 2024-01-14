@@ -99,22 +99,32 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
             });
     }
 
-    const toggleLike = async () => {
+    async function toggleLike() {
         try {
-            await axios.post(`http://localhost:8080/toggleLike/${id}/${auth.ID}`);
-            // After toggling the like status, update the hasLiked and likes states
-            setHasLiked(!hasLiked);
-            getLikes(id);
+            // Check if the user has joined the event
+            if (Joined) {
+                let response;
+                if (hasLiked) {
+                    // If the user has already liked the event, make a request to the /unlike endpoint
+                    response = await axios.post(`http://localhost:8080/unlike/${id}/${auth.ID}`);
+                } else {
+                    // If the user hasn't liked the event yet, make a request to the /like endpoint
+                    response = await axios.post(`http://localhost:8080/like/${id}/${auth.ID}`);
+                }
+                setHasLiked(!hasLiked); // Toggle the hasLiked state
+                getLikes(id); // Update the likes count
+            } else {
+                console.log('User has not joined the event, cannot like');
+            }
         } catch (error) {
-            console.error('Error toggling like status: ', error);
+            console.error('Error toggling like: ', error);
         }
-    };
+    }
 
     async function checkIfLiked(id) {
         try {
             const response = await axios.get(`http://localhost:8080/checkLike/${id}/${auth.ID}`);
-            setHasLiked(response.data.hasLiked);
-            // Call the getLikes function to update the likes state
+            setHasLiked(response.data);
             getLikes(id);
         } catch (error) {
             console.error('Error checking like status: ', error);
@@ -129,7 +139,6 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
             console.error('Error getting likes: ', error);
         }
     }
-
 
     return (
         <div className=
@@ -168,13 +177,26 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
                 ) : (
                     <>
                         <div className=''>{likes}</div>
-                        <FontAwesomeIcon
-                            icon={hasLiked ? solidHeart : regularHeart}
-                            className="mr-1 group-hover:scale-120 transition-transform duration-200 ${Joined ? 'cursor-pointer' : 'cursor-default'}"
-                            onClick={() => {
-                                if (Joined) { toggleLike(); }
-                            }}
-                        />
+                        {Joined ?
+                            (hasLiked ?
+                                <FontAwesomeIcon
+                                    icon={solidHeart}
+                                    className={`mr-1 group-hover:scale-120 transition-transform duration-200 cursor-pointer`}
+                                    onClick={() => { toggleLike() }}
+                                /> :
+                                <FontAwesomeIcon
+                                    icon={regularHeart}
+                                    className={`mr-1 group-hover:scale-120 transition-transform duration-200 cursor-pointer`}
+                                    onClick={() => { toggleLike() }}
+                                />)
+                            :
+                            <FontAwesomeIcon
+                                icon={regularHeart}
+                                className={`mr-1 group-hover:scale-120 transition-transform duration-200 `}
+                            />
+                        }
+
+
                     </>
                 )}
             </div>
