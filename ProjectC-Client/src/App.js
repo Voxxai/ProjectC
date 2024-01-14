@@ -11,6 +11,7 @@ import Settings_Layout from './layout/Settings_Layout';
 import Profile from './pages/Profile';
 import Security from './pages/Security';
 import Settings from './pages/Settings';
+import EventSelector from './pages/EventSelector';
 import Morgen from './pages/Morgen';
 import Register from './pages/Register';
 
@@ -33,6 +34,7 @@ function App() {
               <Route path='/instellingen/profiel' element={<Profile />} />  
               <Route path='/instellingen/security' element={<Security />} />  
               <Route path='/instellingen/options' element={<Settings />} />  
+              {/* <Route path='/instellingen/evenementen' element={<EventSelector />} />   */}
             </Route>
 
           </Route> 
