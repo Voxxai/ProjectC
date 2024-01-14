@@ -435,24 +435,68 @@ app.get('/checkevent/:EventId/:UserId', (req, res) => {
     });
 });
 
-app.get('/checkliked/:EventId/:UserId', (req, res) => {
-    db.query(`SELECT Liked FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
-        if (error) console.log(error);
+app.get('/checkLike/:EventId/:UserId', (req, res) => {
+    const { EventId, UserId } = req.params;
 
-        if (result.length > 0) {
-            res.send(result);
+    const sql = `
+        SELECT EXISTS(
+            SELECT 1 FROM event_users
+            WHERE Event_ID = ? AND User_ID = ? AND IsLiked = true
+        ) as hasLiked
+    `;
+
+    db.query(sql, [EventId, UserId], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error checking like status' });
+        } else {
+            res.status(200).json({ hasLiked: Boolean(result[0].hasLiked) });
         }
-        else {
-            res.send(false);
+    });
+});
+
+app.post('/toggleLike/:EventId/:UserId', (req, res) => {
+    const { EventId, UserId } = req.params;
+
+    const sql = `
+        UPDATE event_users
+        SET IsLiked = NOT IsLiked
+        WHERE Event_ID = ? AND User_ID = ?
+    `;
+
+    db.query(sql, [EventId, UserId], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error toggling like status' });
+        } else {
+            res.status(200).json({ message: 'Like status toggled successfully' });
+        }
+    });
+});
+
+app.get('/countLikes/:EventId', (req, res) => {
+    const { EventId } = req.params;
+
+    const sql = `
+        SELECT COUNT(*) as likes
+        FROM event_users
+        WHERE Event_ID = ? AND IsLiked = true
+    `;
+
+    db.query(sql, [EventId], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error counting likes' });
+        } else {
+            res.status(200).json({ likes: result[0].likes });
         }
     });
 });
 
 
-
 app.get('/eventsregistertime/:EventId', (req, res) => {
     db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
-        console.log("\n\n\n\n\n, ")
+        console.log("\n\n\n\n\n")
         if (error) console.log(error);
 
         if (result.length > 0) {

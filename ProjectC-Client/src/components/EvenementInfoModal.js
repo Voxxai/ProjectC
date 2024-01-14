@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faMapMarkerAlt, faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 
-function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, isPastEvent }) {
+function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, isPastEvent, setRefreshTrigger }) {
 
 
     const { auth } = useAuth();
@@ -21,6 +21,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
         })
             .then((response) => {
                 setJoined(true);
+                setRefreshTrigger(prevState => !prevState);
             }, (error) => {
                 console.log(error);
             });
@@ -30,6 +31,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
         await axios.post(`http://localhost:8080/leaveevent/${event.id}/${auth.ID}`)
             .then((response) => {
                 setJoined(false);
+                setRefreshTrigger(prevState => !prevState);
             }, (error) => {
                 console.log(error);
             });

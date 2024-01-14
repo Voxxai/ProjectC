@@ -9,7 +9,6 @@ import 'flatpickr/dist/themes/dark.css';
 
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
-
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
         return new Date(Math.ceil((date.getTime() + 1000) / coeff) * coeff);
@@ -34,13 +33,32 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         };
     }
 
-    const [formData, setFormData] = useState(() => ({
-        title: eventData?.Title || '',
-        summary: eventData?.Description || '',
-        location: eventData?.Location || '',
-        level: eventData?.Level || 2,
-        ...getRoundedDateTime(),
-    }));
+    const [formData, setFormData] = useState(getRoundedDateTime());
+
+    useEffect(() => {
+        const defaultData = getRoundedDateTime();
+
+        let date = defaultData.date;
+        let time = defaultData.time;
+
+        // Check if eventData.date is defined and is a valid date
+        if (eventData?.date && !isNaN(Date.parse(eventData.date))) {
+            // Parse eventData.date into date and time strings
+            const eventDate = new Date(eventData.date);
+            date = eventDate.toISOString().split('T')[0];
+            time = eventDate.toTimeString().split(' ')[0].slice(0, 5);
+        }
+
+        setFormData({
+            title: eventData?.title || '',
+            summary: eventData?.description || '',
+            location: eventData?.location || '',
+            level: eventData?.level || 2,
+            date: date,
+            time: time,
+            endJoinDate: eventData?.endJoinDate || defaultData.endJoinDate,
+        });
+    }, [eventData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -112,6 +130,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             }));
         }
     }, [isOpen]);
+
 
     return (
 

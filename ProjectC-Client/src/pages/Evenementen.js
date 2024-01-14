@@ -11,17 +11,30 @@ function Evenementen() {
   const { auth } = useAuth();
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [submissionStatus, setSubmissionStatus] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
   const [selectedDropdownOption, setSelectedDropdownOption] = useState('Toekomstig');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const isAdmin = auth.Level === 3;
   const today = new Date();
+  today.setSeconds(0);
+  today.setMilliseconds(0);
+  today.toISOString();
 
   useEffect(() => {
     fetchEventsData();
-  }, [submissionStatus]);
+
+    // Fetch the events data every 30 seconds
+    const intervalId = setInterval(() => {
+      if (!isModalOpen) {
+        fetchEventsData();
+      }
+    }, 30000);
+
+    // Clear the interval when the component is unmounted
+    return () => clearInterval(intervalId);
+  }, [refreshTrigger, isModalOpen]);
 
 
   const fetchEventsData = async () => {
@@ -56,7 +69,7 @@ function Evenementen() {
 
 
     if (shouldReload) {
-      setSubmissionStatus(Date.now());
+      setRefreshTrigger(prevState => !prevState);
     }
   };
 
@@ -78,6 +91,13 @@ function Evenementen() {
       document.removeEventListener('click', handleOutsideClick);
     };
   }, []);
+
+  function convertToDateAndTime(dateStr, timeStr) {
+    const date = new Date(dateStr);
+    const timeParts = timeStr.split(':').map(part => parseInt(part, 10));
+    date.setHours(timeParts[0], timeParts[1], timeParts[2]);
+    return date;
+  }
 
 
 
@@ -122,18 +142,18 @@ function Evenementen() {
           // Container for the events with inline scrolling and hidden scrollbar
           <div className="w-full h-full mb-2 rounded-md flex overflow-y-auto snap-y">
             <div className="w-full ">
-              {events.sort((a, b) => {
-                if (selectedDropdownOption === 'Toekomstig') { return new Date(a.Date) - new Date(b.Date) }
-                else { return new Date(b.Date) - new Date(a.Date) }
-              })
+              {events
+                .filter(event => event.Level >= 2)
                 .filter(event => {
-                  if (selectedDropdownOption === 'Toekomstig') {
-                    return new Date(event.Date) >= today;
-                  } else {
-                    return new Date(event.Date) < today;
-                  }
+                  const eventDateTime = convertToDateAndTime(event.Date, event.Time);
+                  return selectedDropdownOption === 'Toekomstig' ? eventDateTime >= today : eventDateTime < today;
                 })
-                .filter(event => { return event.Level >= 2 })
+                .sort((a, b) => {
+                  const aDateTime = convertToDateAndTime(a.Date, a.Time);
+                  const bDateTime = convertToDateAndTime(b.Date, b.Time);
+
+                  return selectedDropdownOption === 'Toekomstig' ? aDateTime - bDateTime : bDateTime - aDateTime;
+                })
                 .map((event) => (
                   <Evenement
                     key={event.ID}
@@ -146,7 +166,9 @@ function Evenementen() {
                     level={event.Level}
                     currentParticipants={event.participants}
                     closeModal={closeModal}
-                    setSubmissionStatus={setSubmissionStatus}
+                    setRefreshTrigger={setRefreshTrigger}
+                    isAdmin={isAdmin}
+                    auth={auth}
                   />
                 ))}
             </div>
