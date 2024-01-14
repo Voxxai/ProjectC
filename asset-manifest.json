@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/ProjectC/static/css/main.b5c8096b.css",
-    "main.js": "/ProjectC/static/js/main.851e236b.js",
+    "main.css": "/ProjectC/static/css/main.aa050054.css",
+    "main.js": "/ProjectC/static/js/main.f2155b37.js",
     "static/media/Cavero_Icon_BW.png": "/ProjectC/static/media/Cavero_Icon_BW.0424b306e9f075c21c23.png",
     "index.html": "/ProjectC/index.html",
-    "main.b5c8096b.css.map": "/ProjectC/static/css/main.b5c8096b.css.map",
-    "main.851e236b.js.map": "/ProjectC/static/js/main.851e236b.js.map"
+    "main.aa050054.css.map": "/ProjectC/static/css/main.aa050054.css.map",
+    "main.f2155b37.js.map": "/ProjectC/static/js/main.f2155b37.js.map"
   },
   "entrypoints": [
-    "static/css/main.b5c8096b.css",
-    "static/js/main.851e236b.js"
+    "static/css/main.aa050054.css",
+    "static/js/main.f2155b37.js"
   ]
 }
