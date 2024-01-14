@@ -18,7 +18,7 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
 
   function joinEvent() {
     console.log(eventData.ID);
-    axios.post('http://localhost:8080/joinevent', {
+    axios.post(process.env.REACT_APP_API_URL + '/joinevent', {
       "EventId": eventData.ID,
       "UserId": auth.ID
     })
@@ -30,7 +30,7 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
   }
 
   async function leaveEvent() {
-    await axios.post(`http://localhost:8080/leaveevent/${eventData.ID}/${auth.ID}`)
+    await axios.post(process.env.REACT_APP_API_URL + `/leaveevent/${eventData.ID}/${auth.ID}`)
     .then((response) => {
       SetJoined(false);
     }, (error) => {

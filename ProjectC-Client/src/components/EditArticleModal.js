@@ -9,7 +9,7 @@ function EditArticleModal({ id, title: initialTitle, description: initialDescrip
 
   const handleEdit = async () => {
     try {
-      const response = await axios.post(`http://localhost:8080/edit_article/${id}`, {
+      const response = await axios.post(process.env.REACT_APP_API_URL + `/edit_article/${id}`, {
         title,
         description,
       });
@@ -21,7 +21,7 @@ function EditArticleModal({ id, title: initialTitle, description: initialDescrip
 
   const handleDelete = async () => {
     try {
-      const response = await axios.post(`http://localhost:8080/delete_article/${id}`);
+      const response = await axios.post(process.env.REACT_APP_API_URL + `/delete_article/${id}`);
       onClose();
       window.location.reload();
     } catch (error) {

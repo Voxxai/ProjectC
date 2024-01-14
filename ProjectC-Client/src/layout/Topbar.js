@@ -33,10 +33,10 @@ function Topbar({ openNavbar, toggleOpen}) {
   useEffect(() => {
     const fetchNotificationCount = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/get_noticounter/${auth.ID}`);
+        const response = await axios.get(process.env.REACT_APP_API_URL + `/get_noticounter/${auth.ID}`);
         setNotificationCount(response.data[0].NotiCounter);
         
-        await axios.get(`http://localhost:8080/reset_noticounter/${auth.ID}`);
+        await axios.get(process.env.REACT_APP_API_URL + `/reset_noticounter/${auth.ID}`);
       } catch (error) {
         console.error('Error fetching notification count:', error);
       }
@@ -55,7 +55,7 @@ function Topbar({ openNavbar, toggleOpen}) {
   document.addEventListener('mousedown', closeOpenMenus);
 
   const handleSignOut = () => {
-    axios.get(`http://localhost:8080/signout`).then((response) => {
+    axios.get(process.env.REACT_APP_API_URL + `/signout`).then((response) => {
       if (response.data.signedOut === true) {
         // Redirect back to login
         navigate('/Login');
@@ -67,6 +67,14 @@ function Topbar({ openNavbar, toggleOpen}) {
     setBellPressed(true);
   };
 
+  const setTitle = () => {
+    if (location.pathname.split("/").length - 1 > 1) {
+      return location.pathname.split("/")[2];
+    }
+
+    return location.pathname == "/" ? "Week Overzicht" : location.pathname.slice(1)
+  }
+
   return (
     <div className="bg-white shadow-md w-full h-full max-h-20 flex justify-between items-center px-4">
       {/* Hamburger menu for mobile */}
@@ -74,7 +82,7 @@ function Topbar({ openNavbar, toggleOpen}) {
       {/* Header */}
       <div className='items-center flex flex-row gap-x-2'>
         <FontAwesomeIcon icon={faBars} className="fa-xl text-slate-700 hidden max-sm:block hover:scale-110" onClick={toggleOpen} />
-        <span className='font-medium text-3xl'>{location.pathname == "/" ? "Week Overzicht" : location.pathname.slice(1)}</span>
+        <span className='font-medium text-3xl'>{setTitle()}</span>
       </div>
 
       {/* Account item */}

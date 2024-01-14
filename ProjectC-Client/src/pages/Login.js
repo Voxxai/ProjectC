@@ -75,7 +75,7 @@ function Login() {
         setTFACode(mailOptions.Code);
         setTimer();
 
-        await axios.post(`http://localhost:8080/send-email`, mailOptions)
+        await axios.post(process.env.REACT_APP_API_URL + `/send-email`, mailOptions)
             .then(response => {
                 if (response.data.status === 200) {
                     console.log('Email sent');
@@ -87,7 +87,7 @@ function Login() {
         const userDetails = { ID, FirstName, LastName, Email, Password, Level, TFA };
 
         try {
-            await axios.post(`http://localhost:8080/session-create`, userDetails)
+            await axios.post(process.env.REACT_APP_API_URL + `/session-create`, userDetails)
                 .then(response => {
                     return;
                 });
@@ -108,7 +108,7 @@ function Login() {
         setError(false);
       
             try {                
-                await axios.post(`http://localhost:8080/login`, values)
+                await axios.post(process.env.REACT_APP_API_URL + `/login`, values)
                 .then(response => {
                     if (response.data.Login) {
                         // Login succes
@@ -167,7 +167,7 @@ function Login() {
         // show loading spinner
         // setLoading(true);
 
-        axios.get(`http://localhost:8080/login`).then((response) => {
+        axios.get(process.env.REACT_APP_API_URL + `/login`).then((response) => {
             if (response.data.loggedIn == true) {
                 const ID = response.data.user.ID;
                 const FirstName = response.data.user.FirstName;

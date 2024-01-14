@@ -38,13 +38,13 @@ function Morgen() {
 
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get(`http://localhost:8080/users_day/${getDayNameEng(new Date(tomorrow).getDay())}`);
+                const userResponse = await axios.get(process.env.REACT_APP_API_URL + `/users_day/${getDayNameEng(new Date(tomorrow).getDay())}`);
                 setUsers(userResponse.data);
 
-                const roomResponse = await axios.get(`http://localhost:8080/rooms_status/${getDayNameEng(new Date(tomorrow).getDay())}`);
+                const roomResponse = await axios.get(process.env.REACT_APP_API_URL + `/rooms_status/${getDayNameEng(new Date(tomorrow).getDay())}`);
                 setRooms(countWerkRuimteOccurrences(roomResponse.data));
 
-                const eventResponse = await axios.get(`http://localhost:8080/events/${formattedTomorrow}`);
+                const eventResponse = await axios.get(process.env.REACT_APP_API_URL + `/events/${formattedTomorrow}`);
                 setEvents(eventResponse.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

@@ -38,7 +38,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         e.preventDefault();
 
         try {
-            await axios.post('http://localhost:8080/insert_event', formData);
+            await axios.post(process.env.REACT_APP_API_URL + '/insert_event', formData);
             console.log('Form data submitted:', formData);
             onRequestClose(true); // Pass true to indicate successful submission
         } catch (error) {
