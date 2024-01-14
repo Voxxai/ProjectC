@@ -51,7 +51,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
 };
 
   const getPossibleValues = async () => {
-    await axios.get(`http://localhost:8080/get-employee-schedule/${auth.ID}`).then((response) => {
+    await axios.get(process.env.REACT_APP_API_URL + `/get-employee-schedule/${auth.ID}`).then((response) => {
       setWeekValues({
         Dag0: response.data[0]?.Monday ?? null,
         Dag1: response.data[0]?.Tuesday ?? null,
@@ -82,7 +82,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
     // console.log(weekValues);
 
     // Send request
-    await axios.post('http://localhost:8080/scheduleweek', {
+    await axios.post(process.env.REACT_APP_API_URL + '/scheduleweek', {
       Account_ID: auth.ID,
       Monday: weekValues.Dag0,
       Tuesday: weekValues.Dag1,

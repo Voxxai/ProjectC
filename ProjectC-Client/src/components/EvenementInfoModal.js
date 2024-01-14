@@ -15,7 +15,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
     };
 
     function joinEvent() {
-        axios.post('http://localhost:8080/joinevent', {
+        axios.post(process.env.REACT_APP_API_URL + '/joinevent', {
             "EventId": event.id,
             "UserId": auth.ID
         })
@@ -27,7 +27,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
     }
 
     async function leaveEvent() {
-        await axios.post(`http://localhost:8080/leaveevent/${event.id}/${auth.ID}`)
+        await axios.post(process.env.REACT_APP_API_URL + `/leaveevent/${event.id}/${auth.ID}`)
             .then((response) => {
                 setJoined(false);
             }, (error) => {
