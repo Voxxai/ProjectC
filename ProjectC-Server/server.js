@@ -439,10 +439,8 @@ app.get('/checkLike/:EventId/:UserId', (req, res) => {
     const { EventId, UserId } = req.params;
 
     const sql = `
-        SELECT EXISTS(
-            SELECT 1 FROM event_users
-            WHERE Event_ID = ? AND User_ID = ? AND IsLiked = true
-        ) as hasLiked
+        SELECT * FROM event_users
+        WHERE Event_ID = ? AND User_ID = ? AND IsLiked = 1
     `;
 
     db.query(sql, [EventId, UserId], (err, result) => {
@@ -450,26 +448,50 @@ app.get('/checkLike/:EventId/:UserId', (req, res) => {
             console.log(err);
             res.status(500).json({ message: 'Error checking like status' });
         } else {
-            res.status(200).json({ hasLiked: Boolean(result[0].hasLiked) });
+            if (result.length > 0) {
+                res.send(true);
+            } else {
+                res.send(false);
+            }
         }
     });
 });
 
-app.post('/toggleLike/:EventId/:UserId', (req, res) => {
+app.post('/like/:EventId/:UserId', (req, res) => {
     const { EventId, UserId } = req.params;
 
     const sql = `
         UPDATE event_users
-        SET IsLiked = NOT IsLiked
+        SET IsLiked = TRUE
         WHERE Event_ID = ? AND User_ID = ?
     `;
 
     db.query(sql, [EventId, UserId], (err, result) => {
         if (err) {
             console.log(err);
-            res.status(500).json({ message: 'Error toggling like status' });
+            res.status(500).json({ message: 'Error liking the event' });
         } else {
-            res.status(200).json({ message: 'Like status toggled successfully' });
+            res.status(200).json({ message: 'Event liked successfully' });
+        }
+    });
+});
+
+// Unlike endpoint
+app.post('/unlike/:EventId/:UserId', (req, res) => {
+    const { EventId, UserId } = req.params;
+
+    const sql = `
+        UPDATE event_users
+        SET IsLiked = FALSE
+        WHERE Event_ID = ? AND User_ID = ?
+    `;
+
+    db.query(sql, [EventId, UserId], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error unliking the event' });
+        } else {
+            res.status(200).json({ message: 'Event unliked successfully' });
         }
     });
 });

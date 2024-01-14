@@ -38,24 +38,13 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
     useEffect(() => {
         const defaultData = getRoundedDateTime();
 
-        let date = defaultData.date;
-        let time = defaultData.time;
-
-        // Check if eventData.date is defined and is a valid date
-        if (eventData?.date && !isNaN(Date.parse(eventData.date))) {
-            // Parse eventData.date into date and time strings
-            const eventDate = new Date(eventData.date);
-            date = eventDate.toISOString().split('T')[0];
-            time = eventDate.toTimeString().split(' ')[0].slice(0, 5);
-        }
-
         setFormData({
             title: eventData?.title || '',
             summary: eventData?.description || '',
             location: eventData?.location || '',
             level: eventData?.level || 2,
-            date: date,
-            time: time,
+            date: eventData?.date || defaultData.date,
+            time: eventData?.time || defaultData.time,
             endJoinDate: eventData?.endJoinDate || defaultData.endJoinDate,
         });
     }, [eventData]);
@@ -131,6 +120,9 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         }
     }, [isOpen]);
 
+    console.clear();
+    console.log("\n\n\n\n")
+    console.log(formData);
 
     return (
 
@@ -141,6 +133,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             className="event-modal p-3 max-w-lg mx-auto bg-white rounded shadow-lg border-2 relative outline-none"
             overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
         >
+
             <button className='flex justify-end' onClick={onRequestClose}>
                 <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1' />
             </button>
@@ -182,7 +175,8 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                                 minuteIncrement: 5,
                                 minDate: formData.date && formData.time ? new Date(`${formData.date}T${formData.time}`) : roundToNearestMinutes(new Date(), 5),
                             }}
-                            value={formData.date && formData.time ? new Date(`${formData.date}T${formData.time}`) : roundToNearestMinutes(new Date(), 5)}
+                            value={formData.date && formData.time ?
+                                new Date(`${formData.date.split("T")[0]}T${formData.time}`) : roundToNearestMinutes(new Date(), 5)}
                             onChange={handleDateTimeChange}
                         />
                     </label>
