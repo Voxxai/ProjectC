@@ -66,7 +66,7 @@ function Nieuws() {
 
   const renderPagination = () => {
     const totalPageCount = Math.ceil(news.length / articlesPerPage);
-    
+  
     const renderPageButton = (pageNumber) => (
       <button
         key={pageNumber}
@@ -83,8 +83,12 @@ function Nieuws() {
       paginationItems.push(renderPageButton(i));
     }
   
-    return paginationItems;
-  };
+    return (
+      <div className="flex overflow-x-auto">
+        {paginationItems}
+      </div>
+    );
+  };  
 
   return (
     <div className="w-full h-full max-h-full px-4 self-center overflow-y-hidden md:flex md:flex-wrap justify-center text-cavero-purple bg-slate-100">
