@@ -309,15 +309,15 @@ app.get('/news', (req, res) => {
 
 //add event
 app.post('/insert_event', (req, res) => {
-    const { title, date, time, summary, location, level } = req.body;
+    const { title, date, time, summary, location, level, endJoinDate } = req.body;
 
-    const sql = 'INSERT INTO events (Title, Date, Time, Description, Location, Level) VALUES (?, ?, ?, ?, ?,?)';
-    db.query(sql, [title, date, time, summary, location, level], (err, result) => {
+    const sql = 'INSERT INTO events (Title, Date, Time, Description, Location, Level, EndJoinDate) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.query(sql, [title, date, time, summary, location, level, endJoinDate], (err, result) => {
         if (err) {
             console.log(err);
             res.status(500).json({ message: 'Error inserting event data' });
         } else {
-            res.status(200).json({ message: 'Event data inserted successfully' });
+            res.status(200).json({ message: 'Event data inserted successfully', eventId: result.insertId });
         }
     });
 });
@@ -414,6 +414,14 @@ app.post('/joinevent', (req, res) => {
     });
 });
 
+app.post('/leaveevent/:EventId/:UserId', (req, res) => {
+    db.query(`DELETE FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
+        if (error) console.log(error);
+
+        res.send(result);
+    });
+});
+
 app.get('/checkevent/:EventId/:UserId', (req, res) => {
     db.query(`SELECT * FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
         if (error) console.log(error);
@@ -427,13 +435,20 @@ app.get('/checkevent/:EventId/:UserId', (req, res) => {
     });
 });
 
-app.post('/leaveevent/:EventId/:UserId', (req, res) => {
-    db.query(`DELETE FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
+app.get('/checkliked/:EventId/:UserId', (req, res) => {
+    db.query(`SELECT Liked FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
         if (error) console.log(error);
 
-        res.send(result);
+        if (result.length > 0) {
+            res.send(result);
+        }
+        else {
+            res.send(false);
+        }
     });
 });
+
+
 
 app.get('/eventsregistertime/:EventId', (req, res) => {
     db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
@@ -450,7 +465,7 @@ app.get('/eventsregistertime/:EventId', (req, res) => {
     });
 });
 
-app.post('/scheduleweek', (req, res) => { 
+app.post('/scheduleweek', (req, res) => {
     db.query(`  INSERT INTO caverogroep2.Employee_Schedule (Account_ID, Monday, Tuesday, Wednesday, Thursday, Friday)
                 VALUES (?, ?, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE
@@ -459,17 +474,17 @@ app.post('/scheduleweek', (req, res) => {
                     Wednesday = ?,
                     Thursday = ?,
                     Friday = ?;`,
-   [req.body.Account_ID, req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday,
-    req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday], 
-    (error) => {
-        if (error) console.log(error);
+        [req.body.Account_ID, req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday,
+        req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday],
+        (error) => {
+            if (error) console.log(error);
 
-        res.send(true);
-    });
+            res.send(true);
+        });
 });
 
 app.get('/get-employee-schedule/:Account_ID', (req, res) => {
-    db.query(`SELECT * FROM Employee_Schedule WHERE Account_ID = ${req.params.Account_ID}`,  (error, result) => {
+    db.query(`SELECT * FROM Employee_Schedule WHERE Account_ID = ${req.params.Account_ID}`, (error, result) => {
         if (error) console.log(error);
 
         if (result.length > 0) {

@@ -20,6 +20,7 @@
     "react-datepicker": "^4.21.0",
     "react-dom": "^18.2.0",
     "react-email": "1.9.5",
+    "react-flatpickr": "^3.10.13",
     "react-modal": "^3.16.1",
     "react-scripts": "^5.0.1",
     "react-spinners": "^0.13.8",
