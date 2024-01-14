@@ -122,7 +122,10 @@ function Evenementen() {
           // Container for the events with inline scrolling and hidden scrollbar
           <div className="w-full h-full mb-2 rounded-md flex overflow-y-auto snap-y">
             <div className="w-full ">
-              {events.sort((a, b) => new Date(a.Date) - new Date(b.Date))
+              {events.sort((a, b) => {
+                if (selectedDropdownOption === 'Toekomstig') { return new Date(a.Date) - new Date(b.Date) }
+                else { return new Date(b.Date) - new Date(a.Date) }
+              })
                 .filter(event => {
                   if (selectedDropdownOption === 'Toekomstig') {
                     return new Date(event.Date) >= today;
