@@ -26,7 +26,7 @@ function Evenementen() {
 
   const fetchEventsData = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/events');
+      const response = await axios.get(process.env.REACT_APP_API_URL + '/events');
       const eventsWithParticipants = await Promise.all(response.data.map(async (event) => {
         const participants = await amountOfParticipants(event);
         return {
@@ -43,7 +43,7 @@ function Evenementen() {
   const amountOfParticipants = async (event) => {
     try {
 
-      const response = await axios.get(`http://localhost:8080/event_users/${event.ID}`);
+      const response = await axios.get(process.env.REACT_APP_API_URL + `/event_users/${event.ID}`);
       return response.data.length;
     } catch (error) {
       console.error('Error fetching data: ', error);

@@ -60,7 +60,7 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
 
 
     async function checkIfJoined(id) {
-        await axios.get(`http://localhost:8080/checkevent/${id}/${auth.ID}`)
+        await axios.get(process.env.REACT_APP_API_URL + `/checkevent/${id}/${auth.ID}`)
             .then((response) => {
                 if (response.data === true) {
                     setJoined(true)
@@ -74,7 +74,7 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
     }
 
     async function checkEndJoinDate(id) {
-        await axios.get(`http://localhost:8080/eventsregistertime/${id}`)
+        await axios.get(process.env.REACT_APP_API_URL + `/eventsregistertime/${id}`)
             .then((response) => {
                 if (response.data === true) {
                     setEndJoinDate(true)

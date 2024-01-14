@@ -19,7 +19,7 @@ function CreateArticleModal({ onClose }) {
       formData.append('description', description);
       formData.append('image', photo);
   
-      const response = await axios.post('http://localhost:8080/insert_news', formData, {
+      const response = await axios.post(process.env.REACT_APP_API_URL + '/insert_news', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

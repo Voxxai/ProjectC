@@ -35,7 +35,7 @@ function NewsArticleFull({ id, title, description, onBackClick, creation_time, i
 
       {image && (
         <img
-          src={`http://localhost:8080/images/${image}`}
+          src={process.env.REACT_APP_API_URL + `/images/${image}`}
           alt={title}
           className="bg-zinc-300 h-[250px] object-cover w-full rounded-md"
         />

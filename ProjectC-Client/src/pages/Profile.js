@@ -39,7 +39,7 @@ function Profile() {
 
     // Trying to update user to new values
     try {
-      await axios.post(`http://localhost:8080/user_update`, ProfileValues)
+      await axios.post(process.env.REACT_APP_API_URL + `/user_update`, ProfileValues)
         .then(response => {
           if (response) {
             // Update succesfull
@@ -56,7 +56,7 @@ function Profile() {
 
             // Trying to update session cookie to new values
             try {
-              axios.post(`http://localhost:8080/session-update`, ProfileValues)
+              axios.post(process.env.REACT_APP_API_URL + `/session-update`, ProfileValues)
                 .then(response => {
                   if (response) {
                     // Sesison update succesfull
