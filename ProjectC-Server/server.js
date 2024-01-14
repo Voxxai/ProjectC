@@ -109,11 +109,71 @@ app.post('/send-email', (req, res) => {
     });
 });
 
+app.post('/forgot-password-email', (req, res) => {
+    const { ID, Email } = req.body;
+
+    const mailOptions = {
+        from: process.env.USER,
+        to: Email,
+        subject: "Wachtwoord resetten",
+        html: "<html>" +
+            "<body>" +
+            "<div style='width:100%; height:100%; background-color:#f4f4f4; padding:30px;'>" +
+            "<div style='width:600px; height: auto; margin:0 auto; padding:25px; border-radius:5px; background-color:white;'>" +
+            "<h1 style='color:#7F3689;'>Wachtwoord resetten</h1>" +
+            "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Om uw wachtwoord te wijzigen, gelieve op de onderstaande link te klikken.</p>" +
+            "<div style='text-align:center; padding:25px; background-color:#fafafa;'>" +
+            "<p style='color:black; font-size:20px; margin-bottom:25px;'><a href='" + process.env.REACT_APP_API_URL + "/forgotpassword/" + ID + "' style='padding: 10px 25px;background-color: #7f3689;color: white;border-radius: 5px;text-decoration: none;'>Nieuw wachtwoord aanmaken</a></p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</body>" +
+            "</html>",
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.status(200).send('Email sent successfully');
+        }
+    });
+});
+
 app.get('/users', (req, res) => {
     db.query("SELECT * FROM accounts", (error, result) => {
         res.send(result);
     });
 })
+
+app.get('/get-id-by-email/:Email', (req, res) => {
+    db.query(`SELECT ID FROM accounts WHERE Email = "${req.params.Email}"`, (error, result) => {
+        if (error) console.log(error);
+
+        if (result.length > 0) {
+            res.status(200).send(result);
+        }
+        else {
+            res.send(false);
+        }
+    });
+});
+
+app.post('/resetpassword', (req, res) => {
+    const { id, password } = req.body;
+
+    db.query(`UPDATE accounts SET Password = "${password}" WHERE ID = "${id}"`, (error, result) => {
+        if (error) console.log(error);
+
+        if (result) {
+            res.status(200).send({ status: 'success' });
+        }
+        else {
+            res.send({ status: 'failed' });
+        }
+    });
+});
 
 app.post('/user_update', (req, res) => {
     const { ID, Email = req.session.user.Email, FirstName = req.session.user.FirstName, LastName = req.session.user.LastName, TFA = req.session.user.TFA } = req.body;
