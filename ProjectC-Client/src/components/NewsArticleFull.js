@@ -14,7 +14,7 @@ function NewsArticleFull({ id, title, description, onBackClick, creation_time, i
 
   return (
     <div className="max-md:w-full w-1/2 relative">
-      <div className='flex flex-row justify-between items-center'>
+      <div className='flex flex-row justify-between items-center overflow-y-auto'>
         <button
           onClick={onBackClick}
           className="text-cavero-purple py-1 mb-2 md:mb-0 text-xl font-medium"

@@ -15,7 +15,6 @@ function CreateArticleModal({ onClose }) {
   };
 
   const handleSubmit = async () => {
-    // Validation
     if (!title.trim()) {
       setTitleError('Titel is verplicht');
     } else {
