@@ -239,7 +239,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                         type="submit"
                         className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-hover-purple duration-150 hover:scale-105"
                         onClick={handleSubmit}
-                    >{eventData ? 'Edit' : 'Submit'}</button>
+                    >Opslaan</button>
                 </div>
             </div>
         </Modal>
