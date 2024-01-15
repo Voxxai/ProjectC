@@ -415,18 +415,63 @@ app.get('/news', (req, res) => {
 
 //add event
 app.post('/insert_event', (req, res) => {
-    const { title, date, time, summary, location, level } = req.body;
+    const { title, date, time, summary, location, level, endJoinDate } = req.body;
 
-    const sql = 'INSERT INTO events (Title, Date, Time, Description, Location, Level) VALUES (?, ?, ?, ?, ?,?)';
-    db.query(sql, [title, date, time, summary, location, level], (err, result) => {
+    const sql = 'INSERT INTO events (Title, Date, Time, Description, Location, Level, EndJoinDate) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.query(sql, [title, date, time, summary, location, level, endJoinDate], (err, result) => {
         if (err) {
             console.log(err);
             res.status(500).json({ message: 'Error inserting event data' });
         } else {
-            res.status(200).json({ message: 'Event data inserted successfully' });
+            res.status(200).json({ message: 'Event data inserted successfully', eventId: result.insertId });
         }
     });
 });
+
+app.post('/edit_event/:id', (req, res) => {
+    console.log
+    const { title, date, time, summary, location, level, endJoinDate } = req.body;
+    const { id } = req.params;
+    console.clear();
+    console.log(id);
+    console.log(req.body);
+
+
+    const sql = 'UPDATE events SET Title = ?, Date = ?, Time = ?, Description = ?, Location = ?, Level = ?, EndJoinDate = ? WHERE id = ?';
+    db.query(sql, [title, date, time, summary, location, level, endJoinDate, id], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error updating event data' });
+        } else {
+            res.status(200).json({ message: 'Event data updated successfully' });
+        }
+    });
+});
+
+app.post('/delete_event/:id', (req, res) => {
+    const eventId = req.params.id;
+
+    const sql1 = 'DELETE FROM events WHERE id = ?';
+    const sql2 = 'DELETE FROM event_users WHERE event_id = ?';
+
+    db.query(sql2, [eventId], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error deleting event users' });
+
+        } else {
+            db.query(sql1, [eventId], (err, results) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: 'Error deleting event' });
+                } else {
+                    res.status(200).json({ message: 'Event and event users deleted successfully' });
+                }
+            });
+        }
+    });
+});
+
 
 app.get('/events', (request, response) => {
     db.query("SELECT * FROM events", (error, result) => {
@@ -520,6 +565,14 @@ app.post('/joinevent', (req, res) => {
     });
 });
 
+app.post('/leaveevent/:EventId/:UserId', (req, res) => {
+    db.query(`DELETE FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
+        if (error) console.log(error);
+
+        res.send(result);
+    });
+});
+
 app.get('/checkevent/:EventId/:UserId', (req, res) => {
     db.query(`SELECT * FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
         if (error) console.log(error);
@@ -533,13 +586,86 @@ app.get('/checkevent/:EventId/:UserId', (req, res) => {
     });
 });
 
-app.post('/leaveevent/:EventId/:UserId', (req, res) => {
-    db.query(`DELETE FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
-        if (error) console.log(error);
+app.get('/checkLike/:EventId/:UserId', (req, res) => {
+    const { EventId, UserId } = req.params;
 
-        res.send(result);
+    const sql = `
+        SELECT * FROM event_users
+        WHERE Event_ID = ? AND User_ID = ? AND IsLiked = 1
+    `;
+
+    db.query(sql, [EventId, UserId], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error checking like status' });
+        } else {
+            if (result.length > 0) {
+                res.json({ hasLiked: true });
+            } else {
+                res.json({ hasLiked: false });
+            }
+        }
     });
 });
+
+app.post('/like_event/:EventId/:UserId', (req, res) => {
+    const { EventId, UserId } = req.params;
+
+    const sql = `
+        UPDATE event_users
+        SET IsLiked = NOT IsLiked
+        WHERE Event_ID = ? AND User_ID = ?
+    `;
+
+    db.query(sql, [EventId, UserId], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error toggling the like status of the event' });
+        } else {
+            res.status(200).json({ message: 'Event like status toggled successfully' });
+        }
+    });
+});
+
+// Unlike endpoint
+app.post('/unlike/:EventId/:UserId', (req, res) => {
+    const { EventId, UserId } = req.params;
+
+    const sql = `
+        UPDATE event_users
+        SET IsLiked = FALSE
+        WHERE Event_ID = ? AND User_ID = ?
+    `;
+
+    db.query(sql, [EventId, UserId], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error unliking the event' });
+        } else {
+            res.status(200).json({ message: 'Event unliked successfully' });
+        }
+    });
+});
+
+app.get('/countLikes/:EventId', (req, res) => {
+    const { EventId } = req.params;
+
+    const sql = `
+        SELECT COUNT(*) as likes
+        FROM event_users
+        WHERE Event_ID = ? AND IsLiked = true
+    `;
+
+    db.query(sql, [EventId], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error counting likes' });
+        } else {
+            res.status(200).json({ likes: result[0].likes });
+        }
+    });
+});
+
 
 app.get('/eventsregistertime/:EventId', (req, res) => {
     db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
@@ -555,7 +681,7 @@ app.get('/eventsregistertime/:EventId', (req, res) => {
     });
 });
 
-app.post('/scheduleweek', (req, res) => { 
+app.post('/scheduleweek', (req, res) => {
     db.query(`  INSERT INTO caverogroep2.Employee_Schedule (Account_ID, Monday, Tuesday, Wednesday, Thursday, Friday)
                 VALUES (?, ?, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE
@@ -564,17 +690,17 @@ app.post('/scheduleweek', (req, res) => {
                     Wednesday = ?,
                     Thursday = ?,
                     Friday = ?;`,
-   [req.body.Account_ID, req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday,
-    req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday], 
-    (error) => {
-        if (error) console.log(error);
+        [req.body.Account_ID, req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday,
+        req.body.Monday, req.body.Tuesday, req.body.Wednesday, req.body.Thursday, req.body.Friday],
+        (error) => {
+            if (error) console.log(error);
 
-        res.send(true);
-    });
+            res.send(true);
+        });
 });
 
 app.get('/get-employee-schedule/:Account_ID', (req, res) => {
-    db.query(`SELECT * FROM Employee_Schedule WHERE Account_ID = ${req.params.Account_ID}`,  (error, result) => {
+    db.query(`SELECT * FROM Employee_Schedule WHERE Account_ID = ${req.params.Account_ID}`, (error, result) => {
         if (error) console.log(error);
 
         if (result.length > 0) {

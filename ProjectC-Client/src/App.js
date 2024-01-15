@@ -11,6 +11,7 @@ import Settings_Layout from './layout/Settings_Layout';
 import Profile from './pages/Profile';
 import Security from './pages/Security';
 import Settings from './pages/Settings';
+import EventSelector from './pages/EventSelector';
 import Morgen from './pages/Morgen';
 import ForgotPassword from './pages/ForgotPassword';
 import Register from './pages/Register';
