@@ -401,12 +401,9 @@ app.post('/insert_event', (req, res) => {
 });
 
 app.post('/edit_event/:id', (req, res) => {
-    console.log
     const { title, date, time, summary, location, level, endJoinDate } = req.body;
     const { id } = req.params;
-    console.clear();
-    console.log(id);
-    console.log(req.body);
+
 
 
     const sql = 'UPDATE events SET Title = ?, Date = ?, Time = ?, Description = ?, Location = ?, Level = ?, EndJoinDate = ? WHERE id = ?';
