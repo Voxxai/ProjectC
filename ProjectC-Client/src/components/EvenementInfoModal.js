@@ -3,10 +3,11 @@ import Modal from 'react-modal';
 import useAuth from '../hooks/useAuth';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faUserAlt, faUserCircle, faCalendarDays, faClock, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faUserAlt, faUserCircle, faCalendarDays, faClock, faMapMarkerAlt, faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 
 
-function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, isPastEvent, setRefreshTrigger }) {
+function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, isPastEvent, setRefreshTrigger, hasLiked, setHasLiked, getLikes, setHearts }) {
 
 
     const { auth } = useAuth();
@@ -38,14 +39,35 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
             });
     }
 
+    async function toggleLikeEvent(eventId) {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/like_event/${eventId}/${auth.ID}`);
+            setHasLiked(response.data.hasLiked);
+
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
 
     const renderButtons = () => {
+
         if (isPastEvent) {
             return (
                 <div className='flex flex-row gap-x-2 justify-center'>
                     <button className='bg-gray-200 text-gray-500 rounded-md p-2 px-3' disabled>
                         Inschrijftijd is verlopen
                     </button>
+
+                    {joined && (
+
+                        <button className='bg-gray-200 text-white rounded-md p-2 px-3 text hover:bg-gray-300' onClick={() => { toggleLikeEvent(event.id); getLikes(event.id); }}>
+                            {setHearts()}
+                        </button>
+                    )}
+
                 </div>
             );
         } else {

@@ -8,7 +8,7 @@ import EvenementModal from '../components/EvenementModal';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 
 
-function Evenement({ id, title, date, time, description, location, level, currentParticipants, setRefreshTrigger, isAdmin, auth, endJoinDate, hasLiked }) {
+function Evenement({ id, title, date, time, description, location, level, currentParticipants, setRefreshTrigger, isAdmin, auth, endJoinDate, }) {
 
 
     const eventData = {
@@ -21,13 +21,13 @@ function Evenement({ id, title, date, time, description, location, level, curren
         level: level,
         currentParticipants: currentParticipants,
         endJoinDate: endJoinDate,
-        hasLiked: hasLiked,
     }
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [Joined, setJoined] = useState(false);
     const [likes, setLikes] = useState(0);
+    const [HasLiked, setHasLiked] = useState(false);
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [modalEventData, setModalEventData] = useState(null);
 
@@ -71,7 +71,9 @@ function Evenement({ id, title, date, time, description, location, level, curren
     const dayOfWeek = formatDate({ weekday: 'short' });
     const formattedDate = formatDate({ day: '2-digit', month: 'short' });
     const startTime = time.split(':').slice(0, 2).join(':');
-    getLikes(id);
+    useEffect(() => {
+        getLikes(id);
+    }, []);
 
 
     async function checkIfJoined(id) {
@@ -87,6 +89,9 @@ function Evenement({ id, title, date, time, description, location, level, curren
         try {
             const response = await axios.get(`http://localhost:8080/countLikes/${id}`);
             setLikes(response.data.likes);
+
+            const hasLikedResponse = await axios.get(`http://localhost:8080/checkLike/${id}/${auth.ID}`);
+            setHasLiked(hasLikedResponse.data.hasLiked);
         } catch (error) {
             console.error('Error getting likes: ', error);
         }
@@ -102,6 +107,29 @@ function Evenement({ id, title, date, time, description, location, level, curren
             }
         } catch (error) {
             console.error(`Error deleting event: ${error}`);
+        }
+    }
+
+    function setHearts() {
+
+        if (HasLiked) {
+            return (
+                <>
+                    <FontAwesomeIcon
+                        icon={solidHeart}
+                        className={` text-red-500 `}
+                    />
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <FontAwesomeIcon
+                        icon={regularHeart}
+                        className={`text-red-500 `}
+                    />
+                </>
+            )
         }
     }
 
@@ -143,19 +171,10 @@ function Evenement({ id, title, date, time, description, location, level, curren
                         <FontAwesomeIcon icon={faPeopleGroup} className="mr-1" />
                     </>
                 ) : (
+
                     <>
                         <div className=''>{likes}</div>
-                        {hasLiked ?
-                            <FontAwesomeIcon
-                                icon={solidHeart}
-                                className={`mr-1 transform transition-transform duration-200 hover:scale-160`}
-                            />
-                            :
-                            <FontAwesomeIcon
-                                icon={regularHeart}
-                                className={`mr-1 transform transition-transform duration-200 hover:scale-160`}
-                            />
-                        }
+                        {setHearts()}
                     </>
                 )}
             </div>
@@ -165,12 +184,16 @@ function Evenement({ id, title, date, time, description, location, level, curren
 
             <EvenementInfoModal
                 isOpen={isModalOpen}
-                onRequestClose={closeModalAndRefresh}
+                onRequestClose={closeModal}
                 event={eventData}
                 joined={Joined}
                 setJoined={setJoined}
                 isPastEvent={isPastEvent}
                 setRefreshTrigger={setRefreshTrigger}
+                hasLiked={HasLiked}
+                setHasLiked={setHasLiked}
+                getLikes={getLikes}
+                setHearts={setHearts}
             />
             <EvenementModal isOpen={isEditModalOpen} onRequestClose={closeEditModal} eventData={modalEventData} />
         </div>
