@@ -132,12 +132,12 @@ function Evenement({ id, title, date, time, description, location, level, curren
                             {hasLiked ?
                                 <FontAwesomeIcon
                                         icon={solidHeart}
-                                        className={`mr-1 transform transition-transform duration-200 hover:scale-160 cursor-pointer`}
+                                        className={`mr-1 transform transition-transform duration-200 hover:scale-160`}
                                     />
                                  :
                                 <FontAwesomeIcon
                                     icon={regularHeart}
-                                    className={`mr-1 transform transition-transform duration-200 hover:scale-160 cursor-pointer`}
+                                    className={`mr-1 transform transition-transform duration-200 hover:scale-160`}
                                 />
                             }
                         </>
