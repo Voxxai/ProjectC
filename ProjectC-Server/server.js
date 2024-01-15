@@ -167,7 +167,7 @@ app.post('/resetpassword', (req, res) => {
         if (error) console.log(error);
 
         if (result) {
-            res.status(200).send({ status: 'success' });
+            res.send({ EmailSent: 'success' });
         }
         else {
             res.send({ status: 'failed' });

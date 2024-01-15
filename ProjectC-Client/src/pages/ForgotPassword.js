@@ -26,7 +26,7 @@ function ForgotPassword() {
     }
 
     const CorrectPassword = () => {
-        if (values.password.length < 6) {
+        if (values.password.length < 6 && values.passwordConfirm.length < 6) {
             return false;
         } else {
             return true;
@@ -34,7 +34,7 @@ function ForgotPassword() {
     }
 
     const ResetPassword = async () => {
-        console.log(values);
+        let tempPassword = '';
         setError(false);
 
         if (!CorrectPassword()) {
@@ -49,14 +49,10 @@ function ForgotPassword() {
             return;
         }
 
-        setValues({
-            ...values,
-            password: Sha1(values.password),
-            passwordConfirm: Sha1(values.passwordConfirm)
-        });
+        tempPassword = Sha1(values.password);
 
         try {
-            await axios.post('http://localhost:8080/resetpassword', { id: id, password: values.password })
+            await axios.post('http://localhost:8080/resetpassword', { id: id, password: tempPassword })
                     .then((response) => {
                         if (response.data.status == 'success') {
                             navigate('/login');
