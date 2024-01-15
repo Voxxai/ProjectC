@@ -200,7 +200,7 @@ function Morgen() {
                     </div>
 
                     {/* Personen Card */}
-                    <div className="flex flex-col p-2 shadow-md w-1/4 text-left overflow-y-auto bg-white rounded h-full max-sm:w-full max-sm:h-1/2">
+                    <div className="flex flex-col p-2 shadow-md w-1/4 text-left bg-white rounded h-full max-sm:w-full max-sm:h-1/2">
                         <div className="flex items-center">
                             <FontAwesomeIcon icon={faUsers} className="mr-2" />
                             <span className="text-xl font-semibold">Personen</span>
@@ -210,7 +210,7 @@ function Morgen() {
                         {users.length === 0 ? (
                             <span className='text-gray-500 text-sm'>Geen collega's gevonden voor morgen.</span>
                         ) : (
-                            <div>
+                            <div className='overflow-y-auto'>
                                 {users.map((user, index) => (
                                     <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
                                         <FontAwesomeIcon className='text-cavero-purple fa-lg' icon={faCircleUser} />
