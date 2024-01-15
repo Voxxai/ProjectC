@@ -39,7 +39,7 @@ function Profile() {
 
     // Trying to update user to new values
     try {
-      await axios.post(`http://localhost:8080/user_update`, ProfileValues)
+      await axios.post(process.env.REACT_APP_API_URL + `/user_update`, ProfileValues)
         .then(response => {
           if (response) {
             // Update succesfull
@@ -56,7 +56,7 @@ function Profile() {
 
             // Trying to update session cookie to new values
             try {
-              axios.post(`http://localhost:8080/session-update`, ProfileValues)
+              axios.post(process.env.REACT_APP_API_URL + `/session-update`, ProfileValues)
                 .then(response => {
                   if (response) {
                     // Sesison update succesfull
@@ -104,7 +104,7 @@ function Profile() {
   };
 
   return (
-    <div className='flex flex-col gap-y-2 p-4 w-full'>
+    <div className='flex flex-col gap-y-2 w-full p-4'>
       <div className='flex'>
         <span className='font-semibold text-2xl text-cavero-purple'>Uw profiel</span>
       </div>
@@ -123,15 +123,15 @@ function Profile() {
 
       <div className='flex flex-col mb-5'>
         <span className='font-semibold text-lg'>Persoonlijke gegevens</span>
-        <div className='flex flex-row gap-x-2 '>
+        <div className='flex gap-2 max-sm:flex-col max-lg:flex-row'>
 
-          <div className='flex flex-col gap-x-2 w-2/5'>
+          <div className='flex-col gap-x-2 w-2/5 max-sm:w-full'>
             <label className='w-full'>Voornaam
               <input type="text" id='FirstName' name='FirstName' defaultValue={auth.FirstName} onChange={onChangeValues} placeholder='Voornaam' />
             </label>
           </div>
 
-          <div className='flex flex-col gap-x-2 w-3/5'>
+          <div className='flex-col gap-x-2 w-3/5 max-sm:w-full'>
             <label className='w-full'>Achternaam
               <input type="text" id='LastName' name='LastName' defaultValue={auth.LastName} onChange={onChangeValues} placeholder='Achternaam' />
             </label>

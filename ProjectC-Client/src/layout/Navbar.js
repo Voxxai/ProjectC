@@ -17,8 +17,8 @@ function Navbar({ openNavbar, toggleOpen, toggleClose, handleBellPress }) {
     <div className=''>
       <div className="flex">
         <div
-          className={`${openNavbar ? "w-72 max-sm:absolute max-sm:z-10" : "w-20 max-sm:w-0 max-sm:z-10"
-            } bg-cavero-purple h-screen pt-2.5 max-sm:absolute relative duration-300`}
+          className={`${openNavbar ? "w-72 max-sm:absolute max-sm:z-10 max-sm:pr-4" : "w-20 max-sm:w-0 max-sm:z-10"
+            } bg-cavero-purple h-screen pt-2.5 max-sm:absolute relative duration-300 `}
         >
           <FontAwesomeIcon
             icon={faChevronLeft}

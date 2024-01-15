@@ -19,10 +19,10 @@ function Nieuws() {
 
   const fetchNieuwsData = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/news');
+      const response = await axios.get(process.env.REACT_APP_API_URL + '/news');
       setNews(response.data);
   
-      await axios.get(`http://localhost:8080/reset_noticounter/${auth.ID}`);
+      await axios.get(process.env.REACT_APP_API_URL + `/reset_noticounter/${auth.ID}`);
     } catch (error) {
       console.error('Error fetching data: ', error);
     }
