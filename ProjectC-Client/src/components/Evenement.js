@@ -33,12 +33,18 @@ function Evenement({ id, title, date, time, description, location, level, curren
 
     const openModalWithEventData = (eventData) => {
         eventData.date = formatDate({ day: '2-digit', month: '2-digit', year: 'numeric' });
+        const toUs = eventData.date.split('-');
+        toUs.reverse();
+        let joinedString = toUs.join('-');
+
+        eventData.date = new Date(`${joinedString}T${eventData.time}`);
         setModalEventData(eventData);
         setIsEditModalOpen(true);
     };
 
     const closeEditModal = () => {
         setIsEditModalOpen(false);
+        setRefreshTrigger(prevState => prevState + 1);
     };
 
 
@@ -145,7 +151,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
                 <h3 className="text-2xl grow font-semibold mb-1">{title}</h3>
                 {isAdmin && !isPastEvent && (
                     <div className='flex gap-x-2 flex-row '>
-                        <button className="text-red-900 bg-purple-400 bg-opacity-75 rounded-md py-0.5 px-1" onClick={() => openModalWithEventData(eventData)}>Edit</button>
+                        <button className="text-red-900 bg-purple-400 bg-opacity-75 rounded-md py-0.5 px-1" onClick={() => { openModalWithEventData(eventData); }}>Edit</button>
                         <button className="text-red-900 bg-red-400 bg-opacity-75 rounded-md py-0.5 px-1" onClick={() => deleteEvent(id)}>Delete</button>
                     </div>
                 )}

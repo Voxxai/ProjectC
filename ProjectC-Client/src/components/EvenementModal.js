@@ -12,6 +12,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
 
 
+
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
         return new Date(Math.ceil((date.getTime() + 1000) / coeff) * coeff);
@@ -41,6 +42,16 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
     useEffect(() => {
         const defaultData = getRoundedDateTime();
 
+        let selectedDateTime;
+        if (eventData?.date && eventData?.time) {
+            // If eventData.date and eventData.time exist, create a new Date object
+            selectedDateTime = new Date(eventData.date);
+            const [hours, minutes] = eventData.time.split(':').map(Number);
+            selectedDateTime.setHours(hours, minutes);
+            console.log('selectedDateTime:', selectedDateTime);
+            debugger;
+        }
+
         setFormData({
             title: eventData?.title || '',
             summary: eventData?.description || '',
@@ -49,6 +60,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             date: eventData?.date || defaultData.date,
             time: eventData?.time || defaultData.time,
             endJoinDate: eventData?.endJoinDate || defaultData.endJoinDate,
+            selectedDateTime: selectedDateTime || defaultData.selectedDateTime, // Set selectedDateTime
         });
     }, [eventData]);
 
@@ -71,11 +83,23 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
     const handleDateTimeChange = (date) => {
         const value = date[0];
         value.setSeconds(0); // Set the seconds to 00
-        setFormData((prevData) => ({
-            ...prevData,
-            date: value.split('T')[0], // Get the date part
-            time: value.toTimeString().split(' ')[0].slice(0, 5), // Get the time part
-        }));
+        const newDate = value.toISOString().split('T')[0]; // Get the date part
+        const newTime = value.toTimeString().split(' ')[0].slice(0, 5); // Get the time part
+
+        setFormData((prevData) => {
+            // Only update the state if the date or time has changed
+            if (newDate !== prevData.date || newTime !== prevData.time) {
+                return {
+                    ...prevData,
+                    date: newDate,
+                    time: newTime,
+                    selectedDateTime: value, // Store the selected date and time
+                };
+            }
+
+            // If the date and time haven't changed, return the previous state
+            return prevData;
+        });
     };
 
     const handleEndJoinDateChange = (date) => {
@@ -100,9 +124,9 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                 // If eventData exists, make a PUT request to the edit_event endpoint
                 formData.date = formData.date.split('T')[0];
                 formData.endJoinDate = formData.endJoinDate.replace('T', ' ').slice(0, -5);
-                console.log(formData);
-                debugger;
                 await axios.post(`http://localhost:8080/edit_event/${eventData.id}`, formData);
+                console.log('Form data submitted:', formData);
+                debugger;
             } else {
                 // If eventData does not exist, make a POST request to the insert_event endpoint
                 await axios.post('http://localhost:8080/insert_event', formData);
@@ -134,7 +158,6 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
     }, [isOpen]);
 
 
-    const newdate = formData.date.split(' ')[0];
 
     return (
 
@@ -177,20 +200,19 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
 
                     <label className='block' for="time-input">
-                        Datum en tijd:
+                        Datum en tijd {eventData ? 'oude tijd is: ' + eventData?.date.toLocaleString('nl-NL').slice(0, -3) : ''}
 
                         <Flatpickr
+                            key={formData.selectedDateTime} // Add this line
                             data-enable-time
                             options={{
                                 dateFormat: "d-M-Y H:i",
                                 enableTime: true,
                                 time_24hr: true,
                                 minuteIncrement: 5,
-                                minDate: formData.date && formData.time ?
-                                    new Date(`${formData.date.split('-')[2]}-${formData.date.split('-')[1]}-${formData.date.split('-')[0]}T${formData.time}`) : roundToNearestMinutes(new Date(), 5),
+                                minDate: roundToNearestMinutes(new Date(), 5),
                             }}
-                            value={formData.date && formData.time ?
-                                new Date(`${formData.date.split('-')[2]}-${formData.date.split('-')[1]}-${formData.date.split('-')[0]}T${formData.time}`) : roundToNearestMinutes(new Date(), 5)}
+                            value={formData.selectedDateTime || roundToNearestMinutes(new Date(), 5)}
                             onChange={handleDateTimeChange}
                         />
                     </label>
