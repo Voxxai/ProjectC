@@ -31,9 +31,14 @@ function Register() {
             return;
         }
         // if email is not valid or password is not valid
-        else if (!values.email.includes('@') || values.password.length < 6) {
+        else if (!values.email.toString().includes('@')) {
+              setError(true);
+            setErrorMessage("Email moet een @ bevatten");
+            return;
+        }
+        else if (values.password.toString().length < 6) {
             setError(true);
-            setErrorMessage("Vul een geldig emailadres en wachtwoord in.\nWachtwoord moet minimaal 6 tekens bevatten.\nEmail moet een @ bevatten");
+            setErrorMessage("Wachtwoord moet minimaal 6 tekens bevatten.");
             return;
         }
 
@@ -59,8 +64,8 @@ function Register() {
     }
 
 
-    return (
-        <div className='bg-gradient-to-br from-white to-cavero-purple-light'>
+  return (
+<div className='bg-gradient-to-br from-white to-cavero-purple-light'>
             <div className='h-screen w-screen flex items-center justify-center'>
 
                 {/* Login container */}
