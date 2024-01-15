@@ -7,24 +7,42 @@ function CreateArticleModal({ onClose }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [photo, setPhoto] = useState(null);
+  const [titleError, setTitleError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
 
   const handleFileChange = (e) => {
     setPhoto(e.target.files[0]);
   };
 
   const handleSubmit = async () => {
+    if (!title.trim()) {
+      setTitleError('Titel is verplicht');
+    } else {
+      setTitleError('');
+    }
+
+    if (!description.trim()) {
+      setDescriptionError('Beschrijving is verplicht');
+    } else {
+      setDescriptionError('');
+    }
+
+    if (!title.trim() || !description.trim()) {
+      return;
+    }
+
     try {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('description', description);
       formData.append('image', photo);
-  
+      
       const response = await axios.post(process.env.REACT_APP_API_URL + '/insert_news', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-  
+
       onClose();
     } catch (error) {
       console.error('Error inserting data: ', error);
@@ -34,26 +52,36 @@ function CreateArticleModal({ onClose }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-1">
       <div className="p-3 max-w-xl mx-auto bg-white rounded shadow-lg border-2 relative outline-none w-11/12">
-      <button className='flex justify-end' onClick={onClose}>
+        <button className='flex justify-end' onClick={onClose}>
           <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1'/>
         </button>
         <h2 className="text-2xl font-semibold mb-6 text-cavero-purple">Nieuwsartikel</h2>
         <div className="mb-6">
-          <label className="w-full text-gray-700">Titel:
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <label className={`w-full text-gray-700`}>Titel:
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                setTitleError('');
+              }}
+              className={`w-full p-3 rounded-md ${titleError ? 'border-red-500 bg-red-100' : ''}`}
+            />
+            {titleError && <p className="text-red-500">{titleError}</p>}
           </label>
         </div>
         <div className="mb-6">
-          <label className="w-full text-gray-700">Beschrijving:
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows="8"
-          />
+          <label className={`w-full text-gray-700`}>Beschrijving:
+            <textarea
+              value={description.replace(/<br>/g, '\n')}
+              onChange={(e) => {
+                setDescription(e.target.value.replace(/\n/g, '<br>'));
+                setDescriptionError('');
+              }}
+              rows="8"
+              className={`w-full p-3 rounded-md ${descriptionError ? 'border-red-500 bg-red-100' : ''}`}
+            />
+            {descriptionError && <p className="text-red-500">{descriptionError}</p>}
           </label>
         </div>
         <div className="mb-6">
