@@ -8,7 +8,7 @@ import EvenementModal from '../components/EvenementModal';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 
 
-function Evenement({ id, title, date, time, description, location, level, maxParticipants, currentParticipants, setRefreshTrigger, isAdmin, auth, endJoinDate }) {
+function Evenement({ id, title, date, time, description, location, level, currentParticipants, setRefreshTrigger, isAdmin, auth, endJoinDate, hasLiked}) {
 
 
     const eventData = {
@@ -19,20 +19,20 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
         description: description,
         location: location,
         level: level,
-        maxParticipants: maxParticipants,
         currentParticipants: currentParticipants,
         endJoinDate: endJoinDate,
+        hasLiked: hasLiked,
     }
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [Joined, setJoined] = useState(false);
     const [likes, setLikes] = useState(0);
-    const [hasLiked, setHasLiked] = useState(false);
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [modalEventData, setModalEventData] = useState(null);
 
     const openModalWithEventData = (eventData) => {
+        eventData.date = formatDate({ day: '2-digit', month: '2-digit', year: 'numeric' });
         setModalEventData(eventData);
         setIsEditModalOpen(true);
     };
@@ -71,10 +71,8 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
     const dayOfWeek = formatDate({ weekday: 'short' });
     const formattedDate = formatDate({ day: '2-digit', month: 'short' });
     const startTime = time.split(':').slice(0, 2).join(':');
+    getLikes(id);
 
-    useEffect(() => {
-        checkIfLiked(id);
-    }, [id, auth.ID]);
 
     async function checkIfJoined(id) {
         try {
@@ -82,39 +80,6 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
             setJoined(response.data);
         } catch (error) {
             console.error('Error checking join status: ', error);
-        }
-    }
-
-
-    async function toggleLike() {
-        try {
-            // Check if the user has joined the event
-            if (Joined) {
-                let response;
-                if (hasLiked) {
-                    // If the user has already liked the event, make a request to the /unlike endpoint
-                    response = await axios.post(`http://localhost:8080/unlike/${id}/${auth.ID}`);
-                } else {
-                    // If the user hasn't liked the event yet, make a request to the /like endpoint
-                    response = await axios.post(`http://localhost:8080/like/${id}/${auth.ID}`);
-                }
-                setHasLiked(!hasLiked); // Toggle the hasLiked state
-                getLikes(id); // Update the likes count
-            } else {
-                console.log('User has not joined the event, cannot like');
-            }
-        } catch (error) {
-            console.error('Error toggling like: ', error);
-        }
-    }
-
-    async function checkIfLiked(id) {
-        try {
-            const response = await axios.get(`http://localhost:8080/checkLike/${id}/${auth.ID}`);
-            setHasLiked(response.data);
-            getLikes(id);
-        } catch (error) {
-            console.error('Error checking like status: ', error);
         }
     }
 
@@ -141,8 +106,8 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
                     <button onClick={() => openModalWithEventData(eventData)}>Edit</button>
                 )}
                 <div className="text-md w-2/3 text-gray-500 grow gap-x-2 flex truncate flex-row">
-                    <div className="w-3/12 text-left truncate overflow-clip">
-                        <FontAwesomeIcon icon={faClock} className="mr-1" /> {dayOfWeek} - {startTime}
+                    <div className="w-4/12 text-left truncate overflow-clip">
+                        <FontAwesomeIcon icon={faClock} className="mr-1" />{dayOfWeek} - {startTime}
                     </div>
                     <div className="text-left truncate overflow-clip">
                         {locationInfo && (
@@ -155,41 +120,33 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
                 </div>
 
             </div>
-            <div className="flex group whitespace-nowrap text-left flex-row justify-center items-center gap-x-2">
+            <div className="flex whitespace-nowrap text-left flex-row justify-center items-center gap-x-2">
                 {!isPastEvent ? (
                     <>
                         <div>{currentParticipants}</div>
                         <FontAwesomeIcon icon={faPeopleGroup} className="mr-1" />
                     </>
                 ) : (
-                    <>
-                        <div className=''>{likes}</div>
-                        {Joined ?
-                            (hasLiked ?
+                        <>
+                            <div className=''>{likes}</div>
+                            {hasLiked ?
                                 <FontAwesomeIcon
-                                    icon={solidHeart}
-                                    className={`mr-1 group-hover:scale-120 transition-transform duration-200 cursor-pointer`}
-                                    onClick={() => { toggleLike() }}
-                                /> :
+                                        icon={solidHeart}
+                                        className={`mr-1 transform transition-transform duration-200 hover:scale-160 cursor-pointer`}
+                                    />
+                                 :
                                 <FontAwesomeIcon
                                     icon={regularHeart}
-                                    className={`mr-1 group-hover:scale-120 transition-transform duration-200 cursor-pointer`}
-                                    onClick={() => { toggleLike() }}
-                                />)
-                            :
-                            <FontAwesomeIcon
-                                icon={regularHeart}
-                                className={`mr-1 group-hover:scale-120 transition-transform duration-200 `}
-                            />
-                        }
-
-
-                    </>
+                                    className={`mr-1 transform transition-transform duration-200 hover:scale-160 cursor-pointer`}
+                                />
+                            }
+                        </>
                 )}
             </div>
             <div className="flex justify-center w-1/6">
                 <button onClick={() => { openModal(); checkIfJoined(eventData.id) }} className="bg-cavero-purple w-4/5 text-white text-base rounded-md self-center p-1 hover:bg-cavero-purple-dark truncate">meer info</button>
             </div>
+            {eventData.date = formatDate({ day: '2-digit', month: '2-digit', year: 'numeric' })}
             <EvenementInfoModal
                 isOpen={isModalOpen}
                 onRequestClose={closeModalAndRefresh}

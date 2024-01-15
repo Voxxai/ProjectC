@@ -12,6 +12,7 @@ function Evenementen() {
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
+  const [hasLiked, setHasLiked] = useState(false);
   const [selectedDropdownOption, setSelectedDropdownOption] = useState('Toekomstig');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -42,9 +43,11 @@ function Evenementen() {
       const response = await axios.get('http://localhost:8080/events');
       const eventsWithParticipants = await Promise.all(response.data.map(async (event) => {
         const participants = await amountOfParticipants(event);
+        const hasLiked = await checkIfLiked(event.ID);
         return {
           ...event,
           participants: participants,
+          hasLiked: hasLiked,
         };
       }));
       setEvents(eventsWithParticipants);
@@ -63,6 +66,15 @@ function Evenementen() {
       return 0; // Handle the error by returning a default value
     }
   };
+
+  async function checkIfLiked(id) {
+    try {
+      const response = await axios.get(`http://localhost:8080/checkLike/${id}/${auth.ID}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error checking like status: ', error);
+    }
+  }
 
   const closeModal = (shouldReload) => {
     setIsModalOpen(false);
@@ -154,25 +166,26 @@ function Evenementen() {
 
                   return selectedDropdownOption === 'Toekomstig' ? aDateTime - bDateTime : bDateTime - aDateTime;
                 })
-                .map((event) => (
-                  <Evenement
-                    key={event.ID}
-                    id={event.ID}
-                    title={event.Title}
-                    date={event.Date}
-                    time={event.Time}
-                    description={event.Description}
-                    location={event.Location}
-                    level={event.Level}
-                    currentParticipants={event.participants}
-                    endJoinDate={event.EndJoinDate}
-                    closeModal={closeModal}
-                    setRefreshTrigger={setRefreshTrigger}
-                    isAdmin={isAdmin}
-                    auth={auth}
-                  />
-                )
-                )}
+                  .map((event) => (
+                    <Evenement
+                      key={event.ID}
+                      id={event.ID}
+                      title={event.Title}
+                      date={event.Date}
+                      time={event.Time}
+                      description={event.Description}
+                      location={event.Location}
+                      level={event.Level}
+                      currentParticipants={event.participants}
+                      endJoinDate={event.EndJoinDate}
+                      closeModal={closeModal}
+                      setRefreshTrigger={setRefreshTrigger}
+                      isAdmin={isAdmin}
+                      auth={auth}
+                      hasLiked={event.hasLiked}
+                    />
+                  ))
+                }
             </div>
           </div>
 
