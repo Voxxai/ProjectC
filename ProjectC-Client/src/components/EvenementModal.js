@@ -7,6 +7,9 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
     const [formData, setFormData] = useState({
         title: eventData?.Title || '',
         summary: eventData?.Description || '',
@@ -36,7 +39,11 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        if (!formData.title || !formData.summary || !formData.location || !formData.date || !formData.time) {
+            setError(true);
+            setErrorMessage("Vul alle velden in");
+            return;
+        }
         try {
             await axios.post(process.env.REACT_APP_API_URL + '/insert_event', formData);
             console.log('Form data submitted:', formData);
@@ -61,7 +68,9 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                 <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1' />
             </button>
             <h2 className="text-2xl text-gray-700 font-semibold mb-4">{eventData ? 'Edit Event' : 'Voeg evenement toe'}</h2>
-
+            <div className={`bg-red-200 h-13 rounded flex mb-3 ${!error && 'hidden'}`}>
+                <p className='text-black my-auto p-2 text-sm'>{errorMessage}</p>
+            </div>
             <form onSubmit={handleSubmit} >
                 <div className='flex flex-col gap-y-3 w-full'>
                     <div>
