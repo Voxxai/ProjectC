@@ -142,11 +142,11 @@ app.post('/forgot-password-email', (req, res) => {
 });
 
 app.post('/event-delete-email', (req, res) => {
-    const { EventTitle, Email } = req.body;
+    const { EventTitle, Emails } = req.body;
 
     const mailOptions = {
         from: process.env.USER,
-        to: Email,
+        to: Emails,
         subject: "Evenement geannuleerd",
         html: "<html>" +
             "<body>" +
@@ -166,6 +166,20 @@ app.post('/event-delete-email', (req, res) => {
             res.status(500).send('Internal Server Error');
         } else {
             res.status(200).send({ EmailSent: true });
+        }
+    });
+});
+
+// Get Emails by ID
+app.get('/get-email-by-id/:ID', (req, res) => {
+    db.query(`SELECT Email FROM accounts WHERE ID = "${req.params.ID}"`, (error, result) => {
+        if (error) console.log(error);
+
+        if (result.length > 0) {
+            res.status(200).send(result);
+        }
+        else {
+            res.send(false);
         }
     });
 });
@@ -525,7 +539,7 @@ app.get('/events/:date', (request, response) => {
 })
 
 app.get('/event_users/:ID', (request, response) => {
-    db.query(`SELECT accounts.FirstName, accounts.LastName FROM event_users LEFT JOIN accounts ON event_users.User_ID=accounts.ID WHERE Event_ID = "${request.params.ID}"`, (error, result) => {
+    db.query(`SELECT accounts.FirstName, accounts.Email, accounts.LastName FROM event_users LEFT JOIN accounts ON event_users.User_ID=accounts.ID WHERE Event_ID = "${request.params.ID}"`, (error, result) => {
         if (error) console.log(error);
 
         response.send(result);
