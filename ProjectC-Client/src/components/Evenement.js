@@ -8,7 +8,7 @@ import EvenementModal from '../components/EvenementModal';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 
 
-function Evenement({ id, title, date, time, description, location, level, currentParticipants, setRefreshTrigger, isAdmin, auth, endJoinDate, hasLiked}) {
+function Evenement({ id, title, date, time, description, location, level, currentParticipants, setRefreshTrigger, isAdmin, auth, endJoinDate, hasLiked }) {
 
 
     const eventData = {
@@ -30,7 +30,6 @@ function Evenement({ id, title, date, time, description, location, level, curren
     const [likes, setLikes] = useState(0);
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [modalEventData, setModalEventData] = useState(null);
-    const [ eventUsers, setEventUsers ] = useState([]);
 
     const openModalWithEventData = (eventData) => {
         eventData.date = formatDate({ day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -74,19 +73,6 @@ function Evenement({ id, title, date, time, description, location, level, curren
     const startTime = time.split(':').slice(0, 2).join(':');
     getLikes(id);
 
-    const getEventUsers = async (eventID) => {
-        try {
-          await axios.get(`http://localhost:8080/event_users/${eventID}`)
-          .then(response => {
-            setEventUsers(response.data);
-            return;
-            // console.log(response.data);
-          });
-    
-        } catch (error) {
-          console.error('Error fetching data: ', error);
-        }
-      };
 
     async function checkIfJoined(id) {
         try {
@@ -106,6 +92,19 @@ function Evenement({ id, title, date, time, description, location, level, curren
         }
     }
 
+    async function deleteEvent(id) {
+        try {
+            const response = await axios.post(`http://localhost:8080/delete_event/${id}`);
+            if (response.status === 200) {
+                setRefreshTrigger(prevState => prevState + 1);
+            } else {
+                console.error(`Error deleting event: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`Error deleting event: ${error}`);
+        }
+    }
+
     return (
         <div className=
             {` cursor-default w-1/1 md:w-1/1 lg:w-1/1 xl:w-1/1 flex flex-row grow flex-nowrap gap-x-2 mx-auto place-content-between p-2.5 m-1 rounded-md text-center scroll-mb-1 scroll-smooth snap-end snap-normal 
@@ -117,7 +116,10 @@ function Evenement({ id, title, date, time, description, location, level, curren
             <div className="pl-1 w-full whitespace-nowrap truncate flex flex-col items-start">
                 <h3 className="text-2xl grow font-semibold mb-1">{title}</h3>
                 {isAdmin && !isPastEvent && (
-                    <button onClick={() => openModalWithEventData(eventData)}>Edit</button>
+                    <div className='flex gap-x-2 flex-row '>
+                        <button className="text-red-900 bg-purple-400 bg-opacity-75 rounded-md py-0.5 px-1" onClick={() => openModalWithEventData(eventData)}>Edit</button>
+                        <button className="text-red-900 bg-red-400 bg-opacity-75 rounded-md py-0.5 px-1" onClick={() => deleteEvent(id)}>Delete</button>
+                    </div>
                 )}
                 <div className="text-md w-2/3 text-gray-500 grow gap-x-2 flex truncate flex-row">
                     <div className="w-4/12 text-left truncate overflow-clip">
@@ -137,41 +139,38 @@ function Evenement({ id, title, date, time, description, location, level, curren
             <div className="flex whitespace-nowrap text-left flex-row justify-center items-center gap-x-2">
                 {!isPastEvent ? (
                     <>
-                        <div>{currentParticipants}</div>
+                        <div>{currentParticipants ? currentParticipants.length : 0}</div>
                         <FontAwesomeIcon icon={faPeopleGroup} className="mr-1" />
                     </>
                 ) : (
-                        <>
-                            <div className=''>{likes}</div>
-                            {hasLiked ?
-                                <FontAwesomeIcon
-                                        icon={solidHeart}
-                                        className={`mr-1 transform transition-transform duration-200 hover:scale-160`}
-                                    />
-                                 :
-                                <FontAwesomeIcon
-                                    icon={regularHeart}
-                                    className={`mr-1 transform transition-transform duration-200 hover:scale-160`}
-                                />
-                            }
-                        </>
+                    <>
+                        <div className=''>{likes}</div>
+                        {hasLiked ?
+                            <FontAwesomeIcon
+                                icon={solidHeart}
+                                className={`mr-1 transform transition-transform duration-200 hover:scale-160`}
+                            />
+                            :
+                            <FontAwesomeIcon
+                                icon={regularHeart}
+                                className={`mr-1 transform transition-transform duration-200 hover:scale-160`}
+                            />
+                        }
+                    </>
                 )}
             </div>
             <div className="flex justify-center w-1/6">
-                <button onClick={() => { openModal(); checkIfJoined(eventData.id); getEventUsers(eventData.id)}} className="bg-cavero-purple w-4/5 text-white text-base rounded-md self-center p-1 hover:bg-cavero-purple-dark truncate">meer info</button>
+                <button onClick={() => { openModal(); checkIfJoined(eventData.id) }} className="bg-cavero-purple w-4/5 text-white text-base rounded-md self-center p-1 hover:bg-cavero-purple-dark truncate">meer info</button>
             </div>
-            {eventData.date = formatDate({ day: '2-digit', month: '2-digit', year: 'numeric' })}
+
             <EvenementInfoModal
                 isOpen={isModalOpen}
                 onRequestClose={closeModalAndRefresh}
                 event={eventData}
                 joined={Joined}
                 setJoined={setJoined}
-                endJoinDate={eventData.endJoinDate}
+                isPastEvent={isPastEvent}
                 setRefreshTrigger={setRefreshTrigger}
-                reloadEventUsers={getEventUsers}
-                eventUsersData={eventUsers}
-
             />
             <EvenementModal isOpen={isEditModalOpen} onRequestClose={closeEditModal} eventData={modalEventData} />
         </div>
