@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
-import { faMapMarkerAlt, faClock, faPeopleGroup, faHeart as solidHeart, faInfo, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faClock, faPeopleGroup, faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import EvenementInfoModal from '../components/EvenementInfoModal';
 import EvenementModal from '../components/EvenementModal';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
@@ -75,32 +75,14 @@ function Evenement({ id, title, date, time, description, location, level, curren
 
 
     async function checkIfJoined(id) {
-        await axios.get(process.env.REACT_APP_API_URL + `/checkevent/${id}/${auth.ID}`)
-            .then((response) => {
-                if (response.data === true) {
-                    setJoined(true)
-                }
-                else {
-                    setJoined(false)
-                }
-            }, (error) => {
-                console.log(error);
-            });
+        try {
+            const response = await axios.get(`http://localhost:8080/checkevent/${id}/${auth.ID}`);
+            setJoined(response.data);
+        } catch (error) {
+            console.error('Error checking join status: ', error);
+        }
     }
 
-    async function checkEndJoinDate(id) {
-        await axios.get(`http://localhost:8080/eventsregistertime/${id}`)
-            .then((response) => {
-                if (response.data === true) {
-                    setEndJoinDate(true)
-                }
-                else {
-                    setEndJoinDate(false)
-                }
-            }, (error) => {
-                console.log(error);
-            });
-    }
     async function getLikes(id) {
         try {
             const response = await axios.get(`http://localhost:8080/countLikes/${id}`);
@@ -110,15 +92,13 @@ function Evenement({ id, title, date, time, description, location, level, curren
         }
     }
 
-
-
     return (
         <div className=
             {` cursor-default w-1/1 md:w-1/1 lg:w-1/1 xl:w-1/1 flex flex-row grow flex-nowrap gap-x-2 mx-auto place-content-between p-2.5 m-1 rounded-md text-center scroll-mb-1 scroll-smooth snap-end snap-normal 
             ${(isPastEvent ? 'bg-gray-200 !important' :
                     isLevel3 ? 'bg-gradient-to-r from-[#edc2ff] to-cavero-purple-light' : 'bg-cavero-purple-light')}`}>
             <div className='flex justify-center w-1/12 text-center flex-col'>
-                <h2 className="flex w-full leading-5 text-xl max-sm:text-base justify-center text-center text-gray-600 whitespace-pre-line font-medium mb-1">{formattedDate.split(" ").join("\n")}</h2>
+                <h2 className="flex w-full leading-5 text-xl justify-center text-center text-gray-600 whitespace-pre-line font-medium mb-1">{formattedDate.split(" ").join("\n")}</h2>
             </div>
             <div className="pl-1 w-full whitespace-nowrap truncate flex flex-col items-start">
                 <h3 className="text-2xl grow font-semibold mb-1">{title}</h3>
@@ -128,12 +108,8 @@ function Evenement({ id, title, date, time, description, location, level, curren
                 <div className="text-md w-2/3 text-gray-500 grow gap-x-2 flex truncate flex-row">
                     <div className="w-4/12 text-left truncate overflow-clip">
                         <FontAwesomeIcon icon={faClock} className="mr-1" />{dayOfWeek} - {startTime}
-                <h3 className="text-2xl max-sm:text-lg font-semibold mb-1">{title}</h3>
-                <div className="text-md w-full text-gray-500 gap-x-2 flex flex-row">
-                    <div className="w-2/12 max-sm:w-auto text-left truncate">
-                        <FontAwesomeIcon icon={faClock} className="mr-1" /> {dayOfWeek} - {startTime}
                     </div>
-                    <div className="text-left truncate">
+                    <div className="text-left truncate overflow-clip">
                         {locationInfo && (
                             <>
                                 <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-1" />
@@ -168,10 +144,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
                 )}
             </div>
             <div className="flex justify-center w-1/6">
-                <button onClick={() => { openModal(); checkIfJoined(eventData.id) }} className="flex justify-center bg-cavero-purple w-full gap-x-1 rounded-md self-center p-1 hover:bg-cavero-purple-dark truncate">
-                    <FontAwesomeIcon icon={faInfoCircle} className="fa-xl text-white max-sm:block hidden" />
-                    <span className="text-white max-sm:hidden">Meer informatie</span>
-                </button>
+                <button onClick={() => { openModal(); checkIfJoined(eventData.id) }} className="bg-cavero-purple w-4/5 text-white text-base rounded-md self-center p-1 hover:bg-cavero-purple-dark truncate">meer info</button>
             </div>
             {eventData.date = formatDate({ day: '2-digit', month: '2-digit', year: 'numeric' })}
             <EvenementInfoModal

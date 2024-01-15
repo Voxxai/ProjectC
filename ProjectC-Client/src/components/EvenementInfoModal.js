@@ -19,6 +19,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
             "EventId": event.id,
             "UserId": auth.ID
         })
+        
             .then((response) => {
                 setJoined(true);
                 setRefreshTrigger(prevState => !prevState);
