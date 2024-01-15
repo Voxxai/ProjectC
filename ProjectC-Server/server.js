@@ -141,6 +141,35 @@ app.post('/forgot-password-email', (req, res) => {
     });
 });
 
+app.post('/event-delete-email', (req, res) => {
+    const { EventTitle, Email } = req.body;
+
+    const mailOptions = {
+        from: process.env.USER,
+        to: Email,
+        subject: "Evenement geannuleerd",
+        html: "<html>" +
+            "<body>" +
+            "<div style='width:100%; height:100%; background-color:#f4f4f4; padding:30px;'>" +
+            "<div style='width:600px; height: auto; margin:0 auto; padding:25px; border-radius:5px; background-color:white;'>" +
+            "<h1 style='color:#7F3689;'>" + EventTitle + "</h1>" +
+            "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Helaas is dit evenement geannuleerd. De omstandigheden hebben ertoe geleid dat we genoodzaakt zijn deze beslissing te nemen.</p>" +
+            "</div>" +
+            "</div>" +
+            "</body>" +
+            "</html>",
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.status(200).send({ EmailSent: true });
+        }
+    });
+});
+
 app.get('/users', (req, res) => {
     db.query("SELECT * FROM accounts", (error, result) => {
         res.send(result);
