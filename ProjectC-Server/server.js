@@ -404,8 +404,6 @@ app.post('/edit_event/:id', (req, res) => {
     const { title, date, time, summary, location, level, endJoinDate } = req.body;
     const { id } = req.params;
 
-
-
     const sql = 'UPDATE events SET Title = ?, Date = ?, Time = ?, Description = ?, Location = ?, Level = ?, EndJoinDate = ? WHERE id = ?';
     db.query(sql, [title, date, time, summary, location, level, endJoinDate, id], (err, result) => {
         if (err) {

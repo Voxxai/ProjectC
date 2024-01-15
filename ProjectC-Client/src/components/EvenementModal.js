@@ -8,11 +8,7 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
-    console.clear();
-
-
-
-
+  
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
         return new Date(Math.ceil((date.getTime() + 1000) / coeff) * coeff);
@@ -49,7 +45,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             const [hours, minutes] = eventData.time.split(':').map(Number);
             selectedDateTime.setHours(hours, minutes);
             console.log('selectedDateTime:', selectedDateTime);
-            debugger;
+
         }
 
         setFormData({
@@ -116,17 +112,20 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        // e.preventDefault();
 
         try {
 
             if (eventData) {
                 // If eventData exists, make a PUT request to the edit_event endpoint
-                formData.date = formData.date.split('T')[0];
+                let tempDate = new Date(formData.date);
+                formData.date = tempDate.getFullYear() + '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getDate();
+                // formData.date = formData.date.split('T')[0];
                 formData.endJoinDate = formData.endJoinDate.replace('T', ' ').slice(0, -5);
+
+
                 await axios.post(`http://localhost:8080/edit_event/${eventData.id}`, formData);
-                console.log('Form data submitted:', formData);
-                debugger;
+                // console.log('Form data submitted:', formData);
             } else {
                 // If eventData does not exist, make a POST request to the insert_event endpoint
                 await axios.post('http://localhost:8080/insert_event', formData);
@@ -157,8 +156,6 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         }
     }, [isOpen]);
 
-
-
     return (
 
         <Modal
@@ -174,7 +171,6 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             </button>
             <h2 className="text-2xl text-gray-700 font-semibold mb-4">{eventData ? 'Edit Event' : 'Voeg evenement toe'}</h2>
 
-            <form onSubmit={handleSubmit} >
                 <div className='flex flex-col gap-y-3 w-full'>
                     <div>
                         <label className="block">
@@ -245,12 +241,10 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                         <button
                             type="submit"
                             className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-hover-purple duration-150 hover:scale-105"
+                            onClick={handleSubmit}
                         >{eventData ? 'Edit' : 'Submit'}</button>
                     </div>
                 </div>
-
-
-            </form>
         </Modal>
 
     );
