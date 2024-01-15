@@ -33,7 +33,7 @@ function Register() {
         // if email is not valid or password is not valid
         else if (!values.email.includes('@') || values.password.length <6) {
               setError(true);
-            setErrorMessage("Vul een geldig emailadres en wachtwoord in Wachtwoord moet minimaal 6 tekens bevatten Email moet een @ bevatten");
+            setErrorMessage("Vul een geldig emailadres en wachtwoord in. Wachtwoord moet minimaal 6 tekens bevatten. Email moet een @ bevatten.");
             return;
         }
 
