@@ -12,6 +12,7 @@ function Login() {
 
     const [TFAContainer, setTFAContainer] = useState(false);
     const [TFATimer, setTFATimer] = useState(true);
+    const [TFATimerResend, setTFATimerResend] = useState(false);
     const [TFACode, setTFACode] = useState('');
     const initialTFAInputValues = ['', '', '', '', '', ''];
     const [TFAInputValues, setTFAInputValues] = useState(initialTFAInputValues);
@@ -53,14 +54,21 @@ function Login() {
         }, 300000); // 5 min timer for the code or the user has to request a new code
     }
 
+    const setTimerTenSeconds = async () => {
+        setTFATimerResend(true);
+
+        setTimeout(() => {
+            setTFATimerResend(false);
+        }, 10000); // 10 sec timer for the code or the user has to request a new code
+    }
+
     const ResendMail = async () => {
         setTFAInputValues(initialTFAInputValues);
 
-        if (!TFATimer) {
+        if (!TFATimerResend) {
             sendEmail();
             return;
         }
-        return;
     }
 
 
@@ -73,6 +81,7 @@ function Login() {
         setError(false);
 
         setTFACode(mailOptions.Code);
+        setTimerTenSeconds();
         setTimer();
 
         await axios.post(process.env.REACT_APP_API_URL + `/send-email`, mailOptions)

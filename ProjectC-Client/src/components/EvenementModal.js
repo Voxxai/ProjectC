@@ -148,10 +148,10 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             // Form has been closed, reset the date and time
             setFormData(prevData => ({
                 ...prevData,
-                ...getRoundedDateTime(),
+                ...(eventData ? {} : getRoundedDateTime()), // Only reset if creating a new event
             }));
         }
-    }, [isOpen]);
+    }, [isOpen, eventData]);
 
     return (
 

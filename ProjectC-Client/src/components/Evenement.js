@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
-import { faMapMarkerAlt, faClock, faPeopleGroup, faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faClock, faPeopleGroup, faHeart as solidHeart, faTrash, faPencil, faPenAlt, faPencilSquare, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import EvenementInfoModal from '../components/EvenementInfoModal';
 import EvenementModal from '../components/EvenementModal';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
@@ -193,8 +193,12 @@ function Evenement({ id, title, date, time, description, location, level, curren
                 <h3 className="text-2xl grow font-semibold mb-1">{title}</h3>
                 {isAdmin && !isPastEvent && (
                     <div className='flex gap-x-2 flex-row '>
-                        <button className="text-red-900 bg-purple-400 bg-opacity-75 rounded-md py-0.5 px-1" onClick={() => { openModalWithEventData(eventData); }}>Edit</button>
-                        <button className="text-red-900 bg-red-400 bg-opacity-75 rounded-md py-0.5 px-1" onClick={() => deleteEvent(id)}>Delete</button>
+                        <button className=" py-0.5 px-1" onClick={() => { openModalWithEventData(eventData); }}>
+                            <FontAwesomeIcon icon={faPencilAlt} className='w-4 h-4 text-blue-600 hover:scale-110 duration-150' />
+                        </button>
+                        <button className=" py-0.5 px-1" onClick={() => deleteEvent(id)}>
+                            <FontAwesomeIcon icon={faTrash} className="w-4 h-4 text-red-500 hover:scale-110 duration-150" />
+                        </button>
                     </div>
                 )}
                 <div className="text-md w-2/3 text-gray-500 grow gap-x-2 flex truncate flex-row">
