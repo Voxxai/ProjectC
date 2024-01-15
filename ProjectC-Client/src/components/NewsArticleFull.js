@@ -41,11 +41,12 @@ function NewsArticleFull({ id, title, description, onBackClick, creation_time, i
         />
       )}
 
-      <div className="text-cavero-purple text-3xl font-semibold mt-4">
+      <div className="text-cavero-purple text-3xl font-semibold mt-4" style={{ overflowWrap: 'break-word' }}>
         {title}
       </div>
       <div
         className="text-zinc-500 text-base mt-4"
+        style={{ overflowWrap: 'break-word' }}
         dangerouslySetInnerHTML={{ __html: description }}
       />
 
