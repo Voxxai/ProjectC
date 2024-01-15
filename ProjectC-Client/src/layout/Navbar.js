@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faCalendarDays, faChevronLeft, faDashboard, faHome, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import LogoIcon from '../images/Cavero_Icon_BW.png';
 
-function Navbar({ openNavbar, toggleOpen, toggleClose}) {
+function Navbar({ openNavbar, toggleOpen, toggleClose, handleBellPress }) {
   // const [open, setOpen] = useState(false);
   const Menus = [
     { title: "Week Overzicht", src: faHome, link: "/" },
@@ -41,7 +41,14 @@ function Navbar({ openNavbar, toggleOpen, toggleClose}) {
             </h1>
           </div>
           {Menus.map((Menu, index) => (
-            <Link to={Menu.link} className="no-underline" key={index} onClick={toggleClose}>
+            <Link to={Menu.link} className="no-underline" key={index} onClick={() => {
+              if (Menu.title === "Nieuws") {
+                handleBellPress();
+                toggleClose();
+              } else {
+                toggleClose();
+              }
+            }}>
               <li
                 className={`flex h-16 min-w-max rounded-md mx-2 p-3 cursor-pointer hover:bg-cavero-hover-purple text-white text-large items-center gap-x-4 relative max-sm:${!openNavbar ? "hidden" : ""}`}
               >

@@ -16,13 +16,12 @@ import {
 import LogoIcon from '../images/Cavero_Icon_BW.png';
 import useAuth from '../hooks/useAuth';
 
-function Topbar({ openNavbar, toggleOpen}) {
+function Topbar({ openNavbar, toggleOpen, handleBellPress, bellPressed, setBellPressed }) {
   const { auth } = useAuth();
   const navigate = useNavigate();
   const settingMenu = useRef(null);
   const [open, setOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
-  const [bellPressed, setBellPressed] = useState(false);
   const location = useLocation();
 
   const Menus = [
@@ -61,10 +60,6 @@ function Topbar({ openNavbar, toggleOpen}) {
         navigate('/Login');
       }
     });
-  };
-
-  const handleBellPress = () => {
-    setBellPressed(true);
   };
 
   const setTitle = () => {
