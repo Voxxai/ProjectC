@@ -11,27 +11,30 @@ function Evenementen() {
   const { auth } = useAuth();
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [submissionStatus, setSubmissionStatus] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
   const [selectedDropdownOption, setSelectedDropdownOption] = useState('Toekomstig');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const isAdmin = auth.Level === 3;
   const today = new Date();
+  today.setSeconds(0);
+  today.setMilliseconds(0);
+  today.toISOString();
 
   useEffect(() => {
     fetchEventsData();
-  }, [submissionStatus]);
+  }, [refreshTrigger, isModalOpen]);
 
 
   const fetchEventsData = async () => {
     try {
       const response = await axios.get(process.env.REACT_APP_API_URL + '/events');
       const eventsWithParticipants = await Promise.all(response.data.map(async (event) => {
-        const participants = await amountOfParticipants(event);
+        const participantsResponse = await axios.get(process.env.REACT_APP_API_URL + `/event_users/${event.ID}`);
         return {
           ...event,
-          participants: participants,
+          participants: participantsResponse.data,
         };
       }));
       setEvents(eventsWithParticipants);
@@ -40,23 +43,14 @@ function Evenementen() {
     }
   };
 
-  const amountOfParticipants = async (event) => {
-    try {
 
-      const response = await axios.get(process.env.REACT_APP_API_URL + `/event_users/${event.ID}`);
-      return response.data.length;
-    } catch (error) {
-      console.error('Error fetching data: ', error);
-      return 0; // Handle the error by returning a default value
-    }
-  };
 
   const closeModal = (shouldReload) => {
     setIsModalOpen(false);
 
 
     if (shouldReload) {
-      setSubmissionStatus(Date.now());
+      setRefreshTrigger(prevState => !prevState);
     }
   };
 
@@ -78,6 +72,13 @@ function Evenementen() {
       document.removeEventListener('click', handleOutsideClick);
     };
   }, []);
+
+  function convertToDateAndTime(dateStr, timeStr) {
+    const date = new Date(dateStr);
+    const timeParts = timeStr.split(':').map(part => parseInt(part, 10));
+    date.setHours(timeParts[0], timeParts[1], timeParts[2]);
+    return date;
+  }
 
 
 
@@ -120,15 +121,18 @@ function Evenementen() {
           // Container for the events with inline scrolling and hidden scrollbar
           <div className="w-full h-full mb-2 rounded-md flex overflow-y-auto snap-y">
             <div className="w-full ">
-              {events.sort((a, b) => new Date(a.Date) - new Date(b.Date))
+              {events
+                .filter(event => event.Level >= 2)
                 .filter(event => {
-                  if (selectedDropdownOption === 'Toekomstig') {
-                    return new Date(event.Date) >= today;
-                  } else {
-                    return new Date(event.Date) < today;
-                  }
+                  const eventDateTime = convertToDateAndTime(event.Date, event.Time);
+                  return selectedDropdownOption === 'Toekomstig' ? eventDateTime >= today : eventDateTime < today;
                 })
-                .filter(event => { return event.Level >= 2 })
+                .sort((a, b) => {
+                  const aDateTime = convertToDateAndTime(a.Date, a.Time);
+                  const bDateTime = convertToDateAndTime(b.Date, b.Time);
+
+                  return selectedDropdownOption === 'Toekomstig' ? aDateTime - bDateTime : bDateTime - aDateTime;
+                })
                 .map((event) => (
                   <Evenement
                     key={event.ID}
@@ -140,10 +144,14 @@ function Evenementen() {
                     location={event.Location}
                     level={event.Level}
                     currentParticipants={event.participants}
+                    endJoinDate={event.EndJoinDate}
                     closeModal={closeModal}
-                    setSubmissionStatus={setSubmissionStatus}
+                    setRefreshTrigger={setRefreshTrigger}
+                    isAdmin={isAdmin}
+                    auth={auth}
                   />
-                ))}
+                ))
+              }
             </div>
           </div>
 

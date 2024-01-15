@@ -63,7 +63,7 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
 
   const DateFormatter = (date) => {
     const dateObject = new Date(date);
-    return dateObject.toLocaleDateString('nl-NL', {year: 'numeric', month: 'numeric', day: 'numeric' });
+    return dateObject.toLocaleDateString('nl-NL', { day: '2-digit', month: 'short', year: 'numeric' });
   }
 
 
