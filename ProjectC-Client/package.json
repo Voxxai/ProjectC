@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@react-email/button": "0.0.11",
@@ -21,6 +22,7 @@
     "react-datepicker": "^4.21.0",
     "react-dom": "^18.2.0",
     "react-email": "1.9.5",
+    "react-flatpickr": "^3.10.13",
     "react-modal": "^3.16.1",
     "react-scripts": "^5.0.1",
     "react-spinners": "^0.13.8",
