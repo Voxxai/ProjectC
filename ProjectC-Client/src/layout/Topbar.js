@@ -62,10 +62,6 @@ function Topbar({ openNavbar, toggleOpen, handleBellPress, bellPressed, setBellP
     });
   };
 
-  const handleBellPress = () => {
-    setBellPressed(true);
-  };
-
   const setTitle = () => {
     if (location.pathname.split("/").length - 1 > 1) {
       return location.pathname.split("/")[2];
