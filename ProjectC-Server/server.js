@@ -572,29 +572,29 @@ app.get('/checkLike/:EventId/:UserId', (req, res) => {
             res.status(500).json({ message: 'Error checking like status' });
         } else {
             if (result.length > 0) {
-                res.send(true);
+                res.json({ hasLiked: true });
             } else {
-                res.send(false);
+                res.json({ hasLiked: false });
             }
         }
     });
 });
 
-app.post('/like/:EventId/:UserId', (req, res) => {
+app.post('/like_event/:EventId/:UserId', (req, res) => {
     const { EventId, UserId } = req.params;
 
     const sql = `
         UPDATE event_users
-        SET IsLiked = TRUE
+        SET IsLiked = NOT IsLiked
         WHERE Event_ID = ? AND User_ID = ?
     `;
 
     db.query(sql, [EventId, UserId], (err, result) => {
         if (err) {
             console.log(err);
-            res.status(500).json({ message: 'Error liking the event' });
+            res.status(500).json({ message: 'Error toggling the like status of the event' });
         } else {
-            res.status(200).json({ message: 'Event liked successfully' });
+            res.status(200).json({ message: 'Event like status toggled successfully' });
         }
     });
 });
