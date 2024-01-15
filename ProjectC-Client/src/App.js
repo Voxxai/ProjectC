@@ -13,6 +13,7 @@ import Security from './pages/Security';
 import Settings from './pages/Settings';
 import EventSelector from './pages/EventSelector';
 import Morgen from './pages/Morgen';
+import ForgotPassword from './pages/ForgotPassword';
 import Register from './pages/Register';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
     <Routes>
         {/* Public Routes */}
         <Route path='/login' element={<Login />} />
+        <Route path='/forgotpassword/:id' element={<ForgotPassword />} />
         <Route path='/register' element={<Register />} />
           
         {/* Private Routes */}
@@ -31,10 +33,9 @@ function App() {
             <Route path='/morgen' element={<Morgen />} />
 
             <Route path='/instellingen' element={<Settings_Layout />}>
-              <Route path='/instellingen/profiel' element={<Profile />} />  
-              <Route path='/instellingen/security' element={<Security />} />  
-              <Route path='/instellingen/options' element={<Settings />} />  
-              {/* <Route path='/instellingen/evenementen' element={<EventSelector />} />   */}
+              <Route path='/instellingen/Profiel' element={<Profile />} />  
+              <Route path='/instellingen/Security' element={<Security />} />  
+              <Route path='/instellingen/Options' element={<Settings />} />  
             </Route>
 
           </Route> 
