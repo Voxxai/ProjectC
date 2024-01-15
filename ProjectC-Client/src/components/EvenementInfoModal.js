@@ -134,7 +134,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
                     </div>
                     <div className='flex flex-col bg-gray-100 w-full h-40 p-0.5 rounded-md overflow-y-auto gap-y-1'>
                         {event.currentParticipants.map((user, index) => (
-                            <div className='flex flex-row bg-cavero-purple-light rounded-md p-2 font-semibold cursor-pointer' key={index}>
+                            <div className='flex flex-row bg-cavero-purple-light rounded-md p-2 font-semibold' key={index}>
                                 <div className='flex flex-row place-items-center gap-x-2'>
                                     <FontAwesomeIcon icon={faUserCircle} className='text-2xl text-cavero-purple' />
                                     <div className='flex flex-col leading-4 py-1'>

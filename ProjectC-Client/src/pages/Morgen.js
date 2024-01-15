@@ -108,21 +108,28 @@ function Morgen() {
     }
 
     useEffect(() => {
+        let timeoutId1;
+        let timeoutId2;
+
         if (showNotification) {
             document.getElementById('showNotification').classList.remove('scale-0');
             document.getElementById('showNotification').classList.add('scale-100');
 
-            setTimeout(() => {
+            timeoutId1 = setTimeout(() => {
                 document.getElementById('showNotification').classList.remove('scale-100');
                 document.getElementById('showNotification').classList.add('scale-0');
             }, 7000);
 
-            setTimeout(() => {
+            timeoutId2 = setTimeout(() => {
                 setShowNotification(false); 
             },7500);
         }
 
-    return;
+        return () => {
+            // Clear the timeouts when the component is unmounted or when switching to a different page
+            clearTimeout(timeoutId1);
+            clearTimeout(timeoutId2);
+        };
         
     }, [showNotification]);
 
