@@ -620,7 +620,7 @@ app.get('/eventsregistertime/:EventId', (req, res) => {
         if (error) console.log(error);
 
         if (result.length > 0) {
-            console.log('checkEndJoinDate response:', response.data);
+            console.log('checkEndJoinDate response:', res.data);
             res.send(true);
         }
         else {

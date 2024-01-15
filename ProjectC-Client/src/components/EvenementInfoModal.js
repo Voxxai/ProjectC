@@ -10,7 +10,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
     const { auth } = useAuth();
 
     useEffect(() => {
-        reloadEventUsers(event.ID);
+        reloadEventUsers(event.id);
       }, [joined]);
 
     const closeModalAndRefresh = () => {
@@ -67,7 +67,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
         <Modal
             isOpen={isOpen}
             onRequestClose={() => closeModalAndRefresh()}
-            className="event-modal p-3 max-w-md mx-auto w-1/2 h-fit bg-white rounded shadow-lg border-2 relative outline-none"
+            className="event-modal p-3 max-w-md mx-auto w-1/2 max-sm:w-11/12 h-fit bg-white rounded shadow-lg border-2 relative outline-none"
             overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
         >
             <div className='flex flex-col gap-y-2'>
