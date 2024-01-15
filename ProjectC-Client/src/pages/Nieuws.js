@@ -118,7 +118,7 @@ function Nieuws() {
               />
             </div>
           ) : (
-            <div className='flex flex-col w-full h-full mt-4'>
+            <div className='flex flex-col w-full h-full mt-2'>
                 <div className="flex-row w-full flex flex-wrap justify-center gap-3">
                   {currentArticles.map((article) => (
                     <div key={article.id} className="cursor-pointer max-sm:w-full mb-4" onClick={() => handleArticleClick(article)}>
@@ -132,7 +132,7 @@ function Nieuws() {
                   ))}
                 </div>
 
-                <div className="flex justify-center mt-4">
+                <div className="flex justify-center mt-3">
                   {renderPagination()}
                 </div>
               </div>
