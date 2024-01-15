@@ -112,7 +112,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
     };
 
     const handleSubmit = async (e) => {
-        // e.preventDefault();
+        e.preventDefault();
 
         try {
 
@@ -188,7 +188,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
                     <div>
                         <label className="flex flex-col">
-                            Location:
+                            Locatie:
                             <input type="text" placeholder="Locatie evenement" name="location" value={formData.location} onChange={handleChange} required />
                         </label>
                     </div>
@@ -196,7 +196,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
 
                     <label className='block' for="time-input">
-                        Datum en tijd {eventData ? 'oude tijd is: ' + eventData?.date.toLocaleString('nl-NL').slice(0, -3) : ''}
+                        Datum en tijd:
 
                         <Flatpickr
                             key={formData.selectedDateTime} // Add this line
