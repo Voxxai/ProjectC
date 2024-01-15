@@ -105,7 +105,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
                 <div className='flex flex-column gap-y-2.5'>
                     <div className='flex flex-row gap-x-3 items-center'>
                         <FontAwesomeIcon icon={faCalendarDays} className='text-2xl text-cavero-purple w-5' />
-                        <span className='text-md text-gray-700 font-semibold'>{new Date(event.date).toLocaleDateString('nl-NL')}</span>
+                        <span className='text-md text-gray-700 font-semibold'>{new Date(event.date).toLocaleDateString('nl-NL', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                     </div>
                     <div className='flex flex-row gap-x-3 items-center '>
                         <FontAwesomeIcon icon={faClock} className='text-2xl text-cavero-purple gap-3 w-5' />
@@ -118,7 +118,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
                 </div>
 
 
-                <div className={`flex flex-row py-2 gap-x-2 ${event.endJoinDate ? "justify-center" : "justify-end"}`}>
+                <div className={`flex flex-row py-2 gap-x-2 justify-end`}>
                     {renderButtons()}
                 </div>
 

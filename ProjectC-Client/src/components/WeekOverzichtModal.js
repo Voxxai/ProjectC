@@ -50,7 +50,7 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
         return (
           <div className='flex gap-x-2'>
             <button className='bg-cavero-purple text-white rounded-md p-2 px-3' onClick={() => joinEvent()}>Deelnemen</button>
-            <button className='bg-gray-200 text-gray-500 rounded-md p-2 px-3' onClick={() => leaveEvent()}>Afwijzen</button>
+            {/* <button className='bg-gray-200 text-gray-500 rounded-md p-2 px-3' onClick={() => leaveEvent()}>Afwijzen</button> */}
           </div>
         )
       } else {
