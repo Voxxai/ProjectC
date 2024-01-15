@@ -32,7 +32,7 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cors({
-    origin: ["http://localhost:3000", "http://giliankranendonk.xyz"],
+    origin: ["http://localhost:3000"],
     methods: ["GET", "POST"],
     credentials: true
 }));
@@ -123,7 +123,7 @@ app.post('/forgot-password-email', (req, res) => {
             "<h1 style='color:#7F3689;'>Wachtwoord resetten</h1>" +
             "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Om uw wachtwoord te wijzigen, gelieve op de onderstaande link te klikken.</p>" +
             "<div style='text-align:center; padding:25px; background-color:#fafafa;'>" +
-            "<p style='color:black; font-size:20px; margin-bottom:25px;'><a href='" + process.env.REACT_APP_API_URL + "/forgotpassword/" + ID + "' style='padding: 10px 25px;background-color: #7f3689;color: white;border-radius: 5px;text-decoration: none;'>Nieuw wachtwoord aanmaken</a></p>" +
+            "<p style='color:black; font-size:20px; margin-bottom:25px;'><a href='" + process.env.REACT_APP_CLIENT_URL + "/forgotpassword/" + ID + "' style='padding: 10px 25px;background-color: #7f3689;color: white;border-radius: 5px;text-decoration: none;'>Nieuw wachtwoord aanmaken</a></p>" +
             "</div>" +
             "</div>" +
             "</div>" +
