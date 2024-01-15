@@ -22,37 +22,39 @@ function ForgotPassword() {
     });
 
     const handleInput = (e) => {
-        setValues(prev => ({ ...prev, [e.target.name]: [Sha1(e.target.value)] }));
+        setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
     }
 
     const CorrectPassword = () => {
-        if (values.password.length < 6) {
+        if (values.password.length < 6 && values.passwordConfirm.length < 6) {
             return false;
+        } else {
+            return true;
         }
-        
-        return true;
     }
 
     const ResetPassword = async () => {
+        let tempPassword = '';
         setError(false);
 
-        if (values.password == values.passwordConfirm) {
+        if (!CorrectPassword()) {
+            setErrorMessage('Wachtwoord moet minimaal 6 tekens bevatten.');
             setError(true);
-            setErrorMessage('Wachtwoorden komen niet overeen.');
             return;
         }
 
-        if (!CorrectPassword()) {
+        if (values.password != values.passwordConfirm) {
+            setErrorMessage('Wachtwoorden komen niet overeen.');
             setError(true);
-            setErrorMessage('Wachtwoord moet minimaal 8 tekens bevatten.');
             return;
         }
+
+        tempPassword = Sha1(values.password);
 
         try {
-            await axios.post('http://localhost:8080/resetpassword', { id: id, password: values.password })
+            await axios.post('http://localhost:8080/resetpassword', { id: id, password: tempPassword })
                     .then((response) => {
                         if (response.data.status == 'success') {
-                            console.log("JA");
                             navigate('/login');
                         } else {
                             setError(true);
@@ -85,7 +87,7 @@ function ForgotPassword() {
                             <div className='input-container mb-4'>
                                 <div className='flex relative items-center'>
                                     <FontAwesomeIcon icon={faLock} color='black' className='w-6 h-6 text-gray-500 p-1' />
-                                    <input type="password" className='w-full h-12 border-none outline-none rounded shadow-none' name='password' id="password" placeholder="Nieuw Wachtwoord" onChange={handleInput} required />
+                                    <input type="password" className='w-full h-12 border-none outline-none rounded shadow-none' name='password' id="password" placeholder="Nieuw Wachtwoord" onChange={(e) => handleInput(e)} required />
                                 </div>
                                 <div className='h-[3px] bg-cavero-purple duration-300 rounded-full ColoredLine'></div>
                             </div>
@@ -93,13 +95,13 @@ function ForgotPassword() {
                             <div className='input-container mb-4'>
                                 <div className='flex relative items-center'>
                                     <FontAwesomeIcon icon={faLock} color='black' className='w-6 h-6 text-gray-500 p-1' />
-                                    <input type="password" autocomplete="off" className='w-full h-12 border-none outline-none rounded shadow-none' name='passwordConfirm' id="passwordConfirm" placeholder="Herhaal wachtwoord" onChange={handleInput} required />
+                                    <input type="password" autocomplete="off" className='w-full h-12 border-none outline-none rounded shadow-none' name='passwordConfirm' id="passwordConfirm" placeholder="Herhaal wachtwoord" onChange={(e) => handleInput(e)} required />
                                 </div>
                                 <div className='h-[3px] bg-cavero-purple duration-300 rounded-full ColoredLine'></div>
                             </div>
 
                             <div className='flex flex-row-reverse items-center mb-3'>
-                                <button type="button" autocomplete="off" className='bg-gradient-to-r from-cavero-purple to-[#c279cc] text-white w-32 h-9 rounded-full duration-300 hover:scale-105 hover:shadow-lg' onClick={ResetPassword}>Opslaan <FontAwesomeIcon icon={faArrowRightLong} color='white' /></button>
+                                <button type="button" autocomplete="off" className='bg-gradient-to-r from-cavero-purple to-[#c279cc] text-white w-32 h-9 rounded-full duration-300 hover:scale-105 hover:shadow-lg' onClick={() => ResetPassword()}>Opslaan <FontAwesomeIcon icon={faArrowRightLong} color='white' /></button>
                             </div>
                         </div>
                     </div>

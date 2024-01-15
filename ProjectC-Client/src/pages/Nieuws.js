@@ -7,6 +7,8 @@ import axios from 'axios';
 import useAuth from '../hooks/useAuth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import Modal from '../components/CreateArticleModal';
+
 
 function Nieuws() {
   const { auth } = useAuth();
@@ -66,7 +68,7 @@ function Nieuws() {
 
   const renderPagination = () => {
     const totalPageCount = Math.ceil(news.length / articlesPerPage);
-    
+  
     const renderPageButton = (pageNumber) => (
       <button
         key={pageNumber}
@@ -83,23 +85,29 @@ function Nieuws() {
       paginationItems.push(renderPageButton(i));
     }
   
-    return paginationItems;
-  };
+    return (
+      <div className="flex overflow-x-auto">
+        {paginationItems}
+      </div>
+    );
+  };  
 
   return (
     <div className="w-full h-full max-h-full px-4 self-center overflow-y-hidden md:flex md:flex-wrap justify-center text-cavero-purple bg-slate-100">
       <div className="flex flex-col w-full max-h-full h-full overflow-y-hidden gap-2">
         <div className="w-full flex flex-row-reverse items-center justify-between">
-          <button className="flex flex-row gap-x-1.5 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100" onClick={openModal}>
-            <span>Nieuwsbericht aanmaken</span>
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </button>
+          {(auth.Level === 2 || auth.Level === 3) && (
+            <button className="flex flex-row gap-x-1.5 items-center bg-cavero-purple p-1.5 px-2.5 text-white rounded-b hover:bg-cavero-hover-purple duration-100" onClick={openModal}>
+              <span>Nieuwsbericht aanmaken</span>
+              <FontAwesomeIcon icon={faPenToSquare} />
+            </button>
+          )}
         </div>
 
         <div className="w-full h-full mb-2 rounded-md flex overflow-y-auto">
           {isModalOpen && <CreateArticleModal onClose={closeModal} />}
           {selectedArticle ? (
-            <div className="flex justify-center mx-auto w-full">
+            <div className="flex justify-center mx-auto max-w-1/2 max-md:w-full mt-4">
               {/* Single Article */}
               <NewsArticleFull
                 id={selectedArticle.id}
@@ -110,10 +118,10 @@ function Nieuws() {
               />
             </div>
           ) : (
-            <div className='flex flex-col w-full h-full'>
-                <div className="flex-row w-full flex flex-wrap justify-center gap-4">
+            <div className='flex flex-col w-full h-full mt-4'>
+                <div className="flex-row w-full flex flex-wrap justify-center gap-3">
                   {currentArticles.map((article) => (
-                    <div key={article.id} className="cursor-pointer max-sm:w-full" onClick={() => handleArticleClick(article)}>
+                    <div key={article.id} className="cursor-pointer max-sm:w-full mb-4" onClick={() => handleArticleClick(article)}>
                       <NewsArticle
                         title={article.title}
                         description={article.description}
@@ -124,14 +132,15 @@ function Nieuws() {
                   ))}
                 </div>
 
-                <div className="flex justify-center ">
+                <div className="flex justify-center mt-4">
                   {renderPagination()}
                 </div>
               </div>
           )}
+        </div>
       </div>
+      <Modal isOpen={isModalOpen} onRequestClose={closeModal} />
     </div>
-  </div>
   );
 }
 

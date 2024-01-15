@@ -1,20 +1,31 @@
 import React from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import useAuth from '../hooks/useAuth';
-import EditArticleModal from './EditArticleModal';
+import Modal from './EditArticleModal';
 
 function NewsArticleFull({ id, title, description, onBackClick, creation_time, image }) {
   const { auth } = useAuth();
-  const [isEditModalOpen, setEditModalOpen] = React.useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   const handleEditClick = () => {
     setEditModalOpen(true);
   };
 
+  const openModal = () => {
+    setEditModalOpen(true);
+  };
+  
+  const closeModal = () => {
+    setEditModalOpen(false);
+  
+    // setSubmissionStatus(Date.now());
+  };
+
   return (
-    <div className="max-md:w-full w-1/2 relative">
-      <div className='flex flex-row justify-between items-center'>
+    <div className="w-[640px] relative max-md:w-full">
+      <div className='flex flex-row justify-between items-center overflow-y-auto'>
         <button
           onClick={onBackClick}
           className="text-cavero-purple py-1 mb-2 md:mb-0 text-xl font-medium"
@@ -41,19 +52,19 @@ function NewsArticleFull({ id, title, description, onBackClick, creation_time, i
         />
       )}
 
-      <div className="text-cavero-purple text-3xl font-semibold mt-4">
+      <div className="text-cavero-purple text-3xl font-semibold mt-4" style={{ overflowWrap: 'break-word' }}>
         {title}
       </div>
-      <div className="text-zinc-500 text-base mt-4">{description}</div>
+      <div
+        className="text-zinc-500 text-base mt-4"
+        style={{ overflowWrap: 'break-word' }}
+        dangerouslySetInnerHTML={{ __html: description }}
+      />
 
       {isEditModalOpen && (
-        <EditArticleModal
-          id={id}
-          title={title}
-          description={description}
-          onClose={() => setEditModalOpen(false)}
-        />
+        <Modal isOpen={isEditModalOpen} onRequestClose={closeModal} id={id} title={title} description={description} />
       )}
+      
     </div>
   );
 }
