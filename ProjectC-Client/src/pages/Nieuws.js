@@ -7,6 +7,8 @@ import axios from 'axios';
 import useAuth from '../hooks/useAuth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import Modal from '../components/CreateArticleModal';
+
 
 function Nieuws() {
   const { auth } = useAuth();
@@ -137,6 +139,7 @@ function Nieuws() {
           )}
         </div>
       </div>
+      <Modal isOpen={isModalOpen} onRequestClose={closeModal} />
     </div>
   );
 }

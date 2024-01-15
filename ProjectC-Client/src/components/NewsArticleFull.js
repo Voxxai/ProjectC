@@ -1,15 +1,26 @@
 import React from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import useAuth from '../hooks/useAuth';
-import EditArticleModal from './EditArticleModal';
+import Modal from './EditArticleModal';
 
 function NewsArticleFull({ id, title, description, onBackClick, creation_time, image }) {
   const { auth } = useAuth();
-  const [isEditModalOpen, setEditModalOpen] = React.useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   const handleEditClick = () => {
     setEditModalOpen(true);
+  };
+
+  const openModal = () => {
+    setEditModalOpen(true);
+  };
+  
+  const closeModal = () => {
+    setEditModalOpen(false);
+  
+    // setSubmissionStatus(Date.now());
   };
 
   return (
@@ -51,13 +62,9 @@ function NewsArticleFull({ id, title, description, onBackClick, creation_time, i
       />
 
       {isEditModalOpen && (
-        <EditArticleModal
-          id={id}
-          title={title}
-          description={description}
-          onClose={() => setEditModalOpen(false)}
-        />
+        <Modal isOpen={isEditModalOpen} onRequestClose={closeModal} id={id} title={title} description={description} />
       )}
+      
     </div>
   );
 }

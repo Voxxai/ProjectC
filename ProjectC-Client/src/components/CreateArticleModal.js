@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import Modal from 'react-modal';
 
-function CreateArticleModal({ onClose }) {
+function CreateArticleModal({ isOpen, onRequestClose }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [photo, setPhoto] = useState(null);
@@ -43,16 +44,20 @@ function CreateArticleModal({ onClose }) {
         },
       });
 
-      onClose();
+      onRequestClose();
     } catch (error) {
       console.error('Error inserting data: ', error);
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-1">
-      <div className="p-3 max-w-xl mx-auto bg-white rounded shadow-lg border-2 relative outline-none w-11/12">
-        <button className='flex justify-end' onClick={onClose}>
+    <Modal 
+      isOpen={isOpen} 
+      onRequestClose={onRequestClose} 
+      contentLabel="Example Modal"
+      className="event-modal p-3 max-w-2xl mx- max-sm:w-11/12 bg-white rounded shadow-lg border-2 relative outline-none w-1/4"
+      overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+        <button className='flex justify-end' onClick={onRequestClose}>
           <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1'/>
         </button>
         <h2 className="text-2xl font-semibold mb-6 text-cavero-purple">Nieuwsartikel</h2>
@@ -101,14 +106,13 @@ function CreateArticleModal({ onClose }) {
             Aanmaken
           </button>
           <button
-            onClick={onClose}
+            onClick={onRequestClose}
             className="ml-2 text-cavero-purple hover:underline"
           >
             Sluiten
           </button>
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 }
 
