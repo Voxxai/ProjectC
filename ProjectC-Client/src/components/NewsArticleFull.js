@@ -44,7 +44,10 @@ function NewsArticleFull({ id, title, description, onBackClick, creation_time, i
       <div className="text-cavero-purple text-3xl font-semibold mt-4">
         {title}
       </div>
-      <div className="text-zinc-500 text-base mt-4">{description}</div>
+      <div
+        className="text-zinc-500 text-base mt-4"
+        dangerouslySetInnerHTML={{ __html: description }}
+      />
 
       {isEditModalOpen && (
         <EditArticleModal
