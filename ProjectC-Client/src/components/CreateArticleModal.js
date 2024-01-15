@@ -55,7 +55,7 @@ function CreateArticleModal({ isOpen, onRequestClose }) {
       isOpen={isOpen} 
       onRequestClose={onRequestClose} 
       contentLabel="Example Modal"
-      className="event-modal p-3 max-w-2xl mx- max-sm:w-11/12 bg-white rounded shadow-lg border-2 relative outline-none w-1/4"
+      className="event-modal p-3 max-w-3xl mx- max-sm:w-11/12 bg-white rounded shadow-lg border-2 relative outline-none w-1/4"
       overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
         <button className='flex justify-end' onClick={onRequestClose}>
           <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1'/>
@@ -70,7 +70,7 @@ function CreateArticleModal({ isOpen, onRequestClose }) {
                 setTitle(e.target.value);
                 setTitleError('');
               }}
-              className={`w-full p-3 rounded-md ${titleError ? 'border-red-500 bg-red-100' : ''}`}
+              className={`${titleError ? 'border-red-500 bg-red-100' : ''}`}
             />
             {titleError && <p className="text-red-500">{titleError}</p>}
           </label>
