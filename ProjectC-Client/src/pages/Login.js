@@ -308,6 +308,7 @@ function Login() {
                 .then(response => {
                     if (response.data.status === 200) {
                         console.log('Email sent');
+                        navigate('/login');
                     }
                 });
         } catch (err) {
