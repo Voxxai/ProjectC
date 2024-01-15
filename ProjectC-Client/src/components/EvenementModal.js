@@ -8,6 +8,8 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
@@ -113,6 +115,12 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!formData.title || !formData.summary || !formData.location || !formData.date || !formData.time) {
+            setError(true);
+            setErrorMessage("Vul alle velden in");
+            return;
+        }
+        
         try {
 
             if (eventData) {
@@ -168,6 +176,10 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             </button>
             <h2 className="text-2xl text-gray-700 font-semibold mb-4">{eventData ? 'Edit Event' : 'Voeg evenement toe'}</h2>
 
+            <div className={`bg-red-200 h-13 rounded flex mb-3 ${!error && 'hidden'}`}>
+                <p className='text-black my-auto p-2 text-sm'>{errorMessage}</p>
+            </div>
+            
             <div className='flex flex-col gap-y-3 w-full'>
                 <div>
                     <label className="block">
