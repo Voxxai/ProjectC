@@ -44,7 +44,6 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/like_event/${eventId}/${auth.ID}`);
             setHasLiked(response.data.hasLiked);
 
-            console.log(response.data);
         } catch (error) {
             console.error(error);
         }
