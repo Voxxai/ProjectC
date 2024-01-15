@@ -165,6 +165,7 @@ function Evenementen() {
                     location={event.Location}
                     level={event.Level}
                     currentParticipants={event.participants}
+                    endJoinDate={event.EndJoinDate}
                     closeModal={closeModal}
                     setRefreshTrigger={setRefreshTrigger}
                     isAdmin={isAdmin}

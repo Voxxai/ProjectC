@@ -322,6 +322,27 @@ app.post('/insert_event', (req, res) => {
     });
 });
 
+app.post('/edit_event/:id', (req, res) => {
+    console.log
+    const { title, date, time, summary, location, level, endJoinDate } = req.body;
+    const { id } = req.params;
+    console.clear();
+    console.log(id);
+    console.log(req.body);
+
+
+    const sql = 'UPDATE events SET Title = ?, Date = ?, Time = ?, Description = ?, Location = ?, Level = ?, EndJoinDate = ? WHERE id = ?';
+    db.query(sql, [title, date, time, summary, location, level, endJoinDate, id], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error updating event data' });
+        } else {
+            res.status(200).json({ message: 'Event data updated successfully' });
+        }
+    });
+});
+
+
 app.get('/events', (request, response) => {
     db.query("SELECT * FROM events", (error, result) => {
         if (error) {
@@ -518,7 +539,6 @@ app.get('/countLikes/:EventId', (req, res) => {
 
 app.get('/eventsregistertime/:EventId', (req, res) => {
     db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
-        console.log("\n\n\n\n\n")
         if (error) console.log(error);
 
         if (result.length > 0) {

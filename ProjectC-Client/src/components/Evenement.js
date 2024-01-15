@@ -8,7 +8,7 @@ import EvenementModal from '../components/EvenementModal';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 
 
-function Evenement({ id, title, date, time, description, location, level, maxParticipants, currentParticipants, setRefreshTrigger, isAdmin, auth }) {
+function Evenement({ id, title, date, time, description, location, level, maxParticipants, currentParticipants, setRefreshTrigger, isAdmin, auth, endJoinDate }) {
 
 
     const eventData = {
@@ -21,6 +21,7 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
         level: level,
         maxParticipants: maxParticipants,
         currentParticipants: currentParticipants,
+        endJoinDate: endJoinDate,
     }
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +29,6 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
     const [Joined, setJoined] = useState(false);
     const [likes, setLikes] = useState(0);
     const [hasLiked, setHasLiked] = useState(false);
-    const [endJoinDate, setEndJoinDate] = useState(false);
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [modalEventData, setModalEventData] = useState(null);
 
@@ -85,19 +85,6 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
         }
     }
 
-    async function checkEndJoinDate(id) {
-        await axios.get(`http://localhost:8080/eventsregistertime/${id}`)
-            .then((response) => {
-                if (response.data === true) {
-                    setEndJoinDate(true)
-                }
-                else {
-                    setEndJoinDate(false)
-                }
-            }, (error) => {
-                console.log(error);
-            });
-    }
 
     async function toggleLike() {
         try {
@@ -201,7 +188,7 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
                 )}
             </div>
             <div className="flex justify-center w-1/6">
-                <button onClick={() => { openModal(); checkIfJoined(eventData.id); checkEndJoinDate(eventData.id) }} className="bg-cavero-purple w-4/5 text-white text-base rounded-md self-center p-1 hover:bg-cavero-purple-dark truncate">meer info</button>
+                <button onClick={() => { openModal(); checkIfJoined(eventData.id) }} className="bg-cavero-purple w-4/5 text-white text-base rounded-md self-center p-1 hover:bg-cavero-purple-dark truncate">meer info</button>
             </div>
             <EvenementInfoModal
                 isOpen={isModalOpen}
@@ -211,6 +198,7 @@ function Evenement({ id, title, date, time, description, location, level, maxPar
                 setJoined={setJoined}
                 isPastEvent={isPastEvent}
                 setRefreshTrigger={setRefreshTrigger}
+
             />
             <EvenementModal isOpen={isEditModalOpen} onRequestClose={closeEditModal} eventData={modalEventData} />
         </div>
