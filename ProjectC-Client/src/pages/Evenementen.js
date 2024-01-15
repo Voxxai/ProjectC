@@ -16,6 +16,7 @@ function Evenementen() {
   const [selectedDropdownOption, setSelectedDropdownOption] = useState('Toekomstig');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const counter = 0;
 
   const isAdmin = auth.Level === 3;
   const today = new Date();
@@ -25,16 +26,6 @@ function Evenementen() {
 
   useEffect(() => {
     fetchEventsData();
-
-    // Fetch the events data every 30 seconds
-    const intervalId = setInterval(() => {
-      if (!isModalOpen) {
-        fetchEventsData();
-      }
-    }, 15000);
-
-    // Clear the interval when the component is unmounted
-    return () => clearInterval(intervalId);
   }, [refreshTrigger, isModalOpen]);
 
 

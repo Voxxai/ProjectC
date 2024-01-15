@@ -8,9 +8,6 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
-    console.clear();
-   
-    
 
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
