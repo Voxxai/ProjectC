@@ -9,7 +9,8 @@ import 'flatpickr/dist/themes/dark.css';
 
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
     console.clear();
-    console.log(eventData + "eventData");
+   
+    
 
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
@@ -132,7 +133,9 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         }
     }, [isOpen]);
 
-    console.log("hallo: " + formData.date);
+
+    const newdate = formData.date.split(' ')[0]; 
+    
     return (
 
         <Modal
@@ -159,7 +162,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
                     <div>
                         <label className="flex flex-col">
-                            Beschrijving:
+                            Beschrijving: 
                             <textarea name="summary" placeholder='beschrijf het evenement' value={formData.summary} onChange={handleChange} required />
                         </label>
                     </div>
@@ -172,9 +175,10 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                     </div>
 
 
-
+                    
                     <label className='block' for="time-input">
                         Datum en tijd:
+                        
                         <Flatpickr
                             data-enable-time
                             options={{
@@ -183,10 +187,10 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                                 time_24hr: true,
                                 minuteIncrement: 5,
                                 minDate: formData.date && formData.time ?
-                                    new Date(`${formData.date.split("T")[0]}T${formData.time}`) : roundToNearestMinutes(new Date(), 5),
+                                    new Date(`${formData.date.split('-')[2]}-${formData.date.split('-')[1]}-${formData.date.split('-')[0]}T${formData.time}`) : roundToNearestMinutes(new Date(), 5),
                             }}
                             value={formData.date && formData.time ?
-                                new Date(`${formData.date.split("T")[0]}T${formData.time}`) : roundToNearestMinutes(new Date(), 5)}
+                                new Date(`${formData.date.split('-')[2]}-${formData.date.split('-')[1]}-${formData.date.split('-')[0]}T${formData.time}`) : roundToNearestMinutes(new Date(), 5)}
                             onChange={handleDateTimeChange}
                         />
                     </label>
