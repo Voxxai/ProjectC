@@ -121,11 +121,11 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                 formData.date = tempDate.getFullYear() + '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getDate();
                 // formData.date = formData.date.split('T')[0];
                 formData.endJoinDate = formData.endJoinDate.replace('T', ' ').slice(0, -5);
-                await axios.post(`http://localhost:8080/edit_event/${eventData.id}`, formData);
+                await axios.post(process.env.REACT_APP_API_URL + `/edit_event/${eventData.id}`, formData);
               
             } else {
                 // If eventData does not exist, make a POST request to the insert_event endpoint
-                await axios.post('http://localhost:8080/insert_event', formData);
+                await axios.post(process.env.REACT_APP_API_URL + '/insert_event', formData);
             } console.log('Form data submitted:', formData);
             onRequestClose(true); // Pass true to indicate successful submission
 
