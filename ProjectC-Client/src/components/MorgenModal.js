@@ -26,6 +26,7 @@ function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
     ["Vrijdag"],
   ];
 
+  // Get all dates of the week
   const getAllDatesOfWeek = () => {
     let dates = [];
     let date = new Date();
@@ -50,10 +51,11 @@ function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
     return Math.ceil(days / 7);
 };
 
+  // Trying to get possible values to set the select values
   const getPossibleValues = async () => {
     await axios.get(process.env.REACT_APP_API_URL + `/get-employee-schedule/${auth.ID}`).then((response) => {
       setWeekValues({
-        Dag0: response.data[0]?.Monday ?? null,
+        Dag0: response.data[0]?.Monday ?? null, // If null, set to null
         Dag1: response.data[0]?.Tuesday ?? null,
         Dag2: response.data[0]?.Wednesday ?? null,
         Dag3: response.data[0]?.Thursday ?? null,
@@ -62,6 +64,7 @@ function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
     });
   }
 
+  // load everything
   useEffect(() => {
     getPossibleValues();
     setWeekDates(getAllDatesOfWeek().map((date) => {
@@ -91,10 +94,13 @@ function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
       Friday: weekValues.Dag4
     }).then((response) => {
       
+      // Reset everything
       setChanged(false);
+      // Timeout to show loading icon
       setTimeout(() => {
         setLoading(false);
         
+        // Another timeout to close the modal and show notification
         setTimeout(() => {
           onRequestClose();
           toggleNotification();
