@@ -8,6 +8,8 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
+    console.clear();
+    console.log(eventData + "eventData");
 
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
@@ -27,7 +29,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         endJoinDate.setHours(endJoinDate.getHours() - 2); // Subtract 2 hours
 
         return {
-            date: roundedDate.toISOString().split('T')[0],
+            date: formatDate(roundedDate),
             time: roundedDate.toTimeString().split(' ')[0].slice(0, 5),
             endJoinDate: formatDate(endJoinDate),
         };
@@ -70,7 +72,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         value.setSeconds(0); // Set the seconds to 00
         setFormData((prevData) => ({
             ...prevData,
-            date: value.toISOString().split('T')[0], // Get the date part
+            date: value.split('T')[0], // Get the date part
             time: value.toTimeString().split(' ')[0].slice(0, 5), // Get the time part
         }));
     };
@@ -79,12 +81,12 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         const value = date[0];
         value.setSeconds(0); // Set the seconds to 00
 
-        // Format the date as a string in the format 'YYYY-MM-DD HH:MM:00'
-        const formattedDate = `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')} ${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}:00`;
+        // Format the date and time as a string in the format 'YYYY-MM-DD HH:MM:SS'
+        const formattedDateTime = `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')} ${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}:00`;
 
         setFormData((prevData) => ({
             ...prevData,
-            endJoinDate: formattedDate,
+            endJoinDate: formattedDateTime,
         }));
     };
 
@@ -92,8 +94,18 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         e.preventDefault();
 
         try {
-            await axios.post('http://localhost:8080/insert_event', formData);
-            console.log('Form data submitted:', formData);
+
+            if (eventData) {
+                // If eventData exists, make a PUT request to the edit_event endpoint
+                formData.date = formData.date.split('T')[0];
+                formData.endJoinDate = formData.endJoinDate.replace('T', ' ').slice(0, -5);
+                console.log(formData);
+                debugger;
+                await axios.post(`http://localhost:8080/edit_event/${eventData.id}`, formData);
+            } else {
+                // If eventData does not exist, make a POST request to the insert_event endpoint
+                await axios.post('http://localhost:8080/insert_event', formData);
+            } console.log('Form data submitted:', formData);
             onRequestClose(true); // Pass true to indicate successful submission
 
             // Reset the form data
@@ -120,10 +132,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         }
     }, [isOpen]);
 
-    console.clear();
-    console.log("\n\n\n\n")
-    console.log(formData);
-
+    console.log("hallo: " + formData.date);
     return (
 
         <Modal
@@ -173,7 +182,8 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                                 enableTime: true,
                                 time_24hr: true,
                                 minuteIncrement: 5,
-                                minDate: formData.date && formData.time ? new Date(`${formData.date}T${formData.time}`) : roundToNearestMinutes(new Date(), 5),
+                                minDate: formData.date && formData.time ?
+                                    new Date(`${formData.date.split("T")[0]}T${formData.time}`) : roundToNearestMinutes(new Date(), 5),
                             }}
                             value={formData.date && formData.time ?
                                 new Date(`${formData.date.split("T")[0]}T${formData.time}`) : roundToNearestMinutes(new Date(), 5)}
@@ -190,9 +200,9 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                                 enableTime: true,
                                 time_24hr: true,
                                 minuteIncrement: 5,
-                                minDate: formData.endJoinDate ? new Date(formData.endJoinDate) : roundToNearestMinutes(new Date(), 5),
+                                minDate: formData.endJoinDate ? new Date(formData.endJoinDate.replace(' ', 'T')) : roundToNearestMinutes(new Date(), 5),
                             }}
-                            value={formData.endJoinDate ? new Date(formData.endJoinDate) : roundToNearestMinutes(new Date(), 5)}
+                            value={formData.endJoinDate ? new Date(formData.endJoinDate.replace(' ', 'T')) : roundToNearestMinutes(new Date(), 5)}
                             onChange={handleEndJoinDateChange}
                         />
                     </label>
@@ -200,8 +210,8 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
                     <div className='flex'>
                         <label className="flex flex-row gap-x-2 text-gray-500 accent-cavero-purple">
-                            <input type="checkbox" name="level" value={formData.level} onChange={handleCheckbox} />
-                            Dit is een belangrijke gebeurtenis
+                            <input type="checkbox" name="level" value={formData.level} onChange={handleCheckbox} checked={formData.level === 3} />
+                            Is dit een belangrijke gebeurtenis?
                         </label>
                     </div>
 
@@ -209,7 +219,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                         <button
                             type="submit"
                             className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-hover-purple duration-150 hover:scale-105"
-                        >Submit</button>
+                        >{eventData ? 'Edit' : 'Submit'}</button>
                     </div>
                 </div>
 
