@@ -8,9 +8,6 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
-    console.clear();
-
-
 
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
@@ -100,8 +97,6 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                 // If eventData exists, make a PUT request to the edit_event endpoint
                 formData.date = formData.date.split('T')[0];
                 formData.endJoinDate = formData.endJoinDate.replace('T', ' ').slice(0, -5);
-                console.log(formData);
-                debugger;
                 await axios.post(`http://localhost:8080/edit_event/${eventData.id}`, formData);
             } else {
                 // If eventData does not exist, make a POST request to the insert_event endpoint

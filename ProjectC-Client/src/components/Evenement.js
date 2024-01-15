@@ -97,8 +97,50 @@ function Evenement({ id, title, date, time, description, location, level, curren
         }
     }
 
+    const GetAllEmailsOfEvent = async (id) => {
+        let newList = [];
+        try {
+            await axios.get(`http://localhost:8080/event_users/${id}`).then(response => {
+                response.data.forEach(element => {
+                    newList.push(element.Email);
+                });
+            });
+
+            
+        } catch (error) {
+            console.error('Error getting emails: ', error);
+        }
+        
+        return newList;
+    }
+
+    async function sendEmail(EmailList) {
+        for (let index = 0; index < EmailList.length; index++) {
+            if (EmailList[index] === 'admin') {
+                EmailList.splice(index, 1);
+            }
+        }
+        const mailOptions = {
+            EventTitle: title,
+            Emails: EmailList,
+        };
+
+        try {
+            const response = await axios.post(`http://localhost:8080/event-delete-email`, mailOptions)
+                if (response.status === 200) {
+                    console.log('Email sent successfully!');
+                }
+        }
+        catch (error) {
+            console.error('Error sending email: ', error);
+        }
+    }
+
     async function deleteEvent(id) {
         try {
+            const emails = await GetAllEmailsOfEvent(id);
+            await sendEmail(emails);
+
             const response = await axios.post(`http://localhost:8080/delete_event/${id}`);
             if (response.status === 200) {
                 setRefreshTrigger(prevState => prevState + 1);
