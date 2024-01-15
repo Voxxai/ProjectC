@@ -8,7 +8,7 @@ import axios, { all } from 'axios';
 import useAuth from '../hooks/useAuth';
 
 
-function MorgenModal({isOpen, onRequestClose, }) {
+function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
   const { auth } = useAuth();
   const [ weekValues, setWeekValues ] = useState({});
   const [ isDisabled, setIsDisabled ] = useState({});
@@ -26,6 +26,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
     ["Vrijdag"],
   ];
 
+  // Get all dates of the week
   const getAllDatesOfWeek = () => {
     let dates = [];
     let date = new Date();
@@ -50,10 +51,11 @@ function MorgenModal({isOpen, onRequestClose, }) {
     return Math.ceil(days / 7);
 };
 
+  // Trying to get possible values to set the select values
   const getPossibleValues = async () => {
-    await axios.get(`http://localhost:8080/get-employee-schedule/${auth.ID}`).then((response) => {
+    await axios.get(process.env.REACT_APP_API_URL + `/get-employee-schedule/${auth.ID}`).then((response) => {
       setWeekValues({
-        Dag0: response.data[0]?.Monday ?? null,
+        Dag0: response.data[0]?.Monday ?? null, // If null, set to null
         Dag1: response.data[0]?.Tuesday ?? null,
         Dag2: response.data[0]?.Wednesday ?? null,
         Dag3: response.data[0]?.Thursday ?? null,
@@ -62,6 +64,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
     });
   }
 
+  // load everything
   useEffect(() => {
     getPossibleValues();
     setWeekDates(getAllDatesOfWeek().map((date) => {
@@ -82,7 +85,7 @@ function MorgenModal({isOpen, onRequestClose, }) {
     // console.log(weekValues);
 
     // Send request
-    await axios.post('http://localhost:8080/scheduleweek', {
+    await axios.post(process.env.REACT_APP_API_URL + '/scheduleweek', {
       Account_ID: auth.ID,
       Monday: weekValues.Dag0,
       Tuesday: weekValues.Dag1,
@@ -91,9 +94,17 @@ function MorgenModal({isOpen, onRequestClose, }) {
       Friday: weekValues.Dag4
     }).then((response) => {
       
+      // Reset everything
       setChanged(false);
+      // Timeout to show loading icon
       setTimeout(() => {
         setLoading(false);
+        
+        // Another timeout to close the modal and show notification
+        setTimeout(() => {
+          onRequestClose();
+          toggleNotification();
+        }, 500);
       }, 2000);
     
     }).catch((error) => { 

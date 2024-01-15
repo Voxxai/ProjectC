@@ -2,6 +2,19 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
+const multer = require('multer');
+const path = require('path');
+const uuid = require('uuid');
+
+const storage = multer.diskStorage({
+    destination: 'images/',
+    filename: function (req, file, cb) {
+        const extension = path.extname(file.originalname);
+        const uniqueFilename = `${uuid.v4()}${extension}`;
+        cb(null, uniqueFilename);
+    }
+});
+
 var mysql = require('mysql');
 
 const cookieParser = require('cookie-parser');
@@ -13,6 +26,8 @@ const sha1 = require('sha1');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 
+const upload = multer({ storage: storage });
+
 dotenv.config();
 
 app.use(express.json());
@@ -21,6 +36,8 @@ app.use(cors({
     methods: ["GET", "POST"],
     credentials: true
 }));
+
+app.use('/images', express.static('images'));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -92,11 +109,71 @@ app.post('/send-email', (req, res) => {
     });
 });
 
+app.post('/forgot-password-email', (req, res) => {
+    const { ID, Email } = req.body;
+
+    const mailOptions = {
+        from: process.env.USER,
+        to: Email,
+        subject: "Wachtwoord resetten",
+        html: "<html>" +
+            "<body>" +
+            "<div style='width:100%; height:100%; background-color:#f4f4f4; padding:30px;'>" +
+            "<div style='width:600px; height: auto; margin:0 auto; padding:25px; border-radius:5px; background-color:white;'>" +
+            "<h1 style='color:#7F3689;'>Wachtwoord resetten</h1>" +
+            "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Om uw wachtwoord te wijzigen, gelieve op de onderstaande link te klikken.</p>" +
+            "<div style='text-align:center; padding:25px; background-color:#fafafa;'>" +
+            "<p style='color:black; font-size:20px; margin-bottom:25px;'><a href='" + process.env.REACT_APP_CLIENT_URL + "/forgotpassword/" + ID + "' style='padding: 10px 25px;background-color: #7f3689;color: white;border-radius: 5px;text-decoration: none;'>Nieuw wachtwoord aanmaken</a></p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</body>" +
+            "</html>",
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.status(200).send('Email sent successfully');
+        }
+    });
+});
+
 app.get('/users', (req, res) => {
     db.query("SELECT * FROM accounts", (error, result) => {
         res.send(result);
     });
 })
+
+app.get('/get-id-by-email/:Email', (req, res) => {
+    db.query(`SELECT ID FROM accounts WHERE Email = "${req.params.Email}"`, (error, result) => {
+        if (error) console.log(error);
+
+        if (result.length > 0) {
+            res.status(200).send(result);
+        }
+        else {
+            res.send(false);
+        }
+    });
+});
+
+app.post('/resetpassword', (req, res) => {
+    const { id, password } = req.body;
+
+    db.query(`UPDATE accounts SET Password = "${password}" WHERE ID = "${id}"`, (error, result) => {
+        if (error) console.log(error);
+
+        if (result) {
+            res.status(200).send({ status: 'success' });
+        }
+        else {
+            res.send({ status: 'failed' });
+        }
+    });
+});
 
 app.post('/user_update', (req, res) => {
     const { ID, Email = req.session.user.Email, FirstName = req.session.user.FirstName, LastName = req.session.user.LastName, TFA = req.session.user.TFA } = req.body;
@@ -197,13 +274,14 @@ app.get("/signout", (req, res) => {
     res.end();
 })
 
-app.post('/insert_news', (req, res) => {
-    const { title, description, image } = req.body;
+app.post('/insert_news', upload.single('image'), (req, res) => {
+    const { title, description } = req.body;
+    const imageFilename = req.file ? req.file.filename : null;
 
     const sql = 'INSERT INTO news (title, description, image) VALUES (?, ?, ?)';
-    db.query(sql, [title, description, image], (err, result) => {
+    db.query(sql, [title, description, imageFilename], (err, result) => {
         if (err) {
-            console.log(error)
+            console.log(err);
             res.status(500).json({ message: 'Error inserting data' });
         } else {
             const sql = 'UPDATE accounts SET NotiCounter = NotiCounter + 1';
@@ -608,6 +686,12 @@ app.post('/register', (req, res) => {
 }
 );
 
+function generateUniqueFilename(originalFilename) {
+    const extension = path.extname(originalFilename);
+    const uniqueFilename = `${uuid.v4()}${extension}`;
+    return uniqueFilename;
+}
+
 app.listen(8080, () => {
-    console.log("Server listing");
+    console.log("Server listening");
 });

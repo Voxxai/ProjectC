@@ -15,7 +15,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
     };
 
     function joinEvent() {
-        axios.post('http://localhost:8080/joinevent', {
+        axios.post(process.env.REACT_APP_API_URL + '/joinevent', {
             "EventId": event.id,
             "UserId": auth.ID
         })
@@ -28,7 +28,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
     }
 
     async function leaveEvent() {
-        await axios.post(`http://localhost:8080/leaveevent/${event.id}/${auth.ID}`)
+        await axios.post(process.env.REACT_APP_API_URL + `/leaveevent/${event.id}/${auth.ID}`)
             .then((response) => {
                 setJoined(false);
                 setRefreshTrigger(prevState => !prevState);
@@ -66,13 +66,13 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
         <Modal
             isOpen={isOpen}
             onRequestClose={() => closeModalAndRefresh()}
-            className="event-modal p-3 max-w-md mx-auto w-1/2 h-fit bg-white rounded shadow-lg border-2 relative outline-none"
+            className="event-modal p-3 max-w-md mx-auto max-sm:w-11/12 w-1/2 h-fit bg-white rounded shadow-lg border-2 relative outline-none"
             overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
         >
             <button className='flex justify-end' onClick={onRequestClose}>
                 <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1' />
             </button>
-            <h1 className="text-3xl text-center text-cavero-purple font-bold mb-4">{event ? event.title : onRequestClose}</h1>
+            <h1 className="text-3xl text-cavero-purple font-bold mb-4">{event ? event.title : onRequestClose}</h1>
 
             <div className="flex flex-col items-start text-left text-gray-700 gap-y-2 bg-gray-100 rounded-md p-1 border-1">
                 <div className="flex flex-row items-center text-left text-xl w-full gap-x-2">

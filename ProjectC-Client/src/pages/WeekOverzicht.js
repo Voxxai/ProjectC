@@ -31,7 +31,7 @@ useEffect(() => {
 
     const getEvents = async (date) => {
         try {
-            const response = await axios.get(`http://localhost:8080/events/${date}`);
+            const response = await axios.get(process.env.REACT_APP_API_URL + `/events/${date}`);
             return response.data;
         }
         catch (err) {
@@ -42,7 +42,7 @@ useEffect(() => {
 
     const getUsers = async (date) => {
         try {
-            const response = await axios.get(`http://localhost:8080/users_day/${getDayNameEng(new Date(date).getDay())}`);
+            const response = await axios.get(process.env.REACT_APP_API_URL + `/users_day/${getDayNameEng(new Date(date).getDay())}`);
             return response.data;
         }
         catch (err) {
@@ -131,7 +131,7 @@ useEffect(() => {
 
     const getEventUsers = async (eventID) => {
         try {
-          await axios.get(`http://localhost:8080/event_users/${eventID}`)
+          await axios.get(process.env.REACT_APP_API_URL + `/event_users/${eventID}`)
           .then(response => {
             setEventUsers(response.data);
             return;
@@ -144,7 +144,7 @@ useEffect(() => {
       };
 
       async function checkIfJoined(eventID) {
-        await axios.get(`http://localhost:8080/checkevent/${eventID}/${auth.ID}`)
+        await axios.get(process.env.REACT_APP_API_URL + `/checkevent/${eventID}/${auth.ID}`)
         .then((response) => {
           if (response.data === true) {
             setJoined(true)
@@ -158,7 +158,7 @@ useEffect(() => {
       }
 
       async function checkEndJoinDate(eventID) {
-        await axios.get(`http://localhost:8080/eventsregistertime/${eventID}`)
+        await axios.get(process.env.REACT_APP_API_URL + `/eventsregistertime/${eventID}`)
         .then((response) => {
             if (response.data === true) {
                 setEndJoinDate(true)
@@ -213,11 +213,11 @@ useEffect(() => {
                         </div>             
                     
                 </div>
-                <div className="flex flex-row h-full gap-x-4 w-full overflow-x-auto max-sm:flex-nowrap">
+                <div className="flex flex-row h-full gap-x-4 max-md:max-w-[1000px] w-full overflow-x-auto snap-x">
                     
                     {/* Items */}
                     {dates.map((Date, index) => (
-                        <div className="flex flex-col bg-white rounded-md text-gray-400 w-full p-2 shadow-md" key={index}>
+                        <div className="flex flex-col bg-white rounded-md text-gray-400 snap-start w-full max-md:min-w-[300px] p-2 shadow-md" key={index}>
                             <div className='relative'>
                                 <span className='font-medium text-lg'>{Date.Week}</span>
                             <div className="flex flex-row text-black items-end gap-1.5">
