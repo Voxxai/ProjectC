@@ -8,7 +8,7 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
-  
+
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
         return new Date(Math.ceil((date.getTime() + 1000) / coeff) * coeff);
@@ -44,7 +44,6 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             selectedDateTime = new Date(eventData.date);
             const [hours, minutes] = eventData.time.split(':').map(Number);
             selectedDateTime.setHours(hours, minutes);
-            console.log('selectedDateTime:', selectedDateTime);
 
         }
 
@@ -125,7 +124,6 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
 
                 await axios.post(`http://localhost:8080/edit_event/${eventData.id}`, formData);
-                // console.log('Form data submitted:', formData);
             } else {
                 // If eventData does not exist, make a POST request to the insert_event endpoint
                 await axios.post('http://localhost:8080/insert_event', formData);
@@ -171,80 +169,80 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             </button>
             <h2 className="text-2xl text-gray-700 font-semibold mb-4">{eventData ? 'Edit Event' : 'Voeg evenement toe'}</h2>
 
-                <div className='flex flex-col gap-y-3 w-full'>
-                    <div>
-                        <label className="block">
-                            Titel:
-                            <input type="text" placeholder="Naam van het evenement" name="title" value={formData.title} onChange={handleChange} required />
-                        </label>
-                    </div>
-
-                    <div>
-                        <label className="flex flex-col">
-                            Beschrijving:
-                            <textarea name="summary" placeholder='beschrijf het evenement' value={formData.summary} onChange={handleChange} required />
-                        </label>
-                    </div>
-
-                    <div>
-                        <label className="flex flex-col">
-                            Locatie:
-                            <input type="text" placeholder="Locatie evenement" name="location" value={formData.location} onChange={handleChange} required />
-                        </label>
-                    </div>
-
-
-
-                    <label className='block' for="time-input">
-                        Datum en tijd:
-
-                        <Flatpickr
-                            key={formData.selectedDateTime} // Add this line
-                            data-enable-time
-                            options={{
-                                dateFormat: "d-M-Y H:i",
-                                enableTime: true,
-                                time_24hr: true,
-                                minuteIncrement: 5,
-                                minDate: roundToNearestMinutes(new Date(), 5),
-                            }}
-                            value={formData.selectedDateTime || roundToNearestMinutes(new Date(), 5)}
-                            onChange={handleDateTimeChange}
-                        />
+            <div className='flex flex-col gap-y-3 w-full'>
+                <div>
+                    <label className="block">
+                        Titel:
+                        <input type="text" placeholder="Naam van het evenement" name="title" value={formData.title} onChange={handleChange} required />
                     </label>
-
-                    <label className='block' for="end-join-date-input">
-                        Einddatum voor registratie:
-                        <Flatpickr
-                            data-enable-time
-                            options={{
-                                dateFormat: "d-M-Y H:i",
-                                enableTime: true,
-                                time_24hr: true,
-                                minuteIncrement: 5,
-                                minDate: formData.endJoinDate ? new Date(formData.endJoinDate.replace(' ', 'T')) : roundToNearestMinutes(new Date(), 5),
-                            }}
-                            value={formData.endJoinDate ? new Date(formData.endJoinDate.replace(' ', 'T')) : roundToNearestMinutes(new Date(), 5)}
-                            onChange={handleEndJoinDateChange}
-                        />
-                    </label>
-
-
-                    <div className='flex'>
-                        <label className="flex flex-row gap-x-2 text-gray-500 accent-cavero-purple">
-                            <input type="checkbox" name="level" value={formData.level} onChange={handleCheckbox} checked={formData.level === 3} />
-                            Is dit een belangrijke gebeurtenis?
-                        </label>
-                    </div>
-
-                    <div className='flex flex-row-reverse'>
-                        <button
-                            type="submit"
-                            className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-hover-purple duration-150 hover:scale-105"
-                            onClick={handleSubmit}
-                        >{eventData ? 'Edit' : 'Submit'}</button>
-                    </div>
                 </div>
+
+                <div>
+                    <label className="flex flex-col">
+                        Beschrijving:
+                        <textarea name="summary" placeholder='beschrijf het evenement' value={formData.summary} onChange={handleChange} required />
+                    </label>
+                </div>
+
+                <div>
+                    <label className="flex flex-col">
+                        Locatie:
+                        <input type="text" placeholder="Locatie evenement" name="location" value={formData.location} onChange={handleChange} required />
+                    </label>
+                </div>
+
+
+
+                <label className='block' for="time-input">
+                    Datum en tijd:
+
+                    <Flatpickr
+                        key={formData.selectedDateTime} // Add this line
+                        data-enable-time
+                        options={{
+                            dateFormat: "d-M-Y H:i",
+                            enableTime: true,
+                            time_24hr: true,
+                            minuteIncrement: 5,
+                            minDate: roundToNearestMinutes(new Date(), 5),
+                        }}
+                        value={formData.selectedDateTime || roundToNearestMinutes(new Date(), 5)}
+                        onChange={handleDateTimeChange}
+                    />
+                </label>
+
+                <label className='block' for="end-join-date-input">
+                    Einddatum voor registratie:
+                    <Flatpickr
+                        data-enable-time
+                        options={{
+                            dateFormat: "d-M-Y H:i",
+                            enableTime: true,
+                            time_24hr: true,
+                            minuteIncrement: 5,
+                            minDate: formData.endJoinDate ? new Date(formData.endJoinDate.replace(' ', 'T')) : roundToNearestMinutes(new Date(), 5),
+                        }}
+                        value={formData.endJoinDate ? new Date(formData.endJoinDate.replace(' ', 'T')) : roundToNearestMinutes(new Date(), 5)}
+                        onChange={handleEndJoinDateChange}
+                    />
+                </label>
+
+
+                <div className='flex'>
+                    <label className="flex flex-row gap-x-2 text-gray-500 accent-cavero-purple">
+                        <input type="checkbox" name="level" value={formData.level} onChange={handleCheckbox} checked={formData.level === 3} />
+                        Is dit een belangrijke gebeurtenis?
+                    </label>
+                </div>
+
+                <div className='flex flex-row-reverse'>
+                    <button
+                        type="submit"
+                        className="bg-cavero-purple text-white rounded-md px-4 py-2 hover:bg-cavero-hover-purple duration-150 hover:scale-105"
+                        onClick={handleSubmit}
+                    >{eventData ? 'Edit' : 'Submit'}</button>
+                </div>
+            </div>
         </Modal>
 
     );
