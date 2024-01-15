@@ -30,6 +30,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
     const [likes, setLikes] = useState(0);
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [modalEventData, setModalEventData] = useState(null);
+    const [ eventUsers, setEventUsers ] = useState([]);
 
     const openModalWithEventData = (eventData) => {
         eventData.date = formatDate({ day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -73,6 +74,19 @@ function Evenement({ id, title, date, time, description, location, level, curren
     const startTime = time.split(':').slice(0, 2).join(':');
     getLikes(id);
 
+    const getEventUsers = async (eventID) => {
+        try {
+          await axios.get(`http://localhost:8080/event_users/${eventID}`)
+          .then(response => {
+            setEventUsers(response.data);
+            return;
+            // console.log(response.data);
+          });
+    
+        } catch (error) {
+          console.error('Error fetching data: ', error);
+        }
+      };
 
     async function checkIfJoined(id) {
         try {
@@ -144,7 +158,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
                 )}
             </div>
             <div className="flex justify-center w-1/6">
-                <button onClick={() => { openModal(); checkIfJoined(eventData.id) }} className="bg-cavero-purple w-4/5 text-white text-base rounded-md self-center p-1 hover:bg-cavero-purple-dark truncate">meer info</button>
+                <button onClick={() => { openModal(); checkIfJoined(eventData.id); getEventUsers(eventData.id)}} className="bg-cavero-purple w-4/5 text-white text-base rounded-md self-center p-1 hover:bg-cavero-purple-dark truncate">meer info</button>
             </div>
             {eventData.date = formatDate({ day: '2-digit', month: '2-digit', year: 'numeric' })}
             <EvenementInfoModal
@@ -153,8 +167,10 @@ function Evenement({ id, title, date, time, description, location, level, curren
                 event={eventData}
                 joined={Joined}
                 setJoined={setJoined}
-                isPastEvent={isPastEvent}
+                endJoinDate={eventData.endJoinDate}
                 setRefreshTrigger={setRefreshTrigger}
+                reloadEventUsers={getEventUsers}
+                eventUsersData={eventUsers}
 
             />
             <EvenementModal isOpen={isEditModalOpen} onRequestClose={closeEditModal} eventData={modalEventData} />
