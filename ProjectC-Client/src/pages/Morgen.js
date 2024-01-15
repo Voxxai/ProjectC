@@ -168,7 +168,7 @@ function Morgen() {
                         {rooms.length === 0 ? (
                             <span className='text-gray-500 text-sm'>Geen gevulde ruimtes gevonden voor morgen.</span>
                         ) : (
-                            <div className='flex flex-col gap-y-1'>
+                            <div className='flex flex-col gap-y-1 overflow-y-auto'>
                                 {/* Display the results of countWerkRuimteOccurrences */}
                                 {Object.entries(rooms).map(([ruimte, count]) => (
                                     <div key={ruimte} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md'>
@@ -196,7 +196,7 @@ function Morgen() {
                         {events.length === 0 ? (
                             <span className='text-gray-500 text-sm'>Geen evenementen gevonden voor morgen.</span>
                         ) : (
-                            <div>
+                            <div className='overflow-y-auto'>
                                 {events.map((event, index) => (
                                     <div key={index} className='flex items-center bg-cavero-purple-light w-full p-2 rounded-md gap-x-2 mb-1'>
                                         <span className='text-black font-semibold'>{event.Title}</span>
