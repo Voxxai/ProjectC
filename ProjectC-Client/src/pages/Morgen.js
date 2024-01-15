@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserGroup, faCircleUser, faPen, faPlus, faCalendarDay, faCalendarDays, faUsers, faList, faListUl, faPenSquare, faPenToSquare, faPeopleRoof, faHouse, faUserCheck, faLaptop, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
+import { faUserGroup, faCircleUser, faPen, faPlus, faCalendarDay, faCalendarDays, faUsers, faList, faListUl, faPenSquare, faPenToSquare, faPeopleRoof, faHouse, faUserCheck, faLaptop, faUsersRectangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Modal from '../components/MorgenModal';
 
@@ -9,6 +9,7 @@ function Morgen() {
     const [events, setEvents] = useState([]);
     const [rooms, setRooms] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
     const [currentDate] = useState(new Date());
     const [tomorrowDate, setTomorrowDate] = useState(new Date(currentDate).setDate(currentDate.getDate() + 1));
 
@@ -37,13 +38,13 @@ function Morgen() {
 
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get(`http://localhost:8080/users_day/${getDayNameEng(new Date(tomorrow).getDay())}`);
+                const userResponse = await axios.get(process.env.REACT_APP_API_URL + `/users_day/${getDayNameEng(new Date(tomorrow).getDay())}`);
                 setUsers(userResponse.data);
 
-                const roomResponse = await axios.get(`http://localhost:8080/rooms_status/${getDayNameEng(new Date(tomorrow).getDay())}`);
+                const roomResponse = await axios.get(process.env.REACT_APP_API_URL + `/rooms_status/${getDayNameEng(new Date(tomorrow).getDay())}`);
                 setRooms(countWerkRuimteOccurrences(roomResponse.data));
 
-                const eventResponse = await axios.get(`http://localhost:8080/events/${formattedTomorrow}`);
+                const eventResponse = await axios.get(process.env.REACT_APP_API_URL + `/events/${formattedTomorrow}`);
                 setEvents(eventResponse.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -97,12 +98,47 @@ function Morgen() {
         setIsModalOpen(true);
       };
     
-    const closeModal = () => {
+    const closeModal = (show = false) => {
         setIsModalOpen(false);
+        
     };
+
+    const toggleNotification = () => {
+        setShowNotification(!showNotification);
+    }
+
+    useEffect(() => {
+        if (showNotification) {
+            document.getElementById('showNotification').classList.remove('scale-0');
+            document.getElementById('showNotification').classList.add('scale-100');
+
+            setTimeout(() => {
+                document.getElementById('showNotification').classList.remove('scale-100');
+                document.getElementById('showNotification').classList.add('scale-0');
+            }, 7000);
+
+            setTimeout(() => {
+                setShowNotification(false); 
+            },7500);
+        }
+
+    return;
+        
+    }, [showNotification]);
 
     return (
         <div className="flex items-center h-full bg-slate-100 p-4 pt-0 w-full">
+            <div id='showNotification' className={`${!showNotification && "hidden"} max-sm:w-11/12 absolute top-2 max-sm:top-20 left-1/2 transform -translate-x-1/2 justify-center transition-all duration-150 ease-in-out`}>
+                <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+                    <div class="flex flex-row items-center gap-2">
+                        <FontAwesomeIcon icon={faInfoCircle} className="text-teal-500 mr-2 text-2xl" />
+                        <div className='flex flex-col'>
+                            <span class="font-bold">Wijzigingen zijn opgeslagen!</span>
+                            <span class="font-medium text-sm">Uw bijgewerkte weekrooster is succesvol opgeslagen. U wordt nu getoond op de beschikbare dagen.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className='flex flex-col h-full gap-y-2 w-full'>
                 <div className='flex flex-row justify-between w-full'>
                     <span className='flex bg-cavero-purple p-1.5 px-2.5 text-white rounded-b font-medium'>{getDayName(new Date(tomorrowDate).getDay())} {new Date(tomorrowDate).getDate()} {getMonthName(new Date(tomorrowDate).getMonth(), false)}</span>
@@ -186,7 +222,7 @@ function Morgen() {
                     </div>             
                 </div>
             </div>
-            <Modal isOpen={isModalOpen} onRequestClose={closeModal} />
+            <Modal isOpen={isModalOpen} onRequestClose={closeModal} toggleNotification={toggleNotification} />
         </div>
     );
 }

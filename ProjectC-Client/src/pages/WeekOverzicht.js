@@ -31,7 +31,7 @@ useEffect(() => {
 
     const getEvents = async (date) => {
         try {
-            const response = await axios.get(`http://localhost:8080/events/${date}`);
+            const response = await axios.get(process.env.REACT_APP_API_URL + `/events/${date}`);
             return response.data;
         }
         catch (err) {
@@ -42,7 +42,7 @@ useEffect(() => {
 
     const getUsers = async (date) => {
         try {
-            const response = await axios.get(`http://localhost:8080/users_day/${getDayNameEng(new Date(date).getDay())}`);
+            const response = await axios.get(process.env.REACT_APP_API_URL + `/users_day/${getDayNameEng(new Date(date).getDay())}`);
             return response.data;
         }
         catch (err) {
@@ -131,7 +131,7 @@ useEffect(() => {
 
     const getEventUsers = async (eventID) => {
         try {
-          await axios.get(`http://localhost:8080/event_users/${eventID}`)
+          await axios.get(process.env.REACT_APP_API_URL + `/event_users/${eventID}`)
           .then(response => {
             setEventUsers(response.data);
             return;
@@ -144,7 +144,7 @@ useEffect(() => {
       };
 
       async function checkIfJoined(eventID) {
-        await axios.get(`http://localhost:8080/checkevent/${eventID}/${auth.ID}`)
+        await axios.get(process.env.REACT_APP_API_URL + `/checkevent/${eventID}/${auth.ID}`)
         .then((response) => {
           if (response.data === true) {
             setJoined(true)
@@ -158,7 +158,7 @@ useEffect(() => {
       }
 
       async function checkEndJoinDate(eventID) {
-        await axios.get(`http://localhost:8080/eventsregistertime/${eventID}`)
+        await axios.get(process.env.REACT_APP_API_URL + `/eventsregistertime/${eventID}`)
         .then((response) => {
             if (response.data === true) {
                 setEndJoinDate(true)
