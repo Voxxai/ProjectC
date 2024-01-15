@@ -136,7 +136,7 @@ app.post('/forgot-password-email', (req, res) => {
             console.error(error);
             res.status(500).send('Internal Server Error');
         } else {
-            res.status(200).send('Email sent successfully');
+            res.status(200).send({ EmailSent: true });
         }
     });
 });
@@ -167,7 +167,7 @@ app.post('/resetpassword', (req, res) => {
         if (error) console.log(error);
 
         if (result) {
-            res.send({ EmailSent: 'success' });
+            res.status(200).send({ status: 'success' });
         }
         else {
             res.send({ status: 'failed' });
