@@ -73,9 +73,9 @@ function CreateArticleModal({ onClose }) {
         <div className="mb-6">
           <label className={`w-full text-gray-700`}>Beschrijving:
             <textarea
-              value={description}
+              value={description.replace(/<br>/g, '\n')}
               onChange={(e) => {
-                setDescription(e.target.value);
+                setDescription(e.target.value.replace(/\n/g, '<br>'));
                 setDescriptionError('');
               }}
               rows="8"
