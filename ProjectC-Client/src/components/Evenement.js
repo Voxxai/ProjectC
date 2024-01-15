@@ -84,7 +84,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
 
     async function checkIfJoined(id) {
         try {
-            const response = await axios.get(`http://localhost:8080/checkevent/${id}/${auth.ID}`);
+            const response = await axios.get(process.env.REACT_APP_API_URL + `/checkevent/${id}/${auth.ID}`);
             setJoined(response.data);
         } catch (error) {
             console.error('Error checking join status: ', error);
@@ -93,10 +93,10 @@ function Evenement({ id, title, date, time, description, location, level, curren
 
     async function getLikes(id) {
         try {
-            const response = await axios.get(`http://localhost:8080/countLikes/${id}`);
+            const response = await axios.get(process.env.REACT_APP_API_URL + `/countLikes/${id}`);
             setLikes(response.data.likes);
 
-            const hasLikedResponse = await axios.get(`http://localhost:8080/checkLike/${id}/${auth.ID}`);
+            const hasLikedResponse = await axios.get(process.env.REACT_APP_API_URL + `/checkLike/${id}/${auth.ID}`);
             setHasLiked(hasLikedResponse.data.hasLiked);
         } catch (error) {
             console.error('Error getting likes: ', error);
@@ -106,7 +106,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
     const GetAllEmailsOfEvent = async (id) => {
         let newList = [];
         try {
-            await axios.get(`http://localhost:8080/event_users/${id}`).then(response => {
+            await axios.get(process.env.REACT_APP_API_URL + `/event_users/${id}`).then(response => {
                 response.data.forEach(element => {
                     newList.push(element.Email);
                 });
@@ -132,7 +132,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
         };
 
         try {
-            const response = await axios.post(`http://localhost:8080/event-delete-email`, mailOptions)
+            const response = await axios.post(process.env.REACT_APP_API_URL + `/event-delete-email`, mailOptions)
                 if (response.status === 200) {
                     console.log('Email sent successfully!');
                 }
@@ -147,7 +147,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
             const emails = await GetAllEmailsOfEvent(id);
             await sendEmail(emails);
 
-            const response = await axios.post(`http://localhost:8080/delete_event/${id}`);
+            const response = await axios.post(process.env.REACT_APP_API_URL + `/delete_event/${id}`);
             if (response.status === 200) {
                 setRefreshTrigger(prevState => prevState + 1);
             } else {
