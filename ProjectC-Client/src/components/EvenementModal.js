@@ -8,6 +8,9 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 
 function EvenementModal({ isOpen, onRequestClose, eventData }) {
+    console.clear();
+
+
 
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
@@ -131,8 +134,8 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
     }, [isOpen]);
 
 
-    const newdate = formData.date.split(' ')[0]; 
-    
+    const newdate = formData.date.split(' ')[0];
+
     return (
 
         <Modal
@@ -159,7 +162,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
 
                     <div>
                         <label className="flex flex-col">
-                            Beschrijving: 
+                            Beschrijving:
                             <textarea name="summary" placeholder='beschrijf het evenement' value={formData.summary} onChange={handleChange} required />
                         </label>
                     </div>
@@ -172,10 +175,10 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
                     </div>
 
 
-                    
+
                     <label className='block' for="time-input">
                         Datum en tijd:
-                        
+
                         <Flatpickr
                             data-enable-time
                             options={{

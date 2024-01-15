@@ -420,6 +420,30 @@ app.post('/edit_event/:id', (req, res) => {
     });
 });
 
+app.post('/delete_event/:id', (req, res) => {
+    const eventId = req.params.id;
+
+    const sql1 = 'DELETE FROM events WHERE id = ?';
+    const sql2 = 'DELETE FROM event_users WHERE event_id = ?';
+
+    db.query(sql2, [eventId], (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: 'Error deleting event users' });
+
+        } else {
+            db.query(sql1, [eventId], (err, results) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: 'Error deleting event' });
+                } else {
+                    res.status(200).json({ message: 'Event and event users deleted successfully' });
+                }
+            });
+        }
+    });
+});
+
 
 app.get('/events', (request, response) => {
     db.query("SELECT * FROM events", (error, result) => {

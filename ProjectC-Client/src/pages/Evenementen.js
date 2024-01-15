@@ -16,7 +16,6 @@ function Evenementen() {
   const [selectedDropdownOption, setSelectedDropdownOption] = useState('Toekomstig');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const counter = 0;
 
   const isAdmin = auth.Level === 3;
   const today = new Date();
@@ -33,28 +32,17 @@ function Evenementen() {
     try {
       const response = await axios.get(process.env.REACT_APP_API_URL + '/events');
       const eventsWithParticipants = await Promise.all(response.data.map(async (event) => {
-        const participants = await amountOfParticipants(event);
+        const participantsResponse = await axios.get(process.env.REACT_APP_API_URL + `/event_users/${event.ID}`);
         const hasLiked = await checkIfLiked(event.ID);
         return {
           ...event,
-          participants: participants,
+          participants: participantsResponse.data,
           hasLiked: hasLiked,
         };
       }));
       setEvents(eventsWithParticipants);
     } catch (error) {
       console.error('Error fetching data: ', error);
-    }
-  };
-
-  const amountOfParticipants = async (event) => {
-    try {
-
-      const response = await axios.get(process.env.REACT_APP_API_URL + `/event_users/${event.ID}`);
-      return response.data.length;
-    } catch (error) {
-      console.error('Error fetching data: ', error);
-      return 0; // Handle the error by returning a default value
     }
   };
 
@@ -155,26 +143,26 @@ function Evenementen() {
 
                   return selectedDropdownOption === 'Toekomstig' ? aDateTime - bDateTime : bDateTime - aDateTime;
                 })
-                  .map((event) => (
-                    <Evenement
-                      key={event.ID}
-                      id={event.ID}
-                      title={event.Title}
-                      date={event.Date}
-                      time={event.Time}
-                      description={event.Description}
-                      location={event.Location}
-                      level={event.Level}
-                      currentParticipants={event.participants}
-                      endJoinDate={event.EndJoinDate}
-                      closeModal={closeModal}
-                      setRefreshTrigger={setRefreshTrigger}
-                      isAdmin={isAdmin}
-                      auth={auth}
-                      hasLiked={event.hasLiked}
-                    />
-                  ))
-                }
+                .map((event) => (
+                  <Evenement
+                    key={event.ID}
+                    id={event.ID}
+                    title={event.Title}
+                    date={event.Date}
+                    time={event.Time}
+                    description={event.Description}
+                    location={event.Location}
+                    level={event.Level}
+                    currentParticipants={event.participants}
+                    endJoinDate={event.EndJoinDate}
+                    closeModal={closeModal}
+                    setRefreshTrigger={setRefreshTrigger}
+                    isAdmin={isAdmin}
+                    auth={auth}
+                    hasLiked={event.hasLiked}
+                  />
+                ))
+              }
             </div>
           </div>
 
