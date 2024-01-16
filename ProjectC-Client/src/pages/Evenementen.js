@@ -22,11 +22,13 @@ function Evenementen() {
   today.setMilliseconds(0);
   today.toISOString();
 
+  // Fetching all of the events
   useEffect(() => {
     fetchEventsData();
   }, [refreshTrigger, isModalOpen]);
 
 
+  // Fetching the events on page load and when the refresh trigger changes
   const fetchEventsData = async () => {
     try {
       const response = await axios.get(process.env.REACT_APP_API_URL + '/events');
@@ -48,7 +50,7 @@ function Evenementen() {
   const closeModal = (shouldReload) => {
     setIsModalOpen(false);
 
-
+    // Resetting the refresh trigger to trigger a re-fetch of the events
     if (shouldReload) {
       setRefreshTrigger(prevState => !prevState);
     }
@@ -59,6 +61,7 @@ function Evenementen() {
   };
 
 
+  // Close dropdown when clicking outside of it
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -73,6 +76,7 @@ function Evenementen() {
     };
   }, []);
 
+  // Convert date and time to a Date object
   function convertToDateAndTime(dateStr, timeStr) {
     const date = new Date(dateStr);
     const timeParts = timeStr.split(':').map(part => parseInt(part, 10));

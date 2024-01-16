@@ -11,33 +11,41 @@ function CreateArticleModal({ isOpen, onRequestClose }) {
   const [titleError, setTitleError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
 
+  // Handle file change
   const handleFileChange = (e) => {
     setPhoto(e.target.files[0]);
   };
 
+  // Create article
   const handleSubmit = async () => {
+    // Validate input
     if (!title.trim()) {
       setTitleError('Titel is verplicht');
     } else {
       setTitleError('');
     }
 
+    // Validate input
     if (!description.trim()) {
       setDescriptionError('Beschrijving is verplicht');
     } else {
       setDescriptionError('');
     }
 
+    // If there are any errors, don't submit
     if (!title.trim() || !description.trim()) {
       return;
     }
 
+    // Submit the form
     try {
       const formData = new FormData();
+      // Add data to form
       formData.append('title', title);
       formData.append('description', description);
       formData.append('image', photo);
       
+      // Send request
       const response = await axios.post(process.env.REACT_APP_API_URL + '/insert_news', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

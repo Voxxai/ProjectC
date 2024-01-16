@@ -12,12 +12,13 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
 
   const { auth } = useAuth();
 
+  // re-fetching the event users when the joined state changes
   useEffect(() => {
     reloadEventUsers(eventData.ID);
   }, [joined]);
 
+  // joining an event
   function joinEvent() {
-    console.log(eventData.ID);
     axios.post(process.env.REACT_APP_API_URL + '/joinevent', {
       "EventId": eventData.ID,
       "UserId": auth.ID
@@ -29,6 +30,7 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
     });
   }
 
+  // leaving an event
   async function leaveEvent() {
     await axios.post(process.env.REACT_APP_API_URL + `/leaveevent/${eventData.ID}/${auth.ID}`)
     .then((response) => {
@@ -38,6 +40,7 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
     });
   }
 
+  // rendering the buttons
   function renderButtons() {
     // register time expired when endJoinDate is true or when current time is greater than the endJoinDate -1 day
     if (endJoinDate == true || Date.now() > new Date(eventData.Date).setDate(new Date(eventData.Date).getDate() - 1)) {
@@ -61,6 +64,7 @@ function WeekOverzichtModal({isOpen, onRequestClose, eventData, eventUsersData, 
     }
   }
 
+  // formatting the date
   const DateFormatter = (date) => {
     const dateObject = new Date(date);
     return dateObject.toLocaleDateString('nl-NL', { day: '2-digit', month: 'short', year: 'numeric' });

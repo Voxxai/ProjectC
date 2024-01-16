@@ -21,12 +21,14 @@ function ForgotPassword() {
         passwordConfirm: ''
     });
 
+    // handle input change
     const handleInput = (e) => {
         setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
     }
 
+    // check if password is correct
     const CorrectPassword = () => {
-        if (values.password.length < 6 && values.passwordConfirm.length < 6) {
+        if (values.password.length < 6 || values.passwordConfirm.length < 6) {
             return false;
         } else {
             return true;
@@ -37,20 +39,24 @@ function ForgotPassword() {
         let tempPassword = '';
         setError(false);
 
+        // check if password is correct length
         if (!CorrectPassword()) {
             setErrorMessage('Wachtwoord moet minimaal 6 tekens bevatten.');
             setError(true);
             return;
         }
 
+        // check if passwords match
         if (values.password != values.passwordConfirm) {
             setErrorMessage('Wachtwoorden komen niet overeen.');
             setError(true);
             return;
         }
 
+        // hash password
         tempPassword = Sha1(values.password);
 
+        // send request to reset password
         try {
             await axios.post('http://localhost:8080/resetpassword', { id: id, password: tempPassword })
                     .then((response) => {

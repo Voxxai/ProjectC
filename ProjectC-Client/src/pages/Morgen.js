@@ -34,8 +34,10 @@ function Morgen() {
             tomorrow.setDate(tomorrow.getDate() + 1);
         }
 
+        // Formatting the date to match the database format
         const formattedTomorrow = `${tomorrow.getFullYear()}-${(tomorrow.getMonth() + 1).toString().padStart(2, '0')}-${tomorrow.getDate().toString().padStart(2, '0')}`;
 
+        // Fetching the data from the database
         const fetchData = async () => {
             try {
                 const userResponse = await axios.get(process.env.REACT_APP_API_URL + `/users_day/${getDayNameEng(new Date(tomorrow).getDay())}`);
@@ -71,12 +73,15 @@ function Morgen() {
         return dayNames[day];
     }
 
+    // Function to get the day name from a day number in English
     function getDayNameEng(day) {
         var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         return dayNames[day];
     }    
 
+    // Function to count the occurrences of the different werkruimtes
     function countWerkRuimteOccurrences(inputArray) {
+        // setting the initial values of the werkruimtes to 0
         const werkRuimteCounts = {
           'Stille Ruimte': 0,
           'Werk Ruimte 1': 0,
@@ -86,6 +91,7 @@ function Morgen() {
       
         inputArray.forEach((werkRuimte) => {
           if (werkRuimteCounts[werkRuimte] !== undefined) {
+            // If the werkruimte is in the object, add 1 to the count
             werkRuimteCounts[werkRuimte]++;
           }
         });
@@ -103,11 +109,13 @@ function Morgen() {
         
     };
 
+    // Toggling the notification
     const toggleNotification = () => {
         setShowNotification(!showNotification);
     }
 
     useEffect(() => {
+        // temporary variables to store the timeoutIds
         let timeoutId1;
         let timeoutId2;
 
@@ -131,6 +139,7 @@ function Morgen() {
             clearTimeout(timeoutId2);
         };
         
+        // When showNotification changes, run the code inside useEffect
     }, [showNotification]);
 
     return (

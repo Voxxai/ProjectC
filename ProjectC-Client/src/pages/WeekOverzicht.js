@@ -40,6 +40,7 @@ useEffect(() => {
         }
     }
 
+    // Get users of this date
     const getUsers = async (date) => {
         try {
             const response = await axios.get(process.env.REACT_APP_API_URL + `/users_day/${getDayNameEng(new Date(date).getDay())}`);
@@ -51,26 +52,32 @@ useEffect(() => {
         }
     }
 
+    // Fetching all of the data
     const fetchData = async () => {
         const eventPromises = [];
         const userPromises = [];
 
+        // Looping through the days of the week
         for (let i = 1; i <= 5; i++) {
             const first = curr.getDate() - curr.getDay() + i;
             const day = new Date(curr.setDate(first));
             const dateString = day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
 
+            // Pushing the promises to the lists
             eventPromises.push(getEvents(dateString));
             userPromises.push(getUsers(dateString));
         }
 
+        // Waiting for all promises to resolve
         const eventData = await Promise.all(eventPromises);
         const userData = await Promise.all(userPromises);
 
+        // Looping through the days of the week
         for (let i = 1; i <= 5; i++) {
             const first = curr.getDate() - curr.getDay() + i;
             const day = new Date(curr.setDate(first));
 
+            // Pushing the data to the week array
             week.push({
                 Date: day,
                 Day: day.getDate(),
@@ -82,6 +89,7 @@ useEffect(() => {
             });
         }
 
+        // Setting every data to the states
         setEvents(eventData.flat()); // Flattening the array if needed
         setUsers(userData.flat()); // Flattening the array if needed
         setDates(week);
@@ -89,8 +97,10 @@ useEffect(() => {
     }
 
     fetchData();
+    // Actived when the currentDate changes
 }, [currentDate]);
 
+    // Get the month name
     function getMonthName(month, short = true) {
         var monthNames = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun",
             "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
@@ -101,16 +111,19 @@ useEffect(() => {
         return short ? monthNames[month] : monthFullNames[month];
     }
 
+    // Get the day name
     function getDayName(day) {
         var dayNames = [ "Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag" ];
         return dayNames[day];
     }
 
+    // Get the day name in english
     function getDayNameEng(day) {
         var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         return dayNames[day];
     } 
 
+    // Open the dropdown for users
     function openDropdown(index) {
         const dropdownButton = document.getElementById(`dropdownbutton-${index}`);
         const dropdownItems = document.getElementById(`dropdownitems-${index}`);
@@ -129,8 +142,10 @@ useEffect(() => {
         setIsModalOpen(false);
     };
 
+    // Get the users of the event
     const getEventUsers = async (eventID) => {
         try {
+            // Wait for the response to load and set the data to the state
           await axios.get(process.env.REACT_APP_API_URL + `/event_users/${eventID}`)
           .then(response => {
             setEventUsers(response.data);
@@ -143,6 +158,7 @@ useEffect(() => {
         }
       };
 
+      // Check if the user is joined to the event
       async function checkIfJoined(eventID) {
         await axios.get(process.env.REACT_APP_API_URL + `/checkevent/${eventID}/${auth.ID}`)
         .then((response) => {
@@ -157,6 +173,7 @@ useEffect(() => {
         });
       }
 
+      // Check if the event has a end join date
       async function checkEndJoinDate(eventID) {
         await axios.get(process.env.REACT_APP_API_URL + `/eventsregistertime/${eventID}`)
         .then((response) => {
@@ -171,6 +188,7 @@ useEffect(() => {
             });
         }
 
+    // Get the week number
     const getWeek = () => {
         const curr = new Date(currentDate);
         const start = new Date(curr.getFullYear(), 0, 1);
@@ -179,6 +197,7 @@ useEffect(() => {
         return Math.ceil(days / 7);
     };
     
+    // Handle the week change
     const handleWeek = (direction) => {
         
         setCurrentDate((prevDate) => {
@@ -189,8 +208,6 @@ useEffect(() => {
             return newWeek;
         });
     };
-
-    // console.log(dates);
 
     return (
         <div className="flex h-full bg-slate-100">

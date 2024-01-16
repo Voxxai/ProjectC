@@ -3,6 +3,7 @@ import React from 'react';
 function NewsArticle({ title, description, creation_time, image }) {
   const formattedDescription = description.replace(/<br\s*\/?>/g, ' ');
 
+  // truncate description if it's too long
   const truncatedDescription =
     formattedDescription.length > 40 ? `${formattedDescription.slice(0, 40)}...` : formattedDescription;
 

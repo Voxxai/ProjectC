@@ -76,6 +76,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+// send Email for 2FA
 app.post('/send-email', (req, res) => {
     const { Code, Email } = req.body;
 
@@ -109,6 +110,7 @@ app.post('/send-email', (req, res) => {
     });
 });
 
+// send Email for forgot password
 app.post('/forgot-password-email', (req, res) => {
     const { ID, Email } = req.body;
 
@@ -141,6 +143,7 @@ app.post('/forgot-password-email', (req, res) => {
     });
 });
 
+// send Email for event cancelation
 app.post('/event-delete-email', (req, res) => {
     const { EventTitle, Emails } = req.body;
 
@@ -184,12 +187,14 @@ app.get('/get-email-by-id/:ID', (req, res) => {
     });
 });
 
+// get every users
 app.get('/users', (req, res) => {
     db.query("SELECT * FROM accounts", (error, result) => {
         res.send(result);
     });
 })
 
+// get users ID by email
 app.get('/get-id-by-email/:Email', (req, res) => {
     db.query(`SELECT ID FROM accounts WHERE Email = "${req.params.Email}"`, (error, result) => {
         if (error) console.log(error);
@@ -203,6 +208,7 @@ app.get('/get-id-by-email/:Email', (req, res) => {
     });
 });
 
+// reset password call
 app.post('/resetpassword', (req, res) => {
     const { id, password } = req.body;
 
@@ -218,6 +224,7 @@ app.post('/resetpassword', (req, res) => {
     });
 });
 
+// Update user details
 app.post('/user_update', (req, res) => {
     const { ID, Email = req.session.user.Email, FirstName = req.session.user.FirstName, LastName = req.session.user.LastName, TFA = req.session.user.TFA } = req.body;
 
@@ -317,6 +324,7 @@ app.get("/signout", (req, res) => {
     res.end();
 })
 
+// Insert news article
 app.post('/insert_news', upload.single('image'), (req, res) => {
     const { title, description } = req.body;
     const imageFilename = req.file ? req.file.filename : 'standard.png';
@@ -340,6 +348,7 @@ app.post('/insert_news', upload.single('image'), (req, res) => {
     });
 });
 
+// Edit news article by id
 app.post('/edit_article/:id', (req, res) => {
     const articleId = req.params.id;
     const { title, description } = req.body;
@@ -356,6 +365,7 @@ app.post('/edit_article/:id', (req, res) => {
     });
 });
 
+// Delete news article by id
 app.post('/delete_article/:id', (req, res) => {
     const articleId = req.params.id;
     const sql = 'DELETE FROM news WHERE id = ?';
@@ -370,6 +380,7 @@ app.post('/delete_article/:id', (req, res) => {
     });
 });
 
+// Get news article by id
 app.get('/reset_noticounter/:ID', (req, res) => {
     const userId = req.params.ID;
 
@@ -385,6 +396,7 @@ app.get('/reset_noticounter/:ID', (req, res) => {
     });
 });
 
+// Get notifications by id
 app.get('/get_noticounter/:ID', (req, res) => {
     const userId = req.params.ID;
 
@@ -400,6 +412,7 @@ app.get('/get_noticounter/:ID', (req, res) => {
     });
 });
 
+// Get news article by id
 app.get('/get_article/:id', (req, res) => {
     const articleId = req.params.id;
 
@@ -415,6 +428,7 @@ app.get('/get_article/:id', (req, res) => {
     });
 });
 
+// Get all news articles
 app.get('/news', (req, res) => {
     const sql = 'SELECT * FROM news ORDER BY creation_time DESC';
     db.query(sql, (err, results) => {
@@ -427,7 +441,7 @@ app.get('/news', (req, res) => {
     });
 });
 
-//add event
+// add event
 app.post('/insert_event', (req, res) => {
     const { title, date, time, summary, location, level, endJoinDate } = req.body;
 
@@ -442,6 +456,7 @@ app.post('/insert_event', (req, res) => {
     });
 });
 
+// edit event by id
 app.post('/edit_event/:id', (req, res) => {
     const { title, date, time, summary, location, level, endJoinDate } = req.body;
     const { id } = req.params;
@@ -457,6 +472,7 @@ app.post('/edit_event/:id', (req, res) => {
     });
 });
 
+// delete event by id
 app.post('/delete_event/:id', (req, res) => {
     const eventId = req.params.id;
 
@@ -481,7 +497,7 @@ app.post('/delete_event/:id', (req, res) => {
     });
 });
 
-
+// get every events
 app.get('/events', (request, response) => {
     db.query("SELECT * FROM events", (error, result) => {
         if (error) {
@@ -498,6 +514,7 @@ function formatDate(date) {
     return newDate;
 }
 
+// get every events
 app.get('/events', (request, response) => {
 
     db.query("SELECT * FROM events", (error, result) => {
@@ -515,6 +532,7 @@ app.get('/events', (request, response) => {
     });
 })
 
+// get event by date
 app.get('/events/:date', (request, response) => {
     db.query(`SELECT * FROM events WHERE Date = "${request.params.date}"`, (error, result) => {
         if (error) console.log(error);
@@ -533,6 +551,7 @@ app.get('/events/:date', (request, response) => {
     });
 })
 
+// get users of event by id
 app.get('/event_users/:ID', (request, response) => {
     db.query(`SELECT accounts.FirstName, accounts.Email, accounts.LastName FROM event_users LEFT JOIN accounts ON event_users.User_ID=accounts.ID WHERE Event_ID = "${request.params.ID}"`, (error, result) => {
         if (error) console.log(error);
@@ -541,6 +560,7 @@ app.get('/event_users/:ID', (request, response) => {
     });
 })
 
+//get available users by the date
 app.get('/users_day/:day', (request, response) => {
     const day = request.params.day;
     db.query('SELECT accounts.FirstName, accounts.LastName FROM Employee_Schedule LEFT JOIN accounts ON Employee_Schedule.Account_ID = accounts.ID WHERE ?? NOT LIKE ? OR NOT NULL', [day, 'Thuis'], (error, result) => {
@@ -550,6 +570,7 @@ app.get('/users_day/:day', (request, response) => {
     });
 });
 
+// get all the rooms status of the date
 app.get('/rooms_status/:day', (request, response) => {
     db.query(`SELECT ${request.params.day} FROM Employee_Schedule`, (error, result) => {
         if (error) console.log(error);
@@ -559,6 +580,7 @@ app.get('/rooms_status/:day', (request, response) => {
     });
 })
 
+// join event
 app.post('/joinevent', (req, res) => {
     const { EventId, UserId } = req.body;
 
@@ -574,6 +596,7 @@ app.post('/joinevent', (req, res) => {
     });
 });
 
+// leave event
 app.post('/leaveevent/:EventId/:UserId', (req, res) => {
     db.query(`DELETE FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
         if (error) console.log(error);
@@ -582,6 +605,7 @@ app.post('/leaveevent/:EventId/:UserId', (req, res) => {
     });
 });
 
+// check if user is already in event
 app.get('/checkevent/:EventId/:UserId', (req, res) => {
     db.query(`SELECT * FROM event_users WHERE Event_ID = "${req.params.EventId}" AND User_ID = "${req.params.UserId}"`, (error, result) => {
         if (error) console.log(error);
@@ -595,6 +619,7 @@ app.get('/checkevent/:EventId/:UserId', (req, res) => {
     });
 });
 
+// check if the user has liked the event
 app.get('/checkLike/:EventId/:UserId', (req, res) => {
     const { EventId, UserId } = req.params;
 
@@ -617,6 +642,7 @@ app.get('/checkLike/:EventId/:UserId', (req, res) => {
     });
 });
 
+// Like endpoint
 app.post('/like_event/:EventId/:UserId', (req, res) => {
     const { EventId, UserId } = req.params;
 
@@ -656,6 +682,7 @@ app.post('/unlike/:EventId/:UserId', (req, res) => {
     });
 });
 
+// get all the count of the likes of the event
 app.get('/countLikes/:EventId', (req, res) => {
     const { EventId } = req.params;
 
@@ -675,7 +702,7 @@ app.get('/countLikes/:EventId', (req, res) => {
     });
 });
 
-
+// get check if the event has a end join date
 app.get('/eventsregistertime/:EventId', (req, res) => {
     db.query(`SELECT * FROM events WHERE ID = "${req.params.EventId}" AND EndJoinDate < CURRENT_DATE()`, (error, result) => {
         if (error) console.log(error);
@@ -689,6 +716,7 @@ app.get('/eventsregistertime/:EventId', (req, res) => {
     });
 });
 
+// insert users week availablity
 app.post('/scheduleweek', (req, res) => {
     db.query(`  INSERT INTO caverogroep2.Employee_Schedule (Account_ID, Monday, Tuesday, Wednesday, Thursday, Friday)
                 VALUES (?, ?, ?, ?, ?, ?)
@@ -707,6 +735,7 @@ app.post('/scheduleweek', (req, res) => {
         });
 });
 
+// get users week availablity
 app.get('/get-employee-schedule/:Account_ID', (req, res) => {
     db.query(`SELECT * FROM Employee_Schedule WHERE Account_ID = ${req.params.Account_ID}`, (error, result) => {
         if (error) console.log(error);
@@ -719,6 +748,7 @@ app.get('/get-employee-schedule/:Account_ID', (req, res) => {
     });
 });
 
+// insert new user
 app.post('/register', (req, res) => {
     const { email, password, firstname, lastname, level } = req.body;
 
