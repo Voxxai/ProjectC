@@ -136,7 +136,50 @@ app.post('/forgot-password-email', (req, res) => {
             console.error(error);
             res.status(500).send('Internal Server Error');
         } else {
-            res.status(200).send('Email sent successfully');
+            res.status(200).send({ EmailSent: true });
+        }
+    });
+});
+
+app.post('/event-delete-email', (req, res) => {
+    const { EventTitle, Emails } = req.body;
+
+    const mailOptions = {
+        from: process.env.USER,
+        to: Emails,
+        subject: "Evenement geannuleerd",
+        html: "<html>" +
+            "<body>" +
+            "<div style='width:100%; height:100%; background-color:#f4f4f4; padding:30px;'>" +
+            "<div style='width:600px; height: auto; margin:0 auto; padding:25px; border-radius:5px; background-color:white;'>" +
+            "<h1 style='color:#7F3689;'>" + EventTitle + "</h1>" +
+            "<p style='color:#919191; font-size:16px; margin-bottom:25px;'>Helaas is dit evenement geannuleerd. De omstandigheden hebben ertoe geleid dat we genoodzaakt zijn deze beslissing te nemen.</p>" +
+            "</div>" +
+            "</div>" +
+            "</body>" +
+            "</html>",
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.status(200).send({ EmailSent: true });
+        }
+    });
+});
+
+// Get Emails by ID
+app.get('/get-email-by-id/:ID', (req, res) => {
+    db.query(`SELECT Email FROM accounts WHERE ID = "${req.params.ID}"`, (error, result) => {
+        if (error) console.log(error);
+
+        if (result.length > 0) {
+            res.status(200).send(result);
+        }
+        else {
+            res.send(false);
         }
     });
 });
@@ -276,7 +319,7 @@ app.get("/signout", (req, res) => {
 
 app.post('/insert_news', upload.single('image'), (req, res) => {
     const { title, description } = req.body;
-    const imageFilename = req.file ? req.file.filename : null;
+    const imageFilename = req.file ? req.file.filename : 'standard.png';
 
     const sql = 'INSERT INTO news (title, description, image) VALUES (?, ?, ?)';
     db.query(sql, [title, description, imageFilename], (err, result) => {
@@ -315,7 +358,6 @@ app.post('/edit_article/:id', (req, res) => {
 
 app.post('/delete_article/:id', (req, res) => {
     const articleId = req.params.id;
-
     const sql = 'DELETE FROM news WHERE id = ?';
 
     db.query(sql, [articleId], (err, results) => {
@@ -492,7 +534,7 @@ app.get('/events/:date', (request, response) => {
 })
 
 app.get('/event_users/:ID', (request, response) => {
-    db.query(`SELECT accounts.FirstName, accounts.LastName FROM event_users LEFT JOIN accounts ON event_users.User_ID=accounts.ID WHERE Event_ID = "${request.params.ID}"`, (error, result) => {
+    db.query(`SELECT accounts.FirstName, accounts.Email, accounts.LastName FROM event_users LEFT JOIN accounts ON event_users.User_ID=accounts.ID WHERE Event_ID = "${request.params.ID}"`, (error, result) => {
         if (error) console.log(error);
 
         response.send(result);

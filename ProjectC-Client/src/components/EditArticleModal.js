@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import Modal from 'react-modal';
 
-function EditArticleModal({ id, title: initialTitle, description: initialDescription, onClose }) {
+function EditArticleModal({ isOpen, onRequestClose, id, title: initialTitle, description: initialDescription }) {
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
 
@@ -13,7 +14,8 @@ function EditArticleModal({ id, title: initialTitle, description: initialDescrip
         title,
         description,
       });
-      onClose();
+      onRequestClose();
+      window.location.reload();
     } catch (error) {
       console.error('Error updating data: ', error);
     }
@@ -22,7 +24,7 @@ function EditArticleModal({ id, title: initialTitle, description: initialDescrip
   const handleDelete = async () => {
     try {
       const response = await axios.post(process.env.REACT_APP_API_URL + `/delete_article/${id}`);
-      onClose();
+      onRequestClose();
       window.location.reload();
     } catch (error) {
       console.error('Error deleting data: ', error);
@@ -30,9 +32,13 @@ function EditArticleModal({ id, title: initialTitle, description: initialDescrip
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-1">
-      <div className="p-3 max-w-xl mx-auto bg-white rounded shadow-lg border-2 relative outline-none w-11/12">
-        <button onClick={onClose} className="flex justify-end">
+    <Modal 
+      isOpen={isOpen} 
+      onRequestClose={onRequestClose} 
+      contentLabel="Example Modal"
+      className="event-modal p-3 max-w-2xl mx- max-sm:w-11/12 bg-white rounded shadow-lg border-2 relative outline-none w-1/4"
+      overlayClassName="event-modal-overlay fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+        <button onClick={onRequestClose} className="flex justify-end">
           <FontAwesomeIcon icon={faTimes} className='fa-lg text-gray-400 ml-auto absolute top-1 right-1'/>
         </button>
         <h2 className="text-2xl font-semibold mb-6 text-cavero-purple">Nieuwsartikel bewerken</h2>
@@ -68,8 +74,7 @@ function EditArticleModal({ id, title: initialTitle, description: initialDescrip
             Verwijderen
           </button>
         </div>
-      </div>
-    </div>
+      </Modal>
   );
 }
 
