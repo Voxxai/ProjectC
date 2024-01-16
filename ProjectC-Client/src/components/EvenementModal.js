@@ -97,6 +97,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
             if (eventData) {
 
                 await axios.post(`http://localhost:8080/edit_event/${eventData.id}`, formData);
+
             } else {
                 // If eventData does not exist, make a POST request to the insert_event endpoint
                 await axios.post('http://localhost:8080/insert_event', formData);

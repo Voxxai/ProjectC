@@ -306,8 +306,8 @@ function Login() {
     
             await axios.post(`http://localhost:8080/forgot-password-email`, mailOptions)
                 .then(response => {
-                    if (response.data.status === 200) {
-                        console.log('Email sent');
+                    if (response.data.EmailSent == true) {
+                        setFPWContainer(false);
                     }
                 });
         } catch (err) {
