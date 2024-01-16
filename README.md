@@ -3,8 +3,13 @@
 <p>Hieronder willen we beschrijven hoe je ons project kan opstarten op uw eigen device. In ons geval ga ik het project opstarten op een windows computer. Ik zal in stappen uitleggen hoe je alles moet toepassen.</p>
 <h2>BELANGRIJK!</h2>
 <p>Wij gebruiken <a href="https://nodejs.org/en">Node.js</a> voor het opstarten van het project. Download de latest version, tijdens het installeren hoef je nergens op te drukken behalve "Next".</p>
+<p>Ook belangrijk dit is een test account dus Two Factor Authenticate gaat niet werken of andere functies waarbij de email verstuurd word.</p>
 
-<p>We gaan het project opstarten in de terminal.</p>
+<h2>Inlog gegevens</h2>
+<p>Email: test@test.nl<br>
+  Wachtwoord: test123</p>
+
+<p>We gaan het project opstarten in de terminal.</p><br>
 
 <ol>
   <li>
@@ -18,9 +23,15 @@
   </li>
   <li>
     <p><b>Project opbouwen</b><br>
-    Als je kijkt in je map zie je dat er nieuwe mappen zijn toegevoegd. Ga naar de map ProjectC-Client en open deze. Druk nogmaals rechter muisknop en kies voor "Openen in Terminal".<br><br>
-    Type in the Terminal "npm i" en laat het alle packages downloaden.<image src="![stap1](https://github.com/Voxxai/ProjectC/assets/105523967/18328c2a-23d2-44b9-9db6-31c376a22448)"><br>
-    Als dit klaar is ga dan naar de map ProjectC-Server en doe dit nogmaals.</p>
+    Als je kijkt in je map zie je dat er nieuwe mappen zijn toegevoegd. Ga naar de map /ProjectC-Client en open deze. Druk nogmaals rechter muisknop en kies voor "Openen in Terminal".<br><br>
+    Type in the Terminal <b>"npm i"</b> en laat het alle packages downloaden.<br><br>
+    Als dit klaar is ga dan naar de map ProjectC-Server en doe dit nogmaals. (Recht muisknop in de map en kies voor "Openen in Terminal" en type "npm i")</p>
   </li>
-
+  <li>
+      <p><b>Project starten</b><br>
+      Nu gaan we het project starten. Ga naar de map /ProjectC-Server, druk rechter muisknop en kies voor "Openen in Terminal". Type in de Terminal "node server.js" en wacht totdat er staat "Server listening".<br><br>
+      Open nu de map /ProjectC-Client, druk rechter muisknop en kies voor "Openen in Terminal". Type in de Terminal "npm start" en wacht totdat er een webbrowser of tab wordt ingeladen.</p>
+    </li>
 </ol>
+
+<p>Bedankt voor het lezen</p>
