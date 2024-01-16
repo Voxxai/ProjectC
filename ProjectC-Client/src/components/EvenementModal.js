@@ -11,10 +11,12 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
+    // Round the date time to the nearest 5 minutes
     function roundToNearestMinutes(date, minutes) {
         const coeff = 1000 * 60 * minutes;
         return new Date(Math.ceil((date.getTime() + 1000) / coeff) * coeff);
     }
+    // Format the date and time as a string in the format 'YYYY-MM-DD HH:MM:SS'
     function formatDate(date) {
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:00`;
     }
@@ -61,6 +63,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         });
     }, [eventData]);
 
+    // Update the form data when the input fields change
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -69,6 +72,7 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         }));
     };
 
+    // Update the form data when the checkbox changes
     const handleCheckbox = (e) => {
         const { name, checked } = e.target;
         setFormData((prevData) => ({
@@ -112,9 +116,11 @@ function EvenementModal({ isOpen, onRequestClose, eventData }) {
         }));
     };
 
+    // Submit the form data
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Check if any of the required fields are empty
         if (!formData.title || !formData.summary || !formData.location || !formData.date || !formData.time) {
             setError(true);
             setErrorMessage("Vul alle velden in");

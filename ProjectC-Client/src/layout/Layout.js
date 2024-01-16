@@ -10,6 +10,7 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 function Layout() {
     const [openNavbar, setOpenNavbar] = useState(false);
 
+    // On mobile devices, the navbar is pressed toggle the navbar
     const toggleOpen = (close = false) => {
         setOpenNavbar(close ? !openNavbar : close);
     };
@@ -18,6 +19,7 @@ function Layout() {
         setOpenNavbar(false);
     };
 
+    // When the bell is pressed, the bellPressed state is set to true
     const [bellPressed, setBellPressed] = useState(false);
 
     const handleBellPress = () => {

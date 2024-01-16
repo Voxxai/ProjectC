@@ -19,6 +19,7 @@ function Nieuws() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const articlesPerPage = 6;
 
+  // Fetching all of the news articles
   const fetchNieuwsData = async () => {
     try {
       const response = await axios.get(process.env.REACT_APP_API_URL + '/news');
@@ -30,6 +31,7 @@ function Nieuws() {
     }
   };
   
+  // Fetching the news articles on page load and when the submission status changes
   useEffect(() => {
     fetchNieuwsData();
   }, [submissionStatus]);
@@ -41,6 +43,7 @@ function Nieuws() {
   const closeModal = () => {
     setIsModalOpen(false);
   
+    // Resetting the submission status to trigger a re-fetch of the news articles
     setSubmissionStatus(Date.now());
   };
 
@@ -48,24 +51,29 @@ function Nieuws() {
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
   const currentArticles = news.slice(indexOfFirstArticle, indexOfLastArticle);
 
+  // Pagination
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(news.length / articlesPerPage); i++) {
     pageNumbers.push(i);
   }
 
+  // Pagination click handler
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
     setSelectedArticle(null);
   };
 
+  // Article click handler
   const handleArticleClick = (article) => {
     setSelectedArticle(article);
   };
 
+  // Back button click handler
   const handleBackClick = () => {
     setSelectedArticle(null);
   };
 
+  // Pagination rendering
   const renderPagination = () => {
     const totalPageCount = Math.ceil(news.length / articlesPerPage);
   
@@ -80,7 +88,7 @@ function Nieuws() {
     );
   
     const paginationItems = [];
-  
+
     for (let i = 1; i <= totalPageCount; i++) {
       paginationItems.push(renderPageButton(i));
     }

@@ -29,6 +29,7 @@ function Topbar({ openNavbar, toggleOpen, handleBellPress, bellPressed, setBellP
     { title: 'Instellingen', src: faGear, link: '/instellingen/options' },
   ];
 
+  // Fetching the notification count
   useEffect(() => {
     const fetchNotificationCount = async () => {
       try {
@@ -43,16 +44,20 @@ function Topbar({ openNavbar, toggleOpen, handleBellPress, bellPressed, setBellP
 
     setBellPressed(false)
     fetchNotificationCount();
+    // every time the bell is pressed, fetch the notification count
   }, [bellPressed]);
 
+  // Close the dropdown menu when clicking outside of it
   const closeOpenMenus = (e) => {
     if (settingMenu.current && open && !settingMenu.current.contains(e.target)) {
       setOpen(false);
     }
   };
 
+  // Add event listener to close dropdown menu when clicking outside of it
   document.addEventListener('mousedown', closeOpenMenus);
 
+  // Sign out
   const handleSignOut = () => {
     axios.get(process.env.REACT_APP_API_URL + `/signout`).then((response) => {
       if (response.data.signedOut === true) {
@@ -62,6 +67,7 @@ function Topbar({ openNavbar, toggleOpen, handleBellPress, bellPressed, setBellP
     });
   };
 
+  // Set the title of the page
   const setTitle = () => {
     if (location.pathname.split("/").length - 1 > 1) {
       return location.pathname.split("/")[2];

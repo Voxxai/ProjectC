@@ -9,8 +9,6 @@ import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 
 
 function Evenement({ id, title, date, time, description, location, level, currentParticipants, setRefreshTrigger, isAdmin, auth, endJoinDate, }) {
-
-
     const eventData = {
         id: id,
         title: title,
@@ -31,6 +29,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
     const [shouldRefresh, setShouldRefresh] = useState(false);
     const [modalEventData, setModalEventData] = useState(null);
 
+    // Fetching the events on page load and when the refresh trigger changes
     const openModalWithEventData = (eventData) => {
         eventData.date = formatDate({ day: '2-digit', month: '2-digit', year: 'numeric' });
         const toUs = eventData.date.split('-');
@@ -82,6 +81,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
     }, []);
 
 
+    // Check if the user has joined the event
     async function checkIfJoined(id) {
         try {
             const response = await axios.get(process.env.REACT_APP_API_URL + `/checkevent/${id}/${auth.ID}`);
@@ -91,6 +91,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
         }
     }
 
+    // Get the amount of likes for the event
     async function getLikes(id) {
         try {
             const response = await axios.get(process.env.REACT_APP_API_URL + `/countLikes/${id}`);
@@ -103,6 +104,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
         }
     }
 
+    // Get all emails of the event
     const GetAllEmailsOfEvent = async (id) => {
         let newList = [];
         try {
@@ -120,8 +122,10 @@ function Evenement({ id, title, date, time, description, location, level, curren
         return newList;
     }
 
+    // Send email to all participants of the event
     async function sendEmail(EmailList) {
         for (let index = 0; index < EmailList.length; index++) {
+            // Remove admin from the list if he is in it
             if (EmailList[index] === 'admin') {
                 EmailList.splice(index, 1);
             }
@@ -132,6 +136,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
         };
 
         try {
+            // Send email to all participants
             const response = await axios.post(process.env.REACT_APP_API_URL + `/event-delete-email`, mailOptions)
                 if (response.status === 200) {
                     console.log('Email sent successfully!');
@@ -142,11 +147,14 @@ function Evenement({ id, title, date, time, description, location, level, curren
         }
     }
 
+    // Delete event
     async function deleteEvent(id) {
         try {
             const emails = await GetAllEmailsOfEvent(id);
+            // Send email to all participants
             await sendEmail(emails);
 
+            // After sending the email, delete the event
             const response = await axios.post(process.env.REACT_APP_API_URL + `/delete_event/${id}`);
             if (response.status === 200) {
                 setRefreshTrigger(prevState => prevState + 1);
@@ -158,6 +166,7 @@ function Evenement({ id, title, date, time, description, location, level, curren
         }
     }
 
+    // Set the hearts to there correct event
     function setHearts() {
 
         if (HasLiked) {

@@ -43,6 +43,7 @@ function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
     
   }
 
+  // Get week number
   const getWeek = (date) => {
     const curr = new Date(date);
     const start = new Date(curr.getFullYear(), 0, 1);
@@ -113,6 +114,7 @@ function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
 
   };
 
+  // Get month name
   function getMonthName(month, short = true) {
     var monthNames = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun",
         "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
@@ -120,10 +122,12 @@ function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
     var monthFullNames = ["Januari", "Febuari", "Maart", "April", "Mei", "Juni",
         "Juli", "Augustus", "September", "Oktober", "November", "December"
     ];
+    // if short is false return full month name
     return short ? monthNames[month] : monthFullNames[month];
 }
 
 
+  // Handle checkbox change
   const handleCheckboxChange = (index, overwrite=false) => {
     if (isDisabled[index] != true || overwrite) {
       setIsDisabled({
@@ -138,6 +142,7 @@ function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
     return;
   };
 
+  // Correcting form
   const correctingForm = (index) => {
     if (isDisabled[index] === true && weekValues["Dag" + index] !== null) {
       setWeekValues((prevWeekValues) => ({
@@ -147,6 +152,7 @@ function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
     }
   }
 
+  // Handle select change
   const handleSelectChange = async (e) => {
     setChanged(true);
     setWeekValues({
@@ -155,10 +161,12 @@ function MorgenModal({isOpen, onRequestClose, toggleNotification }) {
     });
   }
 
+  // Handle submit
   const handleSubmit = async (e) => {
     SendWeekSchedule();
   }
 
+  // Setting value
   const settingValue = (index) => {
     if (weekValues["Dag" + index] != null) {
       return weekValues["Dag" + index];

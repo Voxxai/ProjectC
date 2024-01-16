@@ -19,10 +19,10 @@ function Register() {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-
+    // Axios credentials change
     axios.defaults.withCredentials = true;
 
-
+    // Inserting the user into the database
     const registerUser = async () => {
         // if one of the fields is empty
         if (values.email == '' || values.password == '' || values.firstname == '' || values.lastname == '') {
@@ -30,18 +30,20 @@ function Register() {
             setErrorMessage("Vul alle velden in");
             return;
         }
-        // if email is not valid or password is not valid
+        // if email is not valid
         else if (!values.email.toString().includes('@')) {
               setError(true);
             setErrorMessage("Email moet een @ bevatten");
             return;
         }
+        // if password is not 6 characters long
         else if (values.password.toString().length < 6) {
             setError(true);
             setErrorMessage("Wachtwoord moet minimaal 6 tekens bevatten.");
             return;
         }
 
+        // trying to register the user
         try {
             const response = await axios.post(process.env.REACT_APP_API_URL + '/register', values);
             console.log(response);
@@ -58,6 +60,7 @@ function Register() {
         }
     }
 
+    // Handling the input, encrypting the password
     const handleInput = (e) => {
 
         setValues(prev => ({ ...prev, [e.target.name]: e.target.name == 'password' ? [Sha1(e.target.value)] : [e.target.value] }));

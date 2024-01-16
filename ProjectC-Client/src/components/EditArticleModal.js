@@ -8,12 +8,14 @@ function EditArticleModal({ isOpen, onRequestClose, id, title: initialTitle, des
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
 
+  // Edit article
   const handleEdit = async () => {
     try {
       const response = await axios.post(process.env.REACT_APP_API_URL + `/edit_article/${id}`, {
         title,
         description,
       });
+      // Close the modal and refresh the page
       onRequestClose();
       window.location.reload();
     } catch (error) {
@@ -21,6 +23,7 @@ function EditArticleModal({ isOpen, onRequestClose, id, title: initialTitle, des
     }
   };
 
+  // Delete article
   const handleDelete = async () => {
     try {
       const response = await axios.post(process.env.REACT_APP_API_URL + `/delete_article/${id}`);

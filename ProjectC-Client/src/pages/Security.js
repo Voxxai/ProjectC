@@ -16,6 +16,7 @@ function Profile() {
   const [loading, setLoading] = useState(false);
   const [hidden, setHidden] = useState(true);
 
+  // Set the session values again for the cookie
   const setSession = async (TFA) => {
     const userDetails = { TFA };
 
@@ -32,6 +33,7 @@ function Profile() {
   }
 
   const update_TFA = async () => {
+    // Disable button and show loading icon
     document.getElementById('TFA').setAttribute('disabled', 'disabled');
 
     setLoading(true);
@@ -47,6 +49,7 @@ function Profile() {
           await setAuth({TFA: ProfileValues.TFA});
         }
   
+        // Wait 1 second and enable button again for preventing spam
         setTimeout(() => {
           setLoading(false);
           document.getElementById('TFA').removeAttribute('disabled');
@@ -60,10 +63,13 @@ function Profile() {
     }
   }
   
+  // Handle input for the checkbox
   const handleInput = async (e) => {
     let isChecked = e.target.checked;
+    // Convert boolean to int
     const CheckboxValue = isChecked === true ? 0 : 1;
   
+    // Set the state
     await setProfileValues((prev) => ({ ...prev, TFA: CheckboxValue }));
     await update_TFA();
   }

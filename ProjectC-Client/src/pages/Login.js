@@ -35,6 +35,7 @@ function Login() {
 
     axios.defaults.withCredentials = true;
 
+    // Getting a random code between 100000 and 999999
     const RedeemCode = async () => {
         let difference = 999999 - 100000;
         let rand = Math.random();
@@ -62,18 +63,21 @@ function Login() {
         }, 10000); // 10 sec timer for the code or the user has to request a new code
     }
 
+    // Resend the email with the code
     const ResendMail = async () => {
         setTFAInputValues(initialTFAInputValues);
 
+        // We don't want the user to spam the button so we set a timer for 10 sec
         if (!TFATimerResend) {
             sendEmail();
             return;
         }
     }
 
-
+    // Send the email with the code
     const sendEmail = async () => {
         const mailOptions = {
+            // redeeming the code
             Code: await RedeemCode(),
             Email: values.email,
         }
@@ -81,9 +85,11 @@ function Login() {
         setError(false);
 
         setTFACode(mailOptions.Code);
+        // Set the timer for the code and for the resend button
         setTimerTenSeconds();
         setTimer();
 
+        // Send the email
         await axios.post(process.env.REACT_APP_API_URL + `/send-email`, mailOptions)
             .then(response => {
                 if (response.data.status === 200) {
@@ -92,6 +98,7 @@ function Login() {
             });
     };
 
+    // Creating a session with the user details
     const setSession = async (ID, FirstName, LastName, Email, Password, Level, TFA) => {
         const userDetails = { ID, FirstName, LastName, Email, Password, Level, TFA };
 
@@ -107,7 +114,9 @@ function Login() {
         }
     }
 
+    // Getting the user details
     const getUser = async () => {
+        // if one of the fields is empty
         if (!values.email.length > 0) {
             setErrorMessage("Vul elk veld in!");
             setError(true);
@@ -116,6 +125,7 @@ function Login() {
 
         setError(false);
       
+        // trying to login the user
             try {                
                 await axios.post(process.env.REACT_APP_API_URL + `/login`, values)
                 .then(response => {
@@ -168,6 +178,7 @@ function Login() {
 
     }
 
+    // Handling the input, encrypting the password
     const handleInput = (e) => {
         setValues(prev => ({ ...prev, [e.target.name]: e.target.name == 'password' ? [Sha1(e.target.value)] : [e.target.value] }));
     }
@@ -266,6 +277,7 @@ function Login() {
         }
     };
 
+    // Preventing the user from pasting letters or other characters besides numbers
     const preventJunk = (index, value) => {
         if (value === '' || !value.match(/[0-9]/)) {
             return;
@@ -276,10 +288,13 @@ function Login() {
         }
     }
 
+    // Confirming the code
     const ConfirmCode = async () => {
         setError(false);
 
+        // Check if the code is expired
         if (TFATimer) {
+            // Check if the code is correct
             if (TFAInputValues.join('') == TFACode.toString()) {
                 await setSession(responseValues.ID, responseValues.FirstName, responseValues.LastName, responseValues.Email, responseValues.Password, responseValues.Level, responseValues.TFA);
                 setAuth(responseValues.ID, responseValues.FirstName, responseValues.LastName, responseValues.Email, responseValues.Password, responseValues.Level, responseValues.TFA);
@@ -300,19 +315,23 @@ function Login() {
     // Forgot password section
     const ForgotPasswordSendEmail = async () => {
         try {
+            // Check if the email is valid
             const userID = await GetIDbyEmail(values.email);
     
+            // If the email is not found
             if (userID === null) {
                 setError(true);
                 setErrorMessage('Emailadres is niet gevonden!');
                 return;
             }
     
+            // Set the email options
             const mailOptions = {
                 ID: userID,
                 Email: values.email,
             };
     
+            // Send the email
             await axios.post(`http://localhost:8080/forgot-password-email`, mailOptions)
                 .then(response => {
                     if (response.data.EmailSent == true) {
@@ -324,11 +343,13 @@ function Login() {
         }
     };    
 
+    // Get the user ID by email
     const GetIDbyEmail = async (Email) => {
         try {
             const response = await axios.get(`http://localhost:8080/get-id-by-email/${Email}`);
     
             if (response.status === 200) {
+                // Return the ID
                 return response.data[0].ID;
             }
     

@@ -8,13 +8,12 @@ import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 
 
 function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, isPastEvent, setRefreshTrigger, hasLiked, setHasLiked, getLikes, setHearts }) {
-
-
     const { auth } = useAuth();
     const closeModalAndRefresh = () => {
         onRequestClose(true); // Close the modal and indicate a refresh
     };
 
+    // Joining an event
     function joinEvent() {
         axios.post(process.env.REACT_APP_API_URL + '/joinevent', {
             "EventId": event.id,
@@ -29,6 +28,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
             });
     }
 
+    // Leaving an event
     async function leaveEvent() {
         await axios.post(process.env.REACT_APP_API_URL + `/leaveevent/${event.id}/${auth.ID}`)
             .then((response) => {
@@ -39,6 +39,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
             });
     }
 
+    // Toggling the like event
     async function toggleLikeEvent(eventId) {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/like_event/${eventId}/${auth.ID}`);
@@ -51,8 +52,9 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
 
 
 
+    // Rendering the buttons
     const renderButtons = () => {
-
+        // If the event is in the past, render the like button and disable the join button
         if (isPastEvent) {
             return (
                 <div className='flex flex-row gap-x-2 justify-center'>
@@ -70,6 +72,7 @@ function EvenementInfoModal({ isOpen, onRequestClose, event, joined, setJoined, 
                 </div>
             );
         } else {
+            // If the event is in the future, render the join button
             return (
                 <div className='flex flex-row gap-x-2 justify-end'>
                     <button
